@@ -86,13 +86,11 @@ void MegaInterface::slotDeviceScan()
 
             char IDN[1024] = "";
             int ret = mrgGateWayIDNQuery(visa,IDN);
+            qDebug() << "*IDN:" << QString(IDN);
             if(ret != 0)
             {
                 mrgCloseGateWay(visa);
                 continue;
-            }else{
-                int len = strlen(IDN);
-                IDN[len-1] = '\0';  // '\n' ===> '\0'
             }
             mrgCloseGateWay(visa);
 

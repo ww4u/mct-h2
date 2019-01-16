@@ -111,7 +111,8 @@ void MainWindow::setupStatusBar()
     qDebug() << "version" << qApp->applicationVersion();
     m_pLabStatus = new QLabel("MegaRobo Configuration Tool");
     m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
-    m_pLabConVer = new QLabel( "Build: " __DATE__);
+//    m_pLabConVer = new QLabel( "Build: " __DATE__);
+    m_pLabConVer = new QLabel("  ");
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
     ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );

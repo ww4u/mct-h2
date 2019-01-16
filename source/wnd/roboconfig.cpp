@@ -185,15 +185,18 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     QString strIP = strDevInfo.split(',').at(0);
     slot_open_close(strIP); //默认打开设备
 
-    //第一次打开设备将数据同步到上位机
-    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-        int ret = pCfg->readDeviceConfig();
-        if(ret != 0){
-            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" +tr("From device upload config faiured"));
+    if(m_RobotList[mIndex].m_Visa != 0)
+    {
+        //第一次打开设备将数据同步到上位机
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+            int ret = pCfg->readDeviceConfig();
+            if(ret != 0){
+                QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" +tr("From device upload config faiured"));
+            }
+            pCfg->updateShow();
+            pCfg->saveConfig();
+            emit signalDataChanged();
         }
-        pCfg->updateShow();
-        pCfg->saveConfig();
-        emit signalDataChanged();
     }
 }
 
@@ -614,6 +617,9 @@ void RoboConfig::slot_open_close(QString strIP)
             emit signalDeviceConnect(true);
         }
         else{
+            m_RobotList[mIndex].m_Visa = 0;
+            m_RobotList[mIndex].m_DeviceName = 0;
+            m_RobotList[mIndex].m_RoboName = 0;
             QMessageBox::information(this,tr("tips"),tr("Device Open Failure!!!"));
         }
     }else{

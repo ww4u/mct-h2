@@ -586,21 +586,23 @@ void H2Ops::on_btnRead_clicked()
         lstData << str.split(",", QString::SkipEmptyParts);
     };
 
+    m_pDiagnosisModel->removeRows( 0, m_pDiagnosisModel->items()->count(), QModelIndex() );
     foreach (QStringList lst, lstData) {
+
         bool ok = false;
         int code = lst.at(0).toInt(&ok);
         if(!ok) continue;
         int counter = lst.at(1).toInt(&ok);
         if(!ok) continue;
-        QString strErrorText = lst.at(2);
+        QString strTime = lst.at(2);
 
         m_pDiagnosisModel->appendOneItem(
                     code,
-                    "Err",
-                    QDateTime::currentDateTime().toString( "yyyy-M-d h:m:s"),
-                    "additional info",
+                    " ", //error type
+                    strTime,
+                    " ", //additional info
                     counter,
-                    strErrorText);
+                    " ");
     };
 
 

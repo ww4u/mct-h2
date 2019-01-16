@@ -59,7 +59,7 @@
      <item>
       <widget class="QLabel" name="label_project">
        <property name="text">
-        <string>MRX-H2:project</string>
+        <string>MRX-H2</string>
        </property>
       </widget>
      </item>
