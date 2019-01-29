@@ -1,5 +1,6 @@
 #include "sysapi.h"
 #include "mainwindow.h"
+#include <QProcess>
 
 void sysInfo( const QString &str )
 { MainWindow::requestLogout( str, eLogInfo ); }
@@ -31,6 +32,11 @@ void sysError( const QString &info , const int &val)
 void sysShowStatus(const QString &statusInfo)
 {
     MainWindow::showStatus(statusInfo);
+}
+
+void sysShowProgressBar(const bool isRunning)
+{
+    MainWindow::showProgressBar(isRunning);
 }
 
 bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
@@ -84,3 +90,27 @@ int writeFile(QString fileName, QString text)
     file.close();
     return 0;
 }
+
+bool QtPing(const QString ip)
+{
+    // #Linux指令 "ping -s 1 -c 1 IP"
+#ifndef _WIN32
+    QString cmdstr = QString("ping -s 1 -c 1 %1").arg(ip);
+#else
+    // #Windows指令 "ping IP -n 1 -w 超时(ms)"
+    QString cmdstr = QString("ping %1 -n 1 -w %2").arg(ip).arg(1000);
+#endif
+    QProcess cmd;
+    cmd.start(cmdstr);
+    cmd.waitForReadyRead(1000);
+    cmd.waitForFinished(1000);
+
+    QString res = cmd.readAll();
+    if (res.indexOf("TTL") == -1){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+

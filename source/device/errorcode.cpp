@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -202,62 +202,62 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 	return 0;
 }
 
-
-
-/**
- * @brief 返回错误文件
- * @param vi visa设备句柄
- * @param format NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
- * @param errorLog 返回错误日志
- * @param len 长度
- * @return 获取数据长度，<=0表示错误
- */
-EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, int len)
+/*
+* 读取错误文件内容到上位机
+* vi :visa设备句柄
+* format: NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
+* errorLog:返回错误日志
+* wantlen： errorLog（存储区）的长度
+* 返回值：返回实际的文件长度
+*/
+EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, int wantlen)
 {
-	char args[SEND_BUF];
-    int retlen = 0, headDataLen = 0;
-    char as8Ret[1024] = "", as8StrLen[20] = "";
+    int retlen = 0, count = 0, lenOfLen = 0, readLen = 0, left = 0;
+    char args[SEND_BUF];
+    char as8Ret[1024], as8StrLen[20];
+    char *as8Format[] = { "NORMAL","ZIP","TARGZ","TAR" };
 
-	char* ps8Format = NULL;
-	if (format == 0)
-	{
-		ps8Format = "NORMAL";
-	}
-	else if (format == 1)
-	{
-		ps8Format = "ZIP";
-	}
-	else if (format == 2)
-	{
-		ps8Format = "TARGZ";
-	}
-	else if (format == 3)
-	{
-		ps8Format = "TAR";
-	}
-	else
+	if (format < 0 || format > 3)
 	{
 		return -2;
 	}
-
-    snprintf(args, SEND_BUF, ":ERRL:UPLoad? %s\n", ps8Format);
-    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
-		return -1;
-	}
-    if(as8Ret[0] != '#')
-    {
-        return -3;
-    }
-    headDataLen = as8Ret[1] - 0x30;
-    memcpy(as8StrLen, &as8Ret[2], headDataLen);
-    int dataLen = strtoul(as8StrLen, NULL, 10);
-    if (dataLen == 0)
+    snprintf(args, SEND_BUF, ":ERRLog:UPLoad? %s\n", as8Format[format]);
+    if (busWrite(vi, args, strlen(args)) == 0)
     {
         return 0;
     }
-
-    memcpy(errorLog, &as8Ret[2+headDataLen], dataLen);
-    return dataLen;
+    // 1. 先读回一个#9的头。
+    retlen = busRead(vi, as8Ret, 12);
+    if (retlen <= 0)
+    {
+        return retlen;
+    }
+    if (as8Ret[0] != '#')//格式错误
+    {
+        return count;
+    }
+    lenOfLen = as8Ret[1] - 0x30;
+    memcpy(as8StrLen, &as8Ret[2], lenOfLen);//取出长度字符串
+    left = strtoul(as8StrLen, NULL, 10);
+    if (left == 0)
+    {
+        return 0;
+    }
+    errorLog[0] = as8Ret[11];
+    count = 1;
+    while (left >0)
+    {
+        readLen = (left > 512) ? 512 : left;
+        //返回的#9数据最后，会有一个分号，所以这里多读一个字节。
+        if ((retlen = busRead(vi, as8Ret, readLen)) == 0)
+        {
+            break;
+        }
+        memcpy(&errorLog[count], as8Ret, retlen);
+        count += retlen;
+        left -= retlen;
+    }
+    return count;
 }
 
 /*

@@ -19,6 +19,14 @@ void MainWindow::showStatus( const QString str)
     MainWindow::_pBackendProxy->slotUpdateStatus(str);
 }
 
+void MainWindow::showProgressBar(bool isRun)
+{
+    if( NULL == MainWindow::_pBackendProxy )
+    { return; }
+
+    MainWindow::_pBackendProxy->slotShowProgressStatus(isRun);
+}
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -26,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
     m_pLabStatus    = NULL;
     m_pLabMctVer    = NULL;
-    m_pLabConVer    = NULL;
+    m_progressBar   = NULL;
     m_roboConfig    = NULL;
     m_pDockOps      = NULL;
     m_pOps          = NULL;
@@ -49,10 +57,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete m_pLabStatus;
+    delete m_progressBar;
+    delete m_pLabMctVer;
+
+    delete m_roboConfig;
+
+    delete m_pOps;
+    delete m_pDockOps;
 
     if ( NULL != m_pHelpPanel )
     { delete m_pHelpPanel; }
+    delete m_pDockHelp;
+
+    delete ui;
 }
 
 void MainWindow::setupWorkArea()
@@ -85,6 +103,7 @@ void MainWindow::setupWorkArea()
 
 void MainWindow::setupToolBar()
 {
+    ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionStop );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionDownload );
@@ -110,18 +129,33 @@ void MainWindow::setupStatusBar()
 {
     qDebug() << "version" << qApp->applicationVersion();
     m_pLabStatus = new QLabel("MegaRobo Configuration Tool");
+    m_progressBar = new QProgressBar;
+    m_progressBar->setMaximum(100);
+    m_progressBar->setHidden(true);
     m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
-//    m_pLabConVer = new QLabel( "Build: " __DATE__);
-    m_pLabConVer = new QLabel("  ");
 
-    ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
-    ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
-    ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
+    ui->statusBar->insertWidget( 0, m_pLabStatus, 1);
+    ui->statusBar->insertWidget( 1, m_progressBar, 0);
+    ui->statusBar->insertWidget( 2, m_pLabMctVer, 0 );
 }
 
 void MainWindow::slotUpdateStatus( const QString str )
 {
     m_pLabStatus->setText(str);
+}
+
+void MainWindow::slotShowProgressStatus( bool isRun )
+{
+    if(isRun)
+    {
+        m_progressBar->setHidden(false);
+        m_progressBar->setMaximum(0);
+    }
+    else
+    {
+        m_progressBar->setMaximum(100);
+        m_progressBar->setHidden(true);
+    }
 }
 
 void MainWindow::buildConnection()
@@ -401,4 +435,9 @@ void MainWindow::on_actionReboot_triggered()
 void MainWindow::on_actionWifi_triggered()
 {
     m_roboConfig->slotWifi();
+}
+
+void MainWindow::on_actionUpdateFirmware_triggered()
+{
+    m_roboConfig->slotUpdateFirmware();
 }

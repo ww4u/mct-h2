@@ -11,14 +11,6 @@ enum e_event_type
 };
 
 
-//enum e_event_action
-//{
-//    e_action_freewheel,
-//    e_action_qs,
-//    e_action_record_dec,
-//    e_action_finish,
-//};
-
 #define ACTION_FREEWHEEL    "Free-wheeling"
 #define ACTION_QSDEC        "QS deceleration"
 #define ACTION_RECDEC       "Record deceleration"
@@ -48,6 +40,9 @@ public:
     eColumnAttr columnAttr( int col );
 
     void setEventType( e_event_type evt, bool b );
+
+    QMap<int,QString> m_mapError;
+    void initErrorCodes();
 
 public:
     bool mbErrorAble, mbWarnAble, mbInfoAble;

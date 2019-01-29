@@ -71,6 +71,13 @@ void RoboConfig::buildUI()
 RoboConfig::~RoboConfig()
 {
     delete ui;
+    delete m_pRootNode;
+    foreach (RobotInfo robotInfo, m_RobotList) {
+        delete robotInfo.m_Robo;
+    }
+    if(m_megaSerachWidget != NULL){
+        delete m_megaSerachWidget;
+    }
 }
 
 void RoboConfig::loadXmlConfig()
@@ -185,7 +192,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     QString strIP = strDevInfo.split(',').at(0);
     slot_open_close(strIP); //默认打开设备
 
-    if(m_RobotList[mIndex].m_Visa != 0)
+    if(m_RobotList[mIndex].m_Visa > 0)
     {
         //第一次打开设备将数据同步到上位机
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
@@ -195,83 +202,118 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
             }
             pCfg->updateShow();
             pCfg->saveConfig();
-            emit signalDataChanged();
         }
+        emit signalDataChanged();
     }
 }
 
 void RoboConfig::slotDownload()
 {
     if(mIndex < 0) return;
-    if( m_RobotList[mIndex].m_Visa == 0)
+    if( m_RobotList[mIndex].m_Visa <= 0)
     {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;//offline
     }
 
-    bool ok = true;
-    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-        pCfg->saveConfig();
-        int ret = pCfg->writeDeviceConfig();
-        if(ret != 0){
-            ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Download Failure"));
-            continue;
-        }
-
-        {   //从设备再重新upload一遍
-            int ret = pCfg->readDeviceConfig();
-            if(ret != 0){
-                ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Download Failure"));
-            }
-            pCfg->updateShow();
+    auto func = [this](QString &strResult)
+    {
+        strResult = "";
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
             pCfg->saveConfig();
+            int ret = pCfg->writeDeviceConfig();
+            if(ret != 0){
+                strResult += pCfg->focuHelpName() + ",";
+                continue;
+            }
+
+            {   //从设备再重新upload一遍
+                int ret = pCfg->readDeviceConfig();
+                if(ret != 0){
+                    strResult += pCfg->focuHelpName() + ",";
+                }
+                pCfg->updateShow();
+                pCfg->saveConfig();
+            }
         }
-    }
+    };
+
+    sysShowProgressBar(true);
+    XThread *thread = new XThread(func);
+    connect(thread,SIGNAL(signalFinishResult(QString)),this,SLOT(slotDownloadEnd(QString)));
+    thread->start();
+    return;
+}
+
+void RoboConfig::slotDownloadEnd(QString str)
+{
+    sysShowProgressBar(false);
     emit signalDataChanged();
-    if(ok){
+    if(str == ""){
         QMessageBox::information(this,tr("tips"),tr("Download Success!"));
     }
+    else
+    {
+        QStringList lst = str.split(",", QString::SkipEmptyParts);
+        foreach (QString name, lst) {
+            QMessageBox::critical(this,tr("error"), name + "\n" + tr("Download Failure"));
+        }
+    }
     qDebug() << "slotDownload Finish";
-
-    return;
 }
 
 void RoboConfig::slotUpload()
 {
     if(mIndex < 0) return;
 
-    if( m_RobotList[mIndex].m_Visa == 0)
+    if( m_RobotList[mIndex].m_Visa <= 0)
     {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }
 
-    bool ok = true;
-    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-        int ret = pCfg->readDeviceConfig();
-        if(ret != 0){
-            ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Upload Faiured"));
+    auto func = [this](QString &strResult)
+    {
+        strResult = "";
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+            int ret = pCfg->readDeviceConfig();
+            if(ret != 0){
+                strResult += pCfg->focuHelpName() + ",";
+            }
+            pCfg->updateShow();
+            pCfg->saveConfig();
         }
-        pCfg->updateShow();
-        pCfg->saveConfig();
-    }
+    };
 
+    sysShowProgressBar(true);
+    XThread *thread = new XThread(func);
+    connect(thread,SIGNAL(signalFinishResult(QString)),this,SLOT(slotUploadEnd(QString)));
+    thread->start();
+    return;
+}
+
+void RoboConfig::slotUploadEnd(QString str)
+{
+    sysShowProgressBar(false);
     emit signalDataChanged();
-    if(ok){
+    if(str == ""){
         QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));
     }
+    else
+    {
+        QStringList lst = str.split(",", QString::SkipEmptyParts);
+        foreach (QString name, lst) {
+            QMessageBox::critical(this,tr("error"), name + "\n" + tr("Upload Failure"));
+        }
+    }
     qDebug() << "slotUpload Finish";
-    return;
 }
 
 void RoboConfig::slotStore()
 {
     if(mIndex < 0) return;
     int visa = m_RobotList[mIndex].m_Visa;
-    if( visa == 0) {
+    if( visa <= 0) {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }
@@ -314,11 +356,13 @@ void RoboConfig::slotStore()
 
     XThread *thread = new XThread(func);
     connect(thread,SIGNAL(signalFinishResult(int)),this,SLOT(slotStoreEnd(int)));
+    sysShowProgressBar(true);
     thread->start();
 }
 
 void RoboConfig::slotStoreEnd(int val)
 {
+    sysShowProgressBar(false);
     switch (val) {
     case 0:
         QMessageBox::information(this,tr("tips"),tr("Store success!"));
@@ -359,7 +403,7 @@ void RoboConfig::slotSearch()
 void RoboConfig::slotWifi()
 {
     if(mIndex < 0) return;
-    if( m_RobotList[mIndex].m_Visa == 0)
+    if( m_RobotList[mIndex].m_Visa <= 0)
     {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
@@ -398,11 +442,70 @@ void RoboConfig::slotWifi()
     return;
 }
 
+void RoboConfig::slotUpdateFirmware()
+{
+    if(mIndex < 0) return;
+    if( m_RobotList[mIndex].m_Visa <= 0)
+    {
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
+        return;
+    }
+    int ret = -1;
+    char fileList[1024] = "";
+    ret = mrgSysUpdateFileSearch(m_RobotList[mIndex].m_Visa, fileList);
+    if(ret < 0)
+    {
+        QMessageBox::critical(this,tr("error"),tr("search firmware file error or empty!"));
+        qDebug() << "mrgSysUpdateFileSearch" << ret;
+        return;
+    }
+    if(ret == 1)
+    {
+        QMessageBox::warning(this,tr("warning"),tr("Udisk not found!"));
+        return;
+    }
+
+    QStringList StrList = QString(fileList).split(",", QString::SkipEmptyParts);
+    QString firmwareName = QInputDialog::getItem(this, tr("Wifi"), tr("Please Choose Update File:"), StrList, -1, false);
+    if(firmwareName == "")
+        return;
+
+    auto lambda = [&](int &ret)
+    {
+        ret = mrgSysUpdateFileStart(m_RobotList[mIndex].m_Visa, firmwareName.toLocal8Bit().data());
+        return;
+    };
+
+    XThread *thread = new XThread(lambda);
+    connect(thread,SIGNAL(signalFinishResult(int)),this,SLOT(slotUpdateFirmwareEnd(int)));
+    sysShowProgressBar(true);
+    thread->start();
+
+    return;
+}
+
+void RoboConfig::slotUpdateFirmwareEnd(int ret)
+{
+    sysShowProgressBar(false);
+    if(ret == 0){
+        QMessageBox::information(this,tr("tips"),tr("Firmware Update success!")
+                                 + "\n" + tr("Reboot device take effect"));
+    }
+    else if(ret == 1){
+        QMessageBox::warning(this,tr("warning"),tr("Firmware Update timeout!"));
+    }
+    else if(ret < 0){
+        QMessageBox::critical(this,tr("error"),tr("Firmware Update error!"));
+        qDebug() << "mrgSysUpdateFileStart" << ret;
+    }
+    return;
+}
+
 void RoboConfig::slotExit()
 {
     foreach (RobotInfo robo, m_RobotList ){
         QString strIP = robo.m_strDevInfo.split(',').at(0);
-        if(robo.m_Visa != 0){
+        if(robo.m_Visa > 0){
             //如果没有关闭就关闭设备
             slot_open_close(strIP);
         }
@@ -416,9 +519,23 @@ void RoboConfig::slotExit()
 void RoboConfig::slotConnect()
 {
     if(mIndex<0) return;
+
+    H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
+    H2Product *pProduct = (H2Product *)(pRobo->subConfigs().at(0));
+
+    if(m_RobotList[mIndex].m_Visa > 0){
+        //关闭设备的动作
+        pProduct->setHandCloseFlag(true);
+    }else{
+        //打开设备的动作
+        pProduct->setHandCloseFlag(false);
+    }
+
     QString strIP = m_RobotList[mIndex].m_strDevInfo.split(',').at(0);
     qDebug() << "slotConnect" << strIP;
-    slot_open_close(strIP);
+    if(m_RobotList[mIndex].m_Visa > 0){
+        slot_open_close(strIP);
+    }
 }
 
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
@@ -446,21 +563,15 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
 void RoboConfig::soltActionClose()
 {
     int index = mIndex;
-    QString strIP = m_RobotList[index].m_strDevInfo.split(',').at(0);
-    if(m_RobotList[index].m_Visa != 0){
-        //如果没有关闭就关闭设备
-        slot_open_close(strIP);
-    }
+
+    slotConnect();
 
     m_pRootNode->removeChild(((H2Robo *)m_RobotList[index].m_Robo)->roboNode());
     delete (H2Robo *)m_RobotList[index].m_Robo;
     m_RobotList.removeAt(index);
 
     ui->treeWidget->setCurrentItem(m_pRootNode);
-
-//    qDebug() << "after close:" << m_RobotList.count() << mIndex;
-    if(m_RobotList.count() == 0)
-        mIndex = -1;
+    mIndex = -1;
 }
 
 void RoboConfig::soltActionDelete()
@@ -533,7 +644,7 @@ int RoboConfig::setReset()
     }
 
     bool ok = true;
-    if( m_RobotList[mIndex].m_Visa == 0)
+    if( m_RobotList[mIndex].m_Visa <= 0)
     {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return -2;//offline
@@ -610,13 +721,17 @@ void RoboConfig::slot_open_close(QString strIP)
     if(mIndex < 0) return;
     H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
 
-    if(m_RobotList[mIndex].m_Visa == 0){
+    if(m_RobotList[mIndex].m_Visa <= 0){
         int ret = deviceOpen(strIP);
         if(ret > 0){            
             pRobo->change_online_status(true);
             emit signalDeviceConnect(true);
         }
         else{
+            H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
+            H2Product *pProduct = (H2Product *)(pRobo->subConfigs().at(0));
+            pProduct->setHandCloseFlag(true);
+
             m_RobotList[mIndex].m_Visa = 0;
             m_RobotList[mIndex].m_DeviceName = 0;
             m_RobotList[mIndex].m_RoboName = 0;
@@ -656,7 +771,7 @@ int RoboConfig::deviceOpen(QString strID)
                 .arg(lst.at(3));
     }
 
-    int visa = mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
+    int visa = mrgOpenGateWay(strDesc.toLocal8Bit().data(), 800);
     if(visa <= 0){
         qDebug() << "mrgOpenGateWay error" << visa;
         sysError("mrgOpenGateWay error");
@@ -716,6 +831,15 @@ BUILD:
             return -6;
         }
 
+        //! MRQM2304 MRQM2302 for MRX-H2
+        if( (QString(deviceType).toUpper() != "MRQM2302")
+                && (QString(deviceType).toUpper() != "MRQM2304"))
+        {
+            qDebug() << "device type error" << ret;
+            sysError("Device type error", ret);
+            return -9;
+        }
+
         ret = mrgBuildRobot(visa, "MRX-H2", QString("0@%1,1@%1").arg(deviceName).toLocal8Bit().data(), roboNames);
         if( (ret < 0) || (roboNames[0] == 0)){
             qDebug() << "mrgBuildRobot error" << ret;
@@ -733,8 +857,10 @@ BUILD:
 
 END:
     //判断机器人类型是否是H2
-    if(2 != mrgGetRobotType(visa, roboName)){
+    int robotType = mrgGetRobotType(visa, roboName);
+    if(2 != robotType){
         QMessageBox::critical(this,tr("error"),tr("Robot type not") + "MRX-H2");
+        sysError("Robot type error", robotType);
         return -10;
     }
 
@@ -756,21 +882,24 @@ int RoboConfig::deviceClose()
 {
     if(mIndex < 0) return -1;
 
-//    mrgIdentify(m_RobotList[mIndex].m_Visa, 0);
+    int visa = m_RobotList[mIndex].m_Visa;
+    int device = m_RobotList[mIndex].m_DeviceName;
 
-    //电机关闭
-    int ret = mrgMRQDriverState(m_RobotList[mIndex].m_Visa, m_RobotList[mIndex].m_DeviceName, 0, 0);
-    qDebug() << "mrgMRQDriverState0 OFF" << ret;
+    auto lambda = [visa,device]()
+    {
+        //电机关闭
+        int ret = mrgMRQDriverState(visa, device, 0, 0);
+        qDebug() << "mrgMRQDriverState0 OFF" << ret;
 
-    ret = mrgMRQDriverState(m_RobotList[mIndex].m_Visa, m_RobotList[mIndex].m_DeviceName, 1, 0);
-    qDebug() << "mrgMRQDriverState1 OFF" << ret;
-    QThread::msleep(300);
+        ret = mrgMRQDriverState(visa, device, 1, 0);
+        qDebug() << "mrgMRQDriverState1 OFF" << ret;
+        QThread::msleep(300);
 
-    ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
+        ret = mrgCloseGateWay(visa);
+        qDebug() << "device close" << visa << ret;
+    };
 
-    qDebug() << "device close" << m_RobotList[mIndex].m_Visa << ret;
     sysInfo("Device Close");
-
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->detachHandle();  }
 
@@ -778,7 +907,10 @@ int RoboConfig::deviceClose()
     m_RobotList[mIndex].m_DeviceName = 0;
     m_RobotList[mIndex].m_RoboName = 0;
 
-    return ret;
+    XThread *thread = new XThread(lambda);
+    thread->start();
+
+    return 0;
 }
 
 void RoboConfig::changeLanguage(QString qmFile)
@@ -800,7 +932,6 @@ void RoboConfig::changeLanguage(QString qmFile)
 
 void RoboConfig::translateUi()
 {
-//    ui->buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Reset"));
     ui->retranslateUi(this);
     m_pRootNode->setText( 0, tr("Project"));
 }
@@ -836,7 +967,7 @@ void RoboConfig::addDeviceWithIP(QString strID)
                 .arg(lst.at(3));
     }
 
-    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
+    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 800);
     if(visa <= 0) {
         return;
     }
@@ -855,5 +986,12 @@ void RoboConfig::addDeviceWithIP(QString strID)
 
     QStringList lst = strDesc.split("::", QString::SkipEmptyParts);
     QString devInfo = lst.at(1) + QString(",%1").arg(IDN);
+
+#if 0
     slotAddNewRobot(devInfo);
+#else
+    auto lambda = [this,devInfo](){ slotAddNewRobot(devInfo);  };
+    XThread *thread = new XThread(lambda);
+    thread->start();
+#endif
 }

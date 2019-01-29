@@ -64,6 +64,9 @@ private:
     QString m_fileContext;
 
     QMenu *m_menu;
+
+    double m_speedRatio;
+    bool setSpeedRatio();
 };
 
 #endif // H2ACTION_H

@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -687,6 +687,7 @@ int busCloseDevice(ViSession vi)
 
 unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 {
+    //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount;
     LOCK();
     if(viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
@@ -700,6 +701,7 @@ unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 
 unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 {
+    //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount = 0;
     LOCK();
     viRead(vi, (ViBuf)buf, len, &retCount); //有可能返回错误码，但读到了数据，只是数据 还没有读完！！！！

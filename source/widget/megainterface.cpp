@@ -79,7 +79,7 @@ void MegaInterface::slotDeviceScan()
         qDebug() << "find devices:" << strFindDevices;
 
         foreach (QString strDevice, strFindDevices.split(',', QString::SkipEmptyParts)) {
-            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 800);
             if(visa <= 0) {
                 continue;
             }
@@ -239,7 +239,7 @@ int MegaInterface::deviceOpen()
                 .arg(lst.at(3));
     }
 
-    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 3000);
+    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 800);
     if(visa <= 0){
         QMessageBox::critical(this,tr("error"),tr("open device error"));
     }

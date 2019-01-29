@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts xml
+QT       += core gui charts xml network
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = mct
 TEMPLATE = app
 #qt >= 5.10
-VERSION = 0.0.1.4
+VERSION = 0.0.1.5
 
 CONFIG += C++11 #use lambda
 
@@ -44,6 +44,7 @@ HEADERS += ../include/mystd.h           \
     ../source/device/system.h           \
     ../source/sys/sysapi.h              \
     ../source/sys/megaxml.h             \
+    ../source/sys/sacsvstream.h         \
     ../source/sys/xthread.h             \
     ../source/mrp/mdatarow.h            \
     ../source/mrp/mdataset.h            \
@@ -90,6 +91,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/device/system.cpp         \
     ../source/sys/sysapi.cpp            \
     ../source/sys/megaxml.cpp           \
+    ../source/sys/sacsvstream.cpp       \
     ../source/sys/xthread.cpp           \
     ../source/mrp/mdatarow.cpp          \
     ../source/mrp/mdataset.cpp          \
@@ -125,6 +127,8 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\
     ../source/widget/megainterface.cpp
+
+
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h

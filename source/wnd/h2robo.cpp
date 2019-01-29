@@ -40,6 +40,17 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     buildConnection();
 }
 
+H2Robo::~H2Robo()
+{
+    delete m_pProduct;
+    delete m_pH2Configuration;
+    delete m_pH2Measurement;
+    delete m_pH2Homing;
+    delete m_pH2JogMode;
+    delete m_pH2Action;
+    delete m_pH2ErrMgr;
+}
+
 void H2Robo::translateUI()
 {
     m_pRoboNode->child(0)->setText(0, tr("Configuration"));

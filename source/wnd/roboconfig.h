@@ -16,6 +16,7 @@ class RoboConfig : public QWidget
 
 signals:
     void signalCurrentRobotChanged(QString,int,int,int);
+
     void signal_focus_in( const QString &);
     void signalDataChanged();
     void signal_record_selected(int);
@@ -36,6 +37,7 @@ public slots:
     void slotSearch();
     void slotExit();
     void slotWifi();
+    void slotUpdateFirmware();
     void slotConnect();
     void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
 
@@ -47,7 +49,12 @@ private slots:
     void slotAddNewRobot(QString strDevInfo );
     void soltActionClose();
     void soltActionDelete();
+
     void slotStoreEnd(int val);
+    void slotDownloadEnd(QString str);
+    void slotUploadEnd(QString str);
+    void slotUpdateFirmwareEnd(int ret);
+
 
 private:
     Ui::RoboConfig *ui;

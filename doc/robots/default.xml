@@ -4,7 +4,7 @@
     <H2Configuration id="H2Configuration">
         <Family>MRX-H2</Family>
         <MotorPosition>0</MotorPosition>
-        <Size>0</Size>
+        <Size>1</Size>
         <WorkStrokeX>370</WorkStrokeX>
         <WorkStrokeY>390</WorkStrokeY>
     </H2Configuration>
@@ -21,7 +21,7 @@
     <H2Homing id="H2Homing">
         <ForceLimit>75.00</ForceLimit>
         <Movement>First in direction of X,then Y</Movement>
-        <SearchVelocity>100.00</SearchVelocity>
+        <SearchVelocity>50.00</SearchVelocity>
         <Target>Block</Target>
     </H2Homing>
     <H2JogMode id="H2JogMode">

@@ -2,6 +2,395 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
+    <name>ACTIONS</name>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="18"/>
+        <source>Free-wheeling</source>
+        <translation>自由溢出</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="19"/>
+        <source>QS deceleration</source>
+        <translation>QS延迟</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="20"/>
+        <source>Record deceleration</source>
+        <translation>运行任务延迟</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="21"/>
+        <source>Finish Record</source>
+        <translation>结束任务延迟</translation>
+    </message>
+</context>
+<context>
+    <name>ERRORS</name>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="26"/>
+        <source>Software error</source>
+        <translation>软件错误</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="27"/>
+        <source>Default parameter file invalid</source>
+        <translation>默认参数文件无效</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="28"/>
+        <source>Non-permitted hardware</source>
+        <translation>非法硬件</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="29"/>
+        <source>Zero angle determination</source>
+        <translation>零角度确定</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="30"/>
+        <source>Encoder</source>
+        <translation>编码器</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="31"/>
+        <source>Parameter file invalid</source>
+        <translation>参数文件无效</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="32"/>
+        <source>Firmware update execution error</source>
+        <translation>固件升级执行故障</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="33"/>
+        <source>I²t malfunction motor</source>
+        <translation>电机I²t错误</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="34"/>
+        <source>Softwarelimit positive</source>
+        <translation>软件正向限位</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="35"/>
+        <source>Softwarelimit negative</source>
+        <translation>软件负向限位</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="36"/>
+        <source>Logic voltage exceeded</source>
+        <translation>逻辑电压过电压</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="37"/>
+        <source>Logic voltage too low</source>
+        <translation>逻辑电压欠电压</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="38"/>
+        <source>Temperature LM-CPU</source>
+        <translation>LM-CPU温度</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="39"/>
+        <source>Intermediate circuit voltage exceede</source>
+        <translation>中间电路过电压</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="40"/>
+        <source>Intermediate circuit voltage too low</source>
+        <translation>中间电路欠电压</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="41"/>
+        <source>CAN Node Guarding, FB has overall control</source>
+        <translation>CAN故障,FB具有控制权</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="42"/>
+        <source>CAN bus communication stopped by master, FB has overall control</source>
+        <translation>主控设备停止CAN总线通信,FB具有控制权</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="43"/>
+        <source>Path calculation</source>
+        <translation>轨迹计算</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="44"/>
+        <source>CAN fieldbus parameters missing</source>
+        <translation>CAN现场总线参数缺失</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="45"/>
+        <source>Save parameters</source>
+        <translation>存储参数</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="46"/>
+        <source>Homing required</source>
+        <translation>需要进行参考运行</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="47"/>
+        <source>Target position behind negative software end position</source>
+        <translation>目标位置在负向软件终点位置之后</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="48"/>
+        <source>Target position behind positive software end position</source>
+        <translation>目标位置在正向软件终点位置之后</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="49"/>
+        <source>Firmware update, invalid firmware</source>
+        <translation>固件升级,无效固件</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="50"/>
+        <source>Incorrect record number</source>
+        <translation>非法指令编号</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="51"/>
+        <source>I²t warning motor</source>
+        <translation>I²t 电机警告</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="52"/>
+        <source>Following error</source>
+        <translation>跟随误差</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="53"/>
+        <source>Extern stop</source>
+        <translation>外部停止激活</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="54"/>
+        <source>CVE connection</source>
+        <translation>CVE连接</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="55"/>
+        <source>MCT connection</source>
+        <translation>MCT连接</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="56"/>
+        <source>Torque Off (TO)</source>
+        <translation>安全停止</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="57"/>
+        <source>CAN Node Guarding, warning, FB does not have overall control</source>
+        <translation>CAN故障,FB没有控制权</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="58"/>
+        <source>CAN bus communication stopped by master, warning, FB does not have overall control</source>
+        <translation>主控设备停止CAN总线通信,FB没有控制权</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="59"/>
+        <source>Standstill monitoring</source>
+        <translation>停止监控</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="60"/>
+        <source>Parameter file access</source>
+        <translation>访问参数文件</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="61"/>
+        <source>Homing Timeout</source>
+        <translation>回零超时</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="62"/>
+        <source>Start-up event</source>
+        <translation>接通事件</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="63"/>
+        <source>Diagnostic memory</source>
+        <translation>诊断存储器</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="64"/>
+        <source>Record invalid</source>
+        <translation>指令无效</translation>
+    </message>
+    <message>
+        <location filename="../../source/model/errmgritem.cpp" line="65"/>
+        <source>System reset</source>
+        <translation>系统复位</translation>
+    </message>
+</context>
+<context>
+    <name>ErrMgrItem</name>
+    <message>
+        <source>Software error</source>
+        <translation type="vanished">软件错误</translation>
+    </message>
+    <message>
+        <source>Default parameter file invalid</source>
+        <translation type="vanished">默认参数文件无效</translation>
+    </message>
+    <message>
+        <source>Non-permitted hardware</source>
+        <translation type="vanished">非法硬件</translation>
+    </message>
+    <message>
+        <source>Zero angle determination</source>
+        <translation type="vanished">零角度确定</translation>
+    </message>
+    <message>
+        <source>Encoder</source>
+        <translation type="vanished">编码器</translation>
+    </message>
+    <message>
+        <source>Parameter file invalid</source>
+        <translation type="vanished">参数文件无效</translation>
+    </message>
+    <message>
+        <source>Firmware update execution error</source>
+        <translation type="vanished">固件升级执行故障</translation>
+    </message>
+    <message>
+        <source>I²t malfunction motor</source>
+        <translation type="vanished">电机I²t错误</translation>
+    </message>
+    <message>
+        <source>Softwarelimit positive</source>
+        <translation type="vanished">软件正向限位</translation>
+    </message>
+    <message>
+        <source>Softwarelimit negative</source>
+        <translation type="vanished">软件负向限位</translation>
+    </message>
+    <message>
+        <source>Logic voltage exceeded</source>
+        <translation type="vanished">逻辑电压过电压</translation>
+    </message>
+    <message>
+        <source>Logic voltage too low</source>
+        <translation type="vanished">逻辑电压欠电压</translation>
+    </message>
+    <message>
+        <source>Temperature LM-CPU</source>
+        <translation type="vanished">LM-CPU温度</translation>
+    </message>
+    <message>
+        <source>Intermediate circuit voltage exceede</source>
+        <translation type="vanished">中间电路过电压</translation>
+    </message>
+    <message>
+        <source>Intermediate circuit voltage too low</source>
+        <translation type="vanished">中间电路欠电压</translation>
+    </message>
+    <message>
+        <source>CAN Node Guarding, FB has overall control</source>
+        <translation type="vanished">CAN故障,FB具有控制权</translation>
+    </message>
+    <message>
+        <source>CAN bus communication stopped by master, FB has overall control</source>
+        <translation type="vanished">主控设备停止CAN总线通信,FB具有控制权</translation>
+    </message>
+    <message>
+        <source>Path calculation</source>
+        <translation type="vanished">轨迹计算</translation>
+    </message>
+    <message>
+        <source>CAN fieldbus parameters missing</source>
+        <translation type="vanished">CAN现场总线参数缺失</translation>
+    </message>
+    <message>
+        <source>Save parameters</source>
+        <translation type="vanished">存储参数</translation>
+    </message>
+    <message>
+        <source>Homing required</source>
+        <translation type="vanished">需要进行参考运行</translation>
+    </message>
+    <message>
+        <source>Target position behind negative software end position</source>
+        <translation type="vanished">目标位置在负向软件终点位置之后</translation>
+    </message>
+    <message>
+        <source>Target position behind positive software end position</source>
+        <translation type="vanished">目标位置在正向软件终点位置之后</translation>
+    </message>
+    <message>
+        <source>Firmware update, invalid firmware</source>
+        <translation type="vanished">固件升级,无效固件</translation>
+    </message>
+    <message>
+        <source>Incorrect record number</source>
+        <translation type="vanished">非法指令编号</translation>
+    </message>
+    <message>
+        <source>I²t warning motor</source>
+        <translation type="vanished">I²t 电机警告</translation>
+    </message>
+    <message>
+        <source>Following error</source>
+        <translation type="vanished">跟随误差</translation>
+    </message>
+    <message>
+        <source>Extern stop</source>
+        <translation type="vanished">外部停止激活</translation>
+    </message>
+    <message>
+        <source>CVE connection</source>
+        <translation type="vanished">CVE连接</translation>
+    </message>
+    <message>
+        <source>MCT connection</source>
+        <translation type="vanished">MCT连接</translation>
+    </message>
+    <message>
+        <source>Torque Off (TO)</source>
+        <translation type="vanished">力矩关闭</translation>
+    </message>
+    <message>
+        <source>CAN Node Guarding, warning, FB does not have overall control</source>
+        <translation type="vanished">CAN故障,FB没有控制权</translation>
+    </message>
+    <message>
+        <source>CAN bus communication stopped by master, warning, FB does not have overall control</source>
+        <translation type="vanished">主控设备停止CAN总线通信,FB没有控制权</translation>
+    </message>
+    <message>
+        <source>Standstill monitoring</source>
+        <translation type="vanished">停止监控</translation>
+    </message>
+    <message>
+        <source>Parameter file access</source>
+        <translation type="vanished">访问参数文件</translation>
+    </message>
+    <message>
+        <source>Homing Timeout</source>
+        <translation type="vanished">回零超时</translation>
+    </message>
+    <message>
+        <source>Start-up event</source>
+        <translation type="vanished">接通事件</translation>
+    </message>
+    <message>
+        <source>Diagnostic memory</source>
+        <translation type="vanished">诊断存储器</translation>
+    </message>
+    <message>
+        <source>Record invalid</source>
+        <translation type="vanished">指令无效</translation>
+    </message>
+    <message>
+        <source>System reset</source>
+        <translation type="vanished">系统复位</translation>
+    </message>
+</context>
+<context>
     <name>H2Action</name>
     <message>
         <location filename="../../source/wnd/h2action.ui" line="14"/>
@@ -13,72 +402,78 @@
         <translation type="vanished">指令表</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
+        <location filename="../../source/wnd/h2action.cpp" line="21"/>
         <source>PA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
+        <location filename="../../source/wnd/h2action.cpp" line="21"/>
         <source>PRN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
+        <location filename="../../source/wnd/h2action.cpp" line="21"/>
         <source>PRA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="221"/>
+        <location filename="../../source/wnd/h2action.cpp" line="227"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="240"/>
-        <location filename="../../source/wnd/h2action.cpp" line="248"/>
+        <location filename="../../source/wnd/h2action.cpp" line="246"/>
+        <location filename="../../source/wnd/h2action.cpp" line="258"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="240"/>
+        <location filename="../../source/wnd/h2action.cpp" line="246"/>
         <source>Device motor uneable</source>
         <translation>设备电机未使能</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="248"/>
+        <location filename="../../source/wnd/h2action.cpp" line="258"/>
         <source>Device Homing Invalid</source>
         <translation>设备回零无效</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="312"/>
+        <location filename="../../source/wnd/h2action.cpp" line="322"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="312"/>
+        <location filename="../../source/wnd/h2action.cpp" line="322"/>
         <source>Run Success!</source>
         <translation>执行成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="315"/>
-        <location filename="../../source/wnd/h2action.cpp" line="318"/>
-        <location filename="../../source/wnd/h2action.cpp" line="321"/>
+        <location filename="../../source/wnd/h2action.cpp" line="325"/>
+        <location filename="../../source/wnd/h2action.cpp" line="328"/>
+        <location filename="../../source/wnd/h2action.cpp" line="331"/>
+        <location filename="../../source/wnd/h2action.cpp" line="359"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="315"/>
+        <location filename="../../source/wnd/h2action.cpp" line="325"/>
         <source>Get current position error!</source>
         <translation>获取当前位置失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="318"/>
+        <location filename="../../source/wnd/h2action.cpp" line="328"/>
         <source>Running error!</source>
         <translation>执行出错！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="321"/>
+        <location filename="../../source/wnd/h2action.cpp" line="331"/>
         <source>Type error!</source>
         <translation>类型有误！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="359"/>
+        <source>The acceleration/deceleration ratios of the two channels are different!</source>
+        <translation>从两个通道获取的加减速比不一致！</translation>
     </message>
     <message>
         <source>Data download to device error!</source>
@@ -118,33 +513,47 @@
         <translation>类型：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="258"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="248"/>
+        <source>Select Size Of Current MRX-H2</source>
+        <translation>选择当前MRX-H2的尺寸</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2configuration.ui" line="261"/>
         <source>Small</source>
         <translation>小</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="263"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="266"/>
+        <source>Middle</source>
+        <translation>中</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2configuration.ui" line="271"/>
         <source>Big</source>
         <translation>大</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="320"/>
-        <location filename="../../source/wnd/h2configuration.ui" line="369"/>
+        <source>Custom</source>
+        <translation type="vanished">定制</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2configuration.ui" line="328"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="377"/>
         <source> mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="401"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="409"/>
         <source>Motor Position</source>
         <translation>电机位置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="419"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="427"/>
         <source>Bottom(B)</source>
         <translation>底部</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="441"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="449"/>
         <source>Top(T)</source>
         <translation>顶部</translation>
     </message>
@@ -211,7 +620,7 @@
     <message>
         <location filename="../../source/wnd/h2homing.ui" line="178"/>
         <source>Block</source>
-        <translation>块状</translation>
+        <translation>止动点</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2homing.ui" line="204"/>
@@ -238,7 +647,12 @@
         <translation>速度：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="421"/>
+        <location filename="../../source/wnd/h2homing.ui" line="372"/>
+        <source>0.01 - 300</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2homing.ui" line="424"/>
         <source>Force Limit:</source>
         <translation>限制：</translation>
     </message>
@@ -295,22 +709,22 @@
     <message>
         <location filename="../../source/wnd/h2measurement.ui" line="129"/>
         <source>Corner Point 1</source>
-        <translation>原点1</translation>
+        <translation>角点1</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2measurement.ui" line="134"/>
         <source>Corner Point 2</source>
-        <translation>原点2</translation>
+        <translation>角点2</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2measurement.ui" line="139"/>
         <source>Corner Point 3</source>
-        <translation>原点3</translation>
+        <translation>角点3</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2measurement.ui" line="144"/>
         <source>Corner Point 4</source>
-        <translation>原点4</translation>
+        <translation>角点4</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2measurement.ui" line="167"/>
@@ -489,7 +903,7 @@
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="914"/>
         <source>Moiton Complete(MC)</source>
-        <translation>动作完整</translation>
+        <translation>动作完成</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="930"/>
@@ -544,8 +958,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1274"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1213"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1222"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1346"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1355"/>
         <source>Run to Project Zero Point</source>
         <translation>回到项目零点</translation>
     </message>
@@ -597,8 +1011,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1996"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="931"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="944"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1064"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1077"/>
         <source>Run  Sequence</source>
         <translation>运行序列</translation>
     </message>
@@ -758,96 +1172,120 @@
         <translation>删除所有</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="80"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="110"/>
         <source>Clear</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="81"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="111"/>
         <source>Select All</source>
         <translation>全选</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="82"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="112"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="93"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="123"/>
         <source>Energy1</source>
         <translation>能效曲线1</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="94"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="124"/>
         <source>Energy2</source>
         <translation>能效曲线2</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="272"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="322"/>
+        <source>The acceleration/deceleration ratios of the two channels are different!</source>
+        <translation>从两个通道获取的加减速比不一致！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="339"/>
         <source>Apply as point </source>
         <translation>应用为点 </translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="475"/>
         <source>Success!</source>
         <translation>成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="478"/>
         <source>Failured!</source>
         <translation>失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="550"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="523"/>
+        <source>unable</source>
+        <translation>不可用</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="652"/>
         <source>load completed</source>
         <translation>完成加载</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="565"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="640"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="667"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="744"/>
         <source>save completed</source>
         <translation>完成保存</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="322"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="478"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="683"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="751"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="683"/>
         <source>Error log upload error!</source>
         <translation>错误日志上传失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="751"/>
         <source>failure</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="694"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="704"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="801"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="812"/>
         <source>Start Go Home</source>
         <translation>开始回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="697"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="804"/>
         <source>Stop Go Home</source>
         <translation>停止回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="947"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="874"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="881"/>
+        <source>warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="874"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="881"/>
+        <source>Target position over the limit</source>
+        <translation>目标位置超出限制</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="1080"/>
         <source>Stop Sequence</source>
         <translation>停止序列</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1216"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1349"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="475"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="523"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
@@ -893,6 +1331,11 @@
         <translation>版本号：</translation>
     </message>
     <message>
+        <location filename="../../source/wnd/h2product.ui" line="387"/>
+        <source>Connect Or Disconnect</source>
+        <translation>连接或断开</translation>
+    </message>
+    <message>
         <source>   offline</source>
         <translation type="vanished">离线</translation>
     </message>
@@ -916,32 +1359,32 @@
 <context>
     <name>H2Robo</name>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="45"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="56"/>
         <source>Configuration</source>
         <translation>配置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="46"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="57"/>
         <source>Measurements</source>
         <translation>测量</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="47"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="58"/>
         <source>Homing</source>
         <translation>回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="48"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="59"/>
         <source>Jog Mode</source>
         <translation>跳跃模式</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="49"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="60"/>
         <source>Record Table</source>
         <translation>指令表</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="50"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="61"/>
         <source>Error Management</source>
         <translation>错误管理</translation>
     </message>
@@ -966,7 +1409,7 @@
     <message>
         <location filename="../../source/wnd/h2status.ui" line="160"/>
         <source>TO</source>
-        <translation>发送</translation>
+        <translation>扭矩关闭</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2status.ui" line="186"/>
@@ -1006,7 +1449,7 @@
     <message>
         <location filename="../../source/wnd/h2status.ui" line="147"/>
         <source>MC</source>
-        <translation>动作完整</translation>
+        <translation>动作完成</translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1580,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="68"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="172"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="179"/>
         <source>&amp;Help</source>
         <translation>帮助&amp;H</translation>
     </message>
@@ -1147,160 +1590,224 @@
         <translation>工具&amp;T</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="80"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="81"/>
         <source>&amp;View</source>
         <translation>视图&amp;V</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="84"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="85"/>
         <source>&amp;Language</source>
         <translation>语言&amp;L</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="91"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="92"/>
         <source>&amp;Style</source>
         <translation>风格&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="148"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="149"/>
         <source>&amp;Stop</source>
         <translation>停止&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="151"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="152"/>
+        <source>Emergency Stop</source>
+        <translation>紧急停止</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="156"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="160"/>
         <source>&amp;Exit</source>
         <translation>退出&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="159"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
+        <source>Exit MCT</source>
+        <translation>退出MCT</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="166"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="164"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="171"/>
         <source>&amp;About</source>
         <translation>关于&amp;A</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="167"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="174"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="181"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="188"/>
         <source>&amp;Upload</source>
         <translation>上传&amp;U</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="184"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="191"/>
+        <source>Upload Parameter Config From MRHT</source>
+        <translation>从MRHT上传参数配置</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="194"/>
         <source>Ctrl+U</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="193"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="203"/>
         <source>&amp;Download</source>
         <translation>下载&amp;D</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="206"/>
+        <source>Download Parameter Config To MRHT</source>
+        <translation>下载参数配置到MRHT</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="209"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="205"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="218"/>
         <source>S&amp;tore</source>
         <translation>储存&amp;T</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="221"/>
+        <source>Permanently Stored Config To MRHT</source>
+        <translation>永久存储配置到MRHT</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="224"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="217"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="233"/>
         <source>S&amp;ync</source>
         <translation>同步&amp;Y</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="220"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="236"/>
+        <source>Synchronize MRHT and MCT configurations</source>
+        <translation>同步MRHT和MCT的配置</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="239"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="228"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="247"/>
         <source>&amp;Chinese</source>
         <translation>中文&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="239"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="258"/>
         <source>&amp;English</source>
         <translation>英语&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="250"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="269"/>
         <source>&amp;MEGAROBO</source>
         <translation>镁伽&amp;M</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="261"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="280"/>
         <source>&amp;Classic</source>
         <translation>经典&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="270"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="289"/>
         <source>&amp;Search</source>
         <translation>搜索&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="276"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="292"/>
+        <source>Search MRHT To The Project</source>
+        <translation>搜索设备添加到工程</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="295"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="285"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="288"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="304"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="291"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="307"/>
+        <source>Connect Or Disconnect MRHT</source>
+        <translation>连接或断开MRHT</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="310"/>
         <source>Ctrl+L</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="299"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="318"/>
         <source>MRX-H2:[0.0.0.0]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="304"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="323"/>
         <source>&amp;Reboot</source>
         <translation>重启&amp;R</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="307"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="326"/>
+        <source>Reboot System</source>
+        <translation>重启系统</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="329"/>
         <source>Ctrl+Alt+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="312"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="334"/>
         <source>&amp;Poweroff</source>
         <translation>关机&amp;P</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="315"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="337"/>
+        <source>Poweroff  System</source>
+        <translation>关机</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="340"/>
         <source>Ctrl+Alt+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="320"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="345"/>
         <source>&amp;Wifi</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="348"/>
+        <source>MRHT Connect To Wifi</source>
+        <translation>MRHT连接到WIFI</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="353"/>
+        <source>&amp;UpdateFirmware</source>
+        <translation>升级固件&amp;U</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="356"/>
+        <source>Update Firmware For MRHT</source>
+        <translation>更新MRHT固件</translation>
     </message>
     <message>
         <source>File</source>
@@ -1311,7 +1818,7 @@
         <translation type="vanished">操作</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="75"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="93"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
@@ -1372,23 +1879,22 @@
         <translation type="vanished">搜索</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="273"/>
         <source>SearchDevice</source>
-        <translation>搜索设备</translation>
+        <translation type="vanished">搜索设备</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="62"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="80"/>
         <source>Pref</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="65"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="83"/>
         <source>Ops</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="81"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="257"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="99"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="291"/>
         <source>&amp;ShowHelp</source>
         <translation>显示帮助&amp;S</translation>
     </message>
@@ -1415,7 +1921,7 @@
     </message>
     <message>
         <location filename="../../source/widget/megainterface.ui" line="62"/>
-        <source>MRX-H2:project</source>
+        <source>MRX-H2</source>
         <translation></translation>
     </message>
     <message>
@@ -1434,46 +1940,46 @@
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <source>IP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
-        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <location filename="../../source/widget/megainterface.cpp" line="131"/>
+        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Manufacturer</source>
         <translation>厂商</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
-        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <location filename="../../source/widget/megainterface.cpp" line="131"/>
+        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
-        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <location filename="../../source/widget/megainterface.cpp" line="131"/>
+        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>SN</source>
         <translation>序列号</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
-        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <location filename="../../source/widget/megainterface.cpp" line="131"/>
+        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Version</source>
         <translation>版本</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>USBID</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="177"/>
+        <location filename="../../source/widget/megainterface.cpp" line="175"/>
         <source>Identify ON</source>
         <translation>打开识别</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="178"/>
+        <location filename="../../source/widget/megainterface.cpp" line="176"/>
         <source>Identify OFF</source>
         <translation>关闭识别</translation>
     </message>
@@ -1486,12 +1992,12 @@
         <translation type="vanished">关闭</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="246"/>
+        <location filename="../../source/widget/megainterface.cpp" line="244"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="246"/>
+        <location filename="../../source/widget/megainterface.cpp" line="244"/>
         <source>open device error</source>
         <translation>打开设备失败</translation>
     </message>
@@ -1504,24 +2010,30 @@
         <translation>窗口</translation>
     </message>
     <message>
+        <location filename="../../source/wnd/roboconfig.ui" line="66"/>
+        <source>Restore default configuration</source>
+        <translation>还原到默认配置</translation>
+    </message>
+    <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="37"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="799"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="932"/>
         <source>Project</source>
         <translation>工程</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="550"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="617"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="150"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="300"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="368"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="436"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="491"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="664"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="734"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="150"/>
         <source>The device already exists in the project.</source>
         <translation>设备已经存在于工程中.</translation>
     </message>
@@ -1539,52 +2051,56 @@ Download Failure</source>
         <translation type="vanished">下载失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="370"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="392"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="544"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="731"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="201"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="306"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="417"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="439"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="458"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="658"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="858"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="201"/>
         <source>From device upload config faiured</source>
         <translation>从设备上传配置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="361"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="535"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="271"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="317"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="408"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="450"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="649"/>
         <source>Current Device In Offline</source>
         <translation>当前设备处于离线状态</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="361"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="535"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="271"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="317"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="371"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="374"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="387"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="408"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="450"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="649"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
         <source>Download Failure</source>
         <translation>下载失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
         <source>Download Success!</source>
         <translation>下载成功！</translation>
     </message>
@@ -1599,37 +2115,41 @@ From device upload config faiured</source>
         <translation type="vanished">从设备上传配置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
         <source>Upload Faiured</source>
-        <translation>上传失败</translation>
+        <translation type="vanished">上传失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="300"/>
         <source>Upload Succeed!</source>
         <translation>上传成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="306"/>
+        <source>Upload Failure</source>
+        <translation>上传失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="371"/>
         <source>Operation in progress!</source>
         <translation>操作正在进行！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="374"/>
         <source>Store timeout!</source>
         <translation>存储超时！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="368"/>
         <source>Store success!</source>
         <translation>存储成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="544"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="658"/>
         <source>Reset Failure</source>
         <translation>重置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="731"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="858"/>
         <source>Robot type not</source>
         <translation>机器人类型不是</translation>
     </message>
@@ -1638,57 +2158,93 @@ From device upload config faiured</source>
         <translation type="vanished">警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
         <source>Store error!</source>
         <translation>存储失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="387"/>
         <source>unable</source>
         <translation>不可用</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="370"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="417"/>
         <source>Wifi search error or empty!</source>
         <translation>wifi搜索出错或者为空！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="425"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="469"/>
         <source>Wifi</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="425"/>
         <source>Please choose wifi:</source>
         <translation>请输入选择Wifi：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="383"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="430"/>
         <source>Input</source>
         <translation>输入</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="383"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="430"/>
         <source>Please input wifi password:</source>
         <translation>请输入wifi密码：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="436"/>
         <source>Wifi Connect success!</source>
         <translation>Wifi连接成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="392"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="439"/>
         <source>Wifi Connect error!</source>
         <translation>Wifi连接失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="432"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="458"/>
+        <source>search firmware file error or empty!</source>
+        <translation>查找固件失败或为空！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
+        <source>Udisk not found!</source>
+        <translation>没有发现U盘！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="469"/>
+        <source>Please Choose Update File:</source>
+        <translation>请选择升级文件:</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="491"/>
+        <source>Firmware Update success!</source>
+        <translation>固件升级成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="492"/>
+        <source>Reboot device take effect</source>
+        <translation>重启设备生效</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
+        <source>Firmware Update timeout!</source>
+        <translation>固件升级超时！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
+        <source>Firmware Update error!</source>
+        <translation>固件升级失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="552"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="433"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="553"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
@@ -1717,12 +2273,12 @@ From device upload config faiured</source>
         <translation type="vanished">重置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="550"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="664"/>
         <source>Reset Success!</source>
         <translation>重置成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="617"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="734"/>
         <source>Device Open Failure!!!</source>
         <translation>设备打开失败!!!!</translation>
     </message>

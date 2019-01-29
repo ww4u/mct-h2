@@ -129,7 +129,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>7</number>
+          <number>6</number>
          </property>
          <property name="movable">
           <bool>false</bool>
@@ -898,6 +898,9 @@
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_2">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>Digital Outputs</string>
              </property>

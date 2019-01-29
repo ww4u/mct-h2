@@ -7,6 +7,9 @@ H2Configuration::H2Configuration(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_WorkStrokeX = 0;
+    m_WorkStrokeY = 0;
+
     setFocuHelpName( "Configuration" );
 
     ui->label_family->setText("MRX-H2");
@@ -14,6 +17,8 @@ H2Configuration::H2Configuration(QWidget *parent) :
     //暂时隐藏此选择项
     ui->groupBox_motorPos->setEnabled(false);
     ui->groupBox_motorPos->setHidden(true);
+
+    ui->sizeComboBox->setEnabled(false);
 }
 
 H2Configuration::~H2Configuration()
@@ -23,6 +28,9 @@ H2Configuration::~H2Configuration()
 
 int H2Configuration::readDeviceConfig()
 {
+    if(mViHandle <= 0)
+        return 1;
+
     int ret = -1;
     int type = mrgGetRobotType(mViHandle, mRobotName);
     qDebug() << "mrgGetRobotType" << type;
@@ -53,6 +61,10 @@ int H2Configuration::readDeviceConfig()
     }
     m_Size = ret;
 
+    //WorkStrokeX
+
+    //WorkStrokeY
+
 #if 0
     int val = 0;
     ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
@@ -71,7 +83,7 @@ int H2Configuration::writeDeviceConfig()
 {
     int ret = -1;
 
-    //type:0==>small, 1==>big
+    //type:0==>H2S, 1==>H2M, 2==>H2L
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
     qDebug() << "mrgSetRobotSubType" << ret;
     if(ret != 0){
@@ -111,8 +123,8 @@ int H2Configuration::loadConfig()
 
     m_Family = map["Family"];
     m_Size = map["Size"].toInt();
-    m_WorkStrokeX = map["WorkStrokeX"].toDouble();
-    m_WorkStrokeY = map["WorkStrokeY"].toDouble();
+//    m_WorkStrokeX = map["WorkStrokeX"].toDouble();
+//    m_WorkStrokeY = map["WorkStrokeY"].toDouble();
     m_MotorPosition = map["MotorPosition"].toInt();
 
     return 0;
@@ -145,6 +157,7 @@ void H2Configuration::updateShow()
 
     on_sizeComboBox_currentIndexChanged(m_Size);
 
+#if 0
     if(0 == m_MotorPosition){
         ui->radioButton_b->setChecked(true);
         ui->radioButton_t->setChecked(false);
@@ -152,7 +165,7 @@ void H2Configuration::updateShow()
         ui->radioButton_b->setChecked(false);
         ui->radioButton_t->setChecked(true);
     }
-
+#endif
 }
 
 void H2Configuration::changeModelLabel()
@@ -162,23 +175,24 @@ void H2Configuration::changeModelLabel()
     m_Family = ui->label_family->text();
     model += m_Family;
 
-    //! 目前暂时未知大尺寸H2的型号，暂时写死为小号H2的型号
-    model += "-M";
-
-#if 0
     if(ui->sizeComboBox->currentIndex() == 0){
+        model += "-S";
+    }
+    else if(ui->sizeComboBox->currentIndex() == 1){
         model += "-M";
-    }else{
+    }
+    else if(ui->sizeComboBox->currentIndex() == 2){
         model += "-L";
     }
+    else{
+//        model += "-";
+//        model += QString::number(m_WorkStrokeX);
 
-    model += "-";
-    model += QString::number(m_WorkStrokeX);
+//        model += "-";
+//        model += QString::number(m_WorkStrokeY);
+    }
 
-    model += "-";
-    model += QString::number(m_WorkStrokeY);
-
-
+#if 0
     if(ui->radioButton_b->isChecked()){
         model += "-B";
     }
@@ -195,7 +209,6 @@ void H2Configuration::on_radioButton_b_toggled(bool checked)
 {
     if(checked)
         m_MotorPosition = 0;
-    changeModelLabel();
     emit signalModelDataChanged(true);
 }
 
@@ -203,7 +216,7 @@ void H2Configuration::on_radioButton_t_toggled(bool checked)
 {
     if(checked)
         m_MotorPosition = 1;
-    changeModelLabel();
+
     emit signalModelDataChanged(true);
 }
 
@@ -212,21 +225,26 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
     if(index < 0) return;
     m_Size = index;
 
-    if(index == 0){
-        //! MRX-H2-M 370 x 390
-        ui->doubleSpinBox_X->setRange(0, 370);
-        ui->doubleSpinBox_X->setToolTip("0-370");
+    ui->doubleSpinBox_X->setEnabled(false);
+    ui->doubleSpinBox_Y->setEnabled(false);
 
-        ui->doubleSpinBox_Y->setRange(0, 390);
-        ui->doubleSpinBox_Y->setToolTip("0-390");
+    if(index == 0){
+        //! MRX-H2-S
+        ui->doubleSpinBox_X->setValue(0);
+        ui->doubleSpinBox_Y->setValue(0);
     }
     else if(index == 1){
-
-        ui->doubleSpinBox_X->setRange(0, 770);
-        ui->doubleSpinBox_X->setToolTip("0-770");
-
-        ui->doubleSpinBox_Y->setRange(0, 890);
-        ui->doubleSpinBox_Y->setToolTip("0-890");
+        //! MRX-H2-M 370 x 390
+        ui->doubleSpinBox_X->setValue(370);
+        ui->doubleSpinBox_Y->setValue(390);
+    }
+    else if(index == 2){
+        //! MRX-H2-L
+        ui->doubleSpinBox_X->setValue(0);
+        ui->doubleSpinBox_Y->setValue(0);
+    }
+    else{
+        //! 定制
     }
 
     changeModelLabel();
@@ -241,7 +259,6 @@ void H2Configuration::translateUI()
 void H2Configuration::on_doubleSpinBox_X_valueChanged(double arg1)
 {
     m_WorkStrokeX = arg1;
-    changeModelLabel();
     emit signalModelDataChanged(true);
     emit WorkStrokeXChanged(m_WorkStrokeX);
 }
@@ -249,7 +266,6 @@ void H2Configuration::on_doubleSpinBox_X_valueChanged(double arg1)
 void H2Configuration::on_doubleSpinBox_Y_valueChanged(double arg1)
 {
     m_WorkStrokeY = arg1;
-    changeModelLabel();
     emit signalModelDataChanged(true);
     emit WorkStrokeYChanged(m_WorkStrokeY);
 }

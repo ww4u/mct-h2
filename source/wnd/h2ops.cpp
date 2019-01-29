@@ -24,6 +24,7 @@ H2Ops::H2Ops(QWidget *parent) :
     mDeviceName = 0;
     mRobotName = 0;
     m_strDevInfo = "";
+    m_speedRatio = 0;
 
     m_recordNumber = -1;
     m_isDebugRunFlag = false;
@@ -40,7 +41,7 @@ H2Ops::H2Ops(QWidget *parent) :
     set_name( ui->tab_Debug,    "tab_Debug");
     set_name( ui->tab_Diagnosis,"tab_Diagnosis");
 
-    setupUi();
+    this->setupUi();
 
     m_timerOpsAll = new QTimer;
     m_timerOpsAll->setInterval(2000);
@@ -71,6 +72,35 @@ H2Ops::H2Ops(QWidget *parent) :
 
 H2Ops::~H2Ops()
 {
+    delete m_timerOpsAll;
+    delete m_timerOpsOpreate;
+    delete m_timerOpsIO;
+    delete m_timerOpsHoming;
+    delete m_timerOpsManual;
+    delete m_timerOpsMonitor;
+    delete m_timerOpsDebug;
+    delete mp_logClearAction;
+    delete mp_logSelectAllAction;
+    delete mp_logCopyAction;
+    delete mp_logSepAction;
+    delete m_splineChart1;
+    delete m_splineChart2;
+
+    delete m_pDiagnosisModel;
+    delete m_pDebugModel;
+    delete m_dblSpinboxRecord;
+    delete m_dblSpinboxDelayTime;
+
+    if(m_threadOpsHoming != NULL){
+        delete m_threadOpsHoming;
+    }
+    if(m_threadOpsPrjZero != NULL){
+        delete m_threadOpsPrjZero;
+    }
+    if(m_threadOpsDebug != NULL){
+        delete m_threadOpsDebug;
+    }
+
     delete ui;
 }
 
@@ -252,17 +282,54 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
              << "m_RoboName:" << mRobotName;
 
     ui->tabWidget->setCurrentIndex(0);
-    if(mViHandle == 0)
+    if(mViHandle <= 0)
     {   //device closed
         m_recordNumber = -1;
         ui->h2Status->on_chkMct_toggled(false);
         ui->h2Status->set_chkMct_enabled(false);
+        setAllTabStopWorking();
     }
     else
     {   //device opened
         slotLoadConfigAgain();
         ui->h2Status->set_chkMct_enabled(true);
+        ui->h2Status->on_chkMct_toggled(false);
     }
+}
+
+//从设备查询加减速比
+bool H2Ops::setSpeedRatio()
+{
+    int speedup1, speedcut1;
+    int speedup2, speedcut2;
+    int ret = -1;
+    ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 0, 0, &speedup1, &speedcut1);
+    if(ret != 0)
+    {
+        qDebug() << "mrgMRQPVTTimeScale_Query0 error" << ret;
+        sysError("mrgMRQPVTTimeScale_Query,0,0", ret);
+        goto ERROR;
+    }
+    ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 1, 0, &speedup2, &speedcut2);
+    if(ret != 0)
+    {
+        qDebug() << "mrgMRQPVTTimeScale_Query1 error" << ret;
+        sysError("mrgMRQPVTTimeScale_Query,1,0", ret);
+        goto ERROR;
+    }
+    if((speedup1 != speedup2) || (speedcut1 != speedcut2))
+    {
+        QMessageBox::critical(this,tr("error"),tr("The acceleration/deceleration ratios of the two channels are different!"));
+        goto ERROR;
+    }
+
+END:
+    m_speedRatio = ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
+    return true;
+
+ERROR:
+    m_speedRatio = 0;
+    return false;
 }
 
 void H2Ops::slotSetCurrentRecordNumber(int number)
@@ -339,8 +406,26 @@ void H2Ops::slot_power_checked(bool checked)
         //电机使能
         ret = mrgMRQDriverState(mViHandle, mDeviceName, 0, 1);
         qDebug() << "mrgMRQDriverState0 ON" << ret;
+        if(ret < 0){
+            sysError("mrgMRQDriverState0 ON error", ret);
+            return;
+        }
+
         ret = mrgMRQDriverState(mViHandle, mDeviceName, 1, 1);
         qDebug() << "mrgMRQDriverState1 ON" << ret;
+        if(ret < 0){
+            sysError("mrgMRQDriverState1 ON error", ret);
+            return;
+        }
+
+        bool ok = setSpeedRatio();
+        if(!ok){
+            return;
+        }
+        qDebug() << "m_speedRatio:" << m_speedRatio;
+
+        ui->h2Status->setActionStatus(H2Status::ACTION_READY);
+        ui->h2Status->setWarningError(H2Status::STATUS_EMPTY,"");
 
         ui->tabWidget->setTabEnabled(3, true);
         ui->tabWidget->setTabEnabled(4, true);
@@ -352,6 +437,9 @@ void H2Ops::slot_power_checked(bool checked)
         qDebug() << "mrgMRQDriverState0 OFF" << ret;
         ret = mrgMRQDriverState(mViHandle, mDeviceName, 1, 0);
         qDebug() << "mrgMRQDriverState1 OFF" << ret;
+
+        ui->h2Status->setActionStatus(H2Status::ACTION_EMPTY);
+        ui->h2Status->setWarningError(H2Status::STATUS_EMPTY,"");
 
         ui->tabWidget->setTabEnabled(3, false);
         ui->tabWidget->setTabEnabled(4, false);
@@ -383,14 +471,13 @@ void H2Ops::setAllTabStopWorking()
     setTimerStop(m_timerOpsDebug);
     setOpsMonitorTimerStop();
 
-    on_pushButton_stop_clicked();
+    if(!m_isHomgingRunFlag){ //不是回零过程中
+        on_pushButton_stop_clicked();
+    }
 
     if(m_isDebugRunFlag){
         on_toolButton_debugRun_clicked();
     }
-//    if(m_isHomgingRunFlag){ //正在回零
-//        on_pushButton_starting_home_clicked();
-//    }
 
     if(m_isPrjZeroRunFlag){
         on_pushButton_go_prjZero_clicked();
@@ -416,6 +503,7 @@ void H2Ops::on_tabWidget_currentChanged(int index)
         break;
     case 2://IO
         setTimerStart(m_timerOpsIO);
+        QMessageBox::information(this,tr("tips"),tr("unable"));//暂不可用
         break;
     case 3://Homing
         setTimerStart(m_timerOpsHoming);
@@ -645,6 +733,7 @@ void H2Ops::slot_starting_home_over(int ret)
     if(ret < 0){
         QMessageBox::critical(this,tr("error"),tr("failure"));
     }
+    ui->h2Status->setActionStatus(H2Status::ACTION_MC);
 }
 
 void H2Ops::on_pushButton_starting_home_clicked()
@@ -751,30 +840,57 @@ void H2Ops::setOpsMonitorTimerStart()
 void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
 {
     if(mViHandle <= 0) return;
-    float offset = ui->doubleSpinBox_Increament->value();
-    float speed = ui->doubleSpinBox_Velocity->value();
-    float time = offset/(0.7*speed);
+
+    double curPosX = ui->doubleSpinBox_currentPos_x->value();
+    double curPosY = ui->doubleSpinBox_currentPos_y->value();
+
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/(m_speedRatio*speed); //把速度当成最大速度
+
+    double  SWLimitPositiveX = m_Data["SWLimitPositiveX"].toDouble() + 0.5;
+    double  SWLimitPositiveY = m_Data["SWLimitPositiveY"].toDouble() + 0.5;
+    double  SWLimitNegativeX = m_Data["SWLimitNegativeX"].toDouble() - 0.5;
+    double  SWLimitNegativeY = m_Data["SWLimitNegativeY"].toDouble() - 0.5;
+
+    if(ax == 0){
+        double move = curPosX + (offset*direct);
+        if( (move > SWLimitPositiveX) || (move < SWLimitNegativeX)){
+            QMessageBox::warning(this, tr("warning"), tr("Target position over the limit"));
+            return;
+        }
+    }else if(ax == 1){
+        double move = curPosY + (offset*direct);
+        if((move > SWLimitPositiveY) || (move < SWLimitNegativeY)) {
+            QMessageBox::warning(this, tr("warning"), tr("Target position over the limit"));
+            return;
+        }
+    }
 
     auto funcRun = [=]()
     {
         int ret = -1;
         if(ax == 0){
-            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, offset*direct, 0, 0, time, 0);
+            ret = mrgRobotRelMove(mViHandle, mRobotName, -1, offset*direct, 0, 0, time, 0);
         }else if(ax == 1){
-            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0, offset*direct, 0, time, 0);
+            ret = mrgRobotRelMove(mViHandle, mRobotName, -1, 0, offset*direct, 0, time, 0);
         }else if(ax == 2){
-            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0, 0, offset*direct, time, 0);
+            ret = mrgRobotRelMove(mViHandle, mRobotName, -1, 0, 0, offset*direct, time, 0);
         }
-        qDebug() << "mrgRobotRelMoveL" << ret << "ax=" << ax << direct;
+        qDebug() << "mrgRobotRelMove" << ret << "ax=" << ax << direct;
         if(ret != 0)
-            sysError("mrgRobotRelMoveL", ret);
+            sysError("mrgRobotRelMove", ret);
     };
 
     on_pushButton_stop_clicked();
     QThread::msleep(100);
     btn->setEnabled(false);
+
     XThread *thread = new XThread(funcRun);
-    connect(thread,&XThread::finished,this,[=](){btn->setEnabled(true);});
+    connect(thread,&XThread::finished,this,[=](){
+        btn->setEnabled(true);
+        ui->h2Status->setActionStatus(H2Status::ACTION_MC);
+    });
     thread->start();
 }
 
@@ -1192,10 +1308,10 @@ void H2Ops::on_pushButton_go_prjZero_clicked()
             return;
         }
 
-        double time = sqrt( pow(0-fx,2) + pow(0-fy,2) ) / (0.7 * velocity);
-        result = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0-fx, 0-fy, 0, time, 0);
+        double time = sqrt( pow(0-fx,2) + pow(0-fy,2) ) / (m_speedRatio * velocity);
+        result = mrgRobotRelMove(mViHandle, mRobotName, -1, 0-fx, 0-fy, 0, time, 0);
         if(result < 0) {
-            sysError("mrgRobotRelMoveL", result);
+            sysError("mrgRobotRelMove", result);
             result = -2;
             return;
         }

@@ -52,8 +52,8 @@ QTabBar::tab {
 	border-bottom-color: #1f2a3b; /* same as the pane color */
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
-        min-width: 12ex;
-	padding: 5px 15px;
+        min-width: 16ex;
+        padding: 5px;
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
@@ -120,17 +120,17 @@ QHeaderView::section{
 
 QToolBar {
 	background: #2c3d4f;
-	border-color:#1f2a3b; 
+        border-color:#1f2a3b;
 	border: 2px;
-	spacing: 3px; /* spacing between items in the tool bar */
+        spacing: 4px; /* spacing between items in the tool bar */
 }
 QToolBar::separator{
 	background: #2c3d4f;
-	border-color:#1f2a3b; 
+        border-color:#1f2a3b;
 }
 QToolBar::handle{
 	background: #2c3d4f;
-	border-color:#1f2a3b; 
+        border-color:#1f2a3b;
 	width:4px;
 }
 

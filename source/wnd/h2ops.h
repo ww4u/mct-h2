@@ -131,6 +131,8 @@ private:
     int m_recordNumber;
     QMap<QString,QString> m_Data;
 
+    double m_speedRatio;
+
     QTimer *m_timerOpsAll;
 
     QTimer *m_timerOpsOpreate;
@@ -163,6 +165,8 @@ private:
 
     void setOpsMonitorTimerStop();  //关闭动态曲线的定时器
     void setOpsMonitorTimerStart(); //打开动态曲线的定时器
+    bool setSpeedRatio();
+
 };
 
 #endif // H2OPS_H

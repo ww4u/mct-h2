@@ -8,6 +8,10 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     ui->setupUi(this);
 
     setFocuHelpName( "Product" );
+    m_strDevInfo = strDevInfo;
+    m_handCloseFlag = false;
+
+    m_thread = new LanCheckedThread(this);
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
 
@@ -20,6 +24,9 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     }
     else{
         strIP = strID;
+        connect(m_thread,SIGNAL(signalCheckConnect(bool)),this,SLOT(slotCheckLanConnect(bool)));
+        m_thread->setIp(strIP);
+        m_thread->start();
     }
 
     this->m_IP      = strIP;
@@ -35,13 +42,57 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     change_online_status(false);
 }
 
+void H2Product::slotCheckLanConnect(bool isconnect)
+{
+    //bool isconnect = QtPing(this->m_IP);
+    qDebug() << "QtPing:" << isconnect;
+
+    if(mViHandle > 0) {
+        //打开状态
+        if(!isconnect){
+            //表示网络断开,就自动关闭设备
+            qDebug() << "Network Disconnect and device auto close";
+            emit signal_online_clicked(m_IP);
+        }
+    }else{
+        //关闭状态
+        if(!m_handCloseFlag){
+            if(isconnect){
+                //表示网络接通,并且没有被手动关闭,就自动打开设备
+                qDebug() << "Network connect and device auto open";
+                emit signal_online_clicked(m_IP);
+            }
+        }
+    }
+}
+
+bool H2Product::handCloseFlag() const
+{
+    return m_handCloseFlag;
+}
+
+void H2Product::setHandCloseFlag(bool handCloseFlag)
+{
+    m_handCloseFlag = handCloseFlag;
+}
+
 H2Product::~H2Product()
 {
+    m_thread->quit();
+    m_thread->wait();
+    delete m_thread;
     delete ui;
 }
 
 void H2Product::on_pushButton_status_clicked()
 {
+    if(mViHandle > 0){
+        //关闭设备的动作
+        m_handCloseFlag = true; //手动关闭标志
+    }else{
+        //打开设备的动作
+        m_handCloseFlag = false;
+    }
     emit signal_online_clicked(m_IP);
 }
 
@@ -85,4 +136,43 @@ void H2Product::updateShow()
 void H2Product::translateUI()
 {
     ui->retranslateUi(this);
+}
+
+
+
+LanCheckedThread::LanCheckedThread(QObject *parent)
+    : QThread(parent)
+{
+    m_timer = NULL;
+    m_timerInterval = 3000;
+    m_timerTimeoutCounter = 0;
+    m_ip = "";
+
+    m_timer = new QTimer();//不能指定父对象
+    m_timer->moveToThread(this);
+    m_timer->setInterval(m_timerInterval);
+    connect(this, SIGNAL(started()), m_timer, SLOT(start()));
+    connect(m_timer,SIGNAL(timeout()),this,SLOT(slotTimerTimeout()),Qt::DirectConnection);
+}
+
+LanCheckedThread::~LanCheckedThread()
+{
+    quit();
+    wait();
+}
+
+void LanCheckedThread::run()
+{
+    exec();
+}
+
+void LanCheckedThread::slotTimerTimeout()
+{
+    bool isConnect = QtPing(m_ip);
+    emit signalCheckConnect(isConnect);
+}
+
+void LanCheckedThread::setIp(const QString &ip)
+{
+    m_ip = ip;
 }

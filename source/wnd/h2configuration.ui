@@ -244,6 +244,9 @@
         <property name="focusPolicy">
          <enum>Qt::ClickFocus</enum>
         </property>
+        <property name="toolTip">
+         <string>Select Size Of Current MRX-H2</string>
+        </property>
         <property name="editable">
          <bool>false</bool>
         </property>
@@ -256,6 +259,11 @@
         <item>
          <property name="text">
           <string>Small</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Middle</string>
          </property>
         </item>
         <item>

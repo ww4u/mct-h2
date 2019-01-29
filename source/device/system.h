@@ -34,5 +34,28 @@ EXPORT_API int CALL mrgSysWifiConnect(ViSession vi, char *wifi, char *password);
  */
 EXPORT_API int CALL mrgSysWifiStatusQuery(ViSession vi);
 
+/**
+ * @brief mrgSysUpdateFileSearch
+ * @param vi
+ * @param 查询可用的升级文件名字
+ * @return 成功返回0,失败返回-1,返回1表示没有U盘
+ */
+EXPORT_API int CALL mrgSysUpdateFileSearch(ViSession vi, char *fileList);
+
+/**
+ * @brief mrgSysUpdateFileStart 更新固件
+ * @param vi 句柄
+ * @param filename 升级的文件名
+ * @return 失败返回负数,成功返回0,超时返回1
+ */
+EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename);
+
+/**
+ * @brief mrgSysUpdateFirmwareStatusQuery 查询当前升级状态
+ * @param vi
+ * @return 成功返回0，失败返回负数，正在升级返回1
+ */
+EXPORT_API int CALL mrgSysUpdateFirmwareStatusQuery(ViSession vi);
+
 #endif // !MR_SYSTEM_H
 

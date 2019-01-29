@@ -37,6 +37,9 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
 H2ErrMgr::~H2ErrMgr()
 {
+    delete m_pCheckDelegate ;
+    delete m_pRadioDelegate ;
+    delete m_pReactionCombox;
     delete ui;
 }
 

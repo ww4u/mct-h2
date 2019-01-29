@@ -368,6 +368,9 @@
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
         </property>
+        <property name="toolTip">
+         <string>0.01 - 300</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
@@ -387,10 +390,10 @@
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>0.100000000000000</double>
+         <double>0.010000000000000</double>
         </property>
         <property name="maximum">
-         <double>10000.000000000000000</double>
+         <double>300.000000000000000</double>
         </property>
         <property name="value">
          <double>50.000000000000000</double>

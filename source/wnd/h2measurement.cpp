@@ -176,11 +176,13 @@ void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
     ui->doubleSpinBox_pzpX->setRange(0, m_WorkStrokeX);
     ui->doubleSpinBox_pzpX->setValue(arg1);
 
-    ui->doubleSpinBox_swlp_X->setRange(0, m_WorkStrokeX - arg1);
-    ui->doubleSpinBox_swlp_X->setValue(m_WorkStrokeX - arg1);
+    ui->doubleSpinBox_swlp_X->setRange(arg1, m_WorkStrokeX);
+    ui->doubleSpinBox_swlp_X->setToolTip(QString("%1<->%2").arg(arg1).arg(m_WorkStrokeX));
+    ui->doubleSpinBox_swlp_X->setValue(m_WorkStrokeX);
 
     ui->doubleSpinBox_swln_X->setRange(0, arg1);
-    ui->doubleSpinBox_swln_X->setValue(arg1);
+    ui->doubleSpinBox_swln_X->setToolTip(QString("%1<->%2").arg(0).arg(arg1));
+    ui->doubleSpinBox_swln_X->setValue(0);
 }
 
 void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
@@ -191,11 +193,13 @@ void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
     ui->doubleSpinBox_pzpY->setRange(0, m_WorkStrokeY);
     ui->doubleSpinBox_pzpY->setValue(arg1);
 
-    ui->doubleSpinBox_swlp_Y->setRange(0, m_WorkStrokeY - arg1);
-    ui->doubleSpinBox_swlp_Y->setValue(m_WorkStrokeY - arg1);
+    ui->doubleSpinBox_swlp_Y->setRange(arg1, m_WorkStrokeY);
+    ui->doubleSpinBox_swlp_Y->setToolTip(QString("%1<->%2").arg(arg1).arg(m_WorkStrokeY));
+    ui->doubleSpinBox_swlp_Y->setValue(m_WorkStrokeY);
 
     ui->doubleSpinBox_swln_Y->setRange(0, arg1);
-    ui->doubleSpinBox_swln_Y->setValue(arg1);
+    ui->doubleSpinBox_swln_Y->setToolTip(QString("%1<->%2").arg(0).arg(arg1));
+    ui->doubleSpinBox_swln_Y->setValue(0);
 }
 
 void H2Measurement::on_doubleSpinBox_swlp_X_valueChanged(double arg1)

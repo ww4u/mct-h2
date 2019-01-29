@@ -383,6 +383,9 @@
         <property name="focusPolicy">
          <enum>Qt::ClickFocus</enum>
         </property>
+        <property name="toolTip">
+         <string>Connect Or Disconnect</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">border-color: rgba(255, 255, 255, 0);
 background-color: rgba(255, 255, 255, 0);

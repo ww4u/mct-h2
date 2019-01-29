@@ -42,7 +42,7 @@
     <number>0</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="rightMargin">
     <number>0</number>
@@ -69,7 +69,7 @@
        <number>6</number>
       </property>
       <property name="topMargin">
-       <number>2</number>
+       <number>6</number>
       </property>
       <property name="rightMargin">
        <number>2</number>
@@ -102,7 +102,7 @@
          <string>Ready</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -131,7 +131,7 @@
          <string>Enable</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -186,7 +186,7 @@
          <string>Warning</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -202,7 +202,7 @@
          <string>Error</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>

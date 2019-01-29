@@ -14,6 +14,7 @@ H2Action::H2Action(QWidget *parent) :
     m_strDeviceFileName = "MCT_motion.mrp";
     m_fileContext = "";
     m_menu = NULL;
+    m_speedRatio = 0;
 
     m_pDelegate = new comboxDelegate(this);
     QStringList prxs;
@@ -40,6 +41,11 @@ H2Action::H2Action(QWidget *parent) :
 
 H2Action::~H2Action()
 {
+    delete m_pDelegate;
+    delete m_delegatePosX;
+    delete m_delegatePosY;
+    delete m_delegateVelocity;
+    delete m_delegateAcceleration;
     delete ui;
 }
 
@@ -241,6 +247,10 @@ void H2Action::soltActionRun()
         return;
     }
 
+    if(false == setSpeedRatio()){
+        return;
+    }
+
     int homeVaild = mrgGetRobotHomeRequire(mViHandle, mRobotName);
     qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
     if(homeVaild == 1)
@@ -271,21 +281,21 @@ void H2Action::soltActionRun()
                 return;
             }
 
-            time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (0.7 * velocity) ;
-            qDebug() << "mrgRobotMoveL PA offset time" << posX << posY << time;
-            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
+            time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (m_speedRatio * velocity) ;
+            qDebug() << "mrgRobotMove PA offset time" << posX << posY << time;
+            ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
             if(ret < 0) {
-                sysError("mrgRobotRelMoveL", ret);
+                sysError("mrgRobotRelMove", ret);
                 ret = -2;
                 return;
             }
         }
         else if(strType == "PRA" || strType == "PRN" ){
-            time = sqrt( pow(posX,2) + pow(posY,2) ) / (0.7 * velocity) ;
-            qDebug() << "mrgRobotRelMoveL PRA/PRN offset time" << posX << posY << time;
-            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
+            time = sqrt( pow(posX,2) + pow(posY,2) ) / (m_speedRatio * velocity) ;
+            qDebug() << "mrgRobotRelMove PRA/PRN offset time" << posX << posY << time;
+            ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
             if(ret < 0) {
-                sysError("mrgRobotRelMoveL", ret);
+                sysError("mrgRobotRelMove", ret);
                 ret = -2;
                 return;
             }
@@ -324,3 +334,39 @@ void H2Action::soltActionRunEnd(int ret)
         break;
     }
 }
+
+bool H2Action::setSpeedRatio()
+{
+    int speedup1, speedcut1;
+    int speedup2, speedcut2;
+    int ret = -1;
+    ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 0, 0, &speedup1, &speedcut1);
+    if(ret != 0)
+    {
+        qDebug() << "mrgMRQPVTTimeScale_Query0 error" << ret;
+        sysError("mrgMRQPVTTimeScale_Query,0,0", ret);
+        goto ERROR;
+    }
+    ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 1, 0, &speedup2, &speedcut2);
+    if(ret != 0)
+    {
+        qDebug() << "mrgMRQPVTTimeScale_Query1 error" << ret;
+        sysError("mrgMRQPVTTimeScale_Query,1,0", ret);
+        goto ERROR;
+    }
+    if((speedup1 != speedup2) || (speedcut1 != speedcut2))
+    {
+        QMessageBox::critical(this,tr("error"),tr("The acceleration/deceleration ratios of the two channels are different!"));
+        goto ERROR;
+    }
+
+END:
+    m_speedRatio = ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
+    return true;
+
+ERROR:
+    m_speedRatio = 0;
+    return false;
+}
+
+

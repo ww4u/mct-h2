@@ -49,13 +49,26 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
         //! \note 0x
         if ( role == Qt::DisplayRole )
         {
-            return QVariant( QString("0x%1").arg( mItems[row]->mNr, 2, 16, QChar('0') ) );
+            return QVariant( QString("0x%1(%2)")
+                             .arg( mItems[row]->mNr, 2, 16, QChar('0') )
+                             .arg(mItems[row]->mNr, 2, 10, QChar('0')) );
         }
         else
         { return QVariant( mItems[ row ]->mNr ); }
     }
     else if ( col == 1 )
-    { return QVariant( ( mItems[ row ]->mErr ) ); }
+    {
+        if ( role == Qt::DisplayRole )
+        {
+            mItems[row]->initErrorCodes();
+            int code = mItems[row]->mNr;
+            return QVariant( mItems[row]->m_mapError[code] );
+        }
+        else
+        {
+            return QVariant( ( mItems[ row ]->mErr ) );
+        }
+    }
 
     else if ( col == 2 )
     {

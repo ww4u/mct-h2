@@ -62,6 +62,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string>Restore default configuration</string>
+     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Reset</set>
      </property>

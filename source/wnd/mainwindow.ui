@@ -74,6 +74,7 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="actionWifi"/>
+    <addaction name="actionUpdateFirmware"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -112,17 +113,20 @@
    <property name="focusPolicy">
     <enum>Qt::ClickFocus</enum>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">border-color: rgba(0, 0, 255, 0);
+background-color: rgba(44, 61, 79, 255);</string>
    </property>
    <property name="movable">
     <bool>false</bool>
    </property>
    <property name="iconSize">
     <size>
-     <width>48</width>
-     <height>36</height>
+     <width>60</width>
+     <height>50</height>
     </size>
    </property>
    <property name="toolButtonStyle">
@@ -140,12 +144,18 @@ border-color: rgba(255, 255, 255, 0);</string>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStop">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../res/res.qrc">
      <normaloff>:/res/image/icon/stop.png</normaloff>:/res/image/icon/stop.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Emergency Stop</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -154,6 +164,9 @@ border-color: rgba(255, 255, 255, 0);</string>
   <action name="actionExit">
    <property name="text">
     <string>&amp;Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit MCT</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -180,6 +193,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <property name="text">
     <string>&amp;Upload</string>
    </property>
+   <property name="toolTip">
+    <string>Upload Parameter Config From MRHT</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+U</string>
    </property>
@@ -191,6 +207,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    </property>
    <property name="text">
     <string>&amp;Download</string>
+   </property>
+   <property name="toolTip">
+    <string>Download Parameter Config To MRHT</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -204,6 +223,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <property name="text">
     <string>S&amp;tore</string>
    </property>
+   <property name="toolTip">
+    <string>Permanently Stored Config To MRHT</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
    </property>
@@ -215,6 +237,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    </property>
    <property name="text">
     <string>S&amp;ync</string>
+   </property>
+   <property name="toolTip">
+    <string>Synchronize MRHT and MCT configurations</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
@@ -270,7 +295,7 @@ border-color: rgba(255, 255, 255, 0);</string>
     <string>&amp;Search</string>
    </property>
    <property name="toolTip">
-    <string>SearchDevice</string>
+    <string>Search MRHT To The Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
@@ -285,7 +310,7 @@ border-color: rgba(255, 255, 255, 0);</string>
     <string>Connect</string>
    </property>
    <property name="toolTip">
-    <string>Connect</string>
+    <string>Connect Or Disconnect MRHT</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -303,6 +328,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <property name="text">
     <string>&amp;Reboot</string>
    </property>
+   <property name="toolTip">
+    <string>Reboot System</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+Alt+R</string>
    </property>
@@ -311,6 +339,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <property name="text">
     <string>&amp;Poweroff</string>
    </property>
+   <property name="toolTip">
+    <string>Poweroff  System</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+Alt+P</string>
    </property>
@@ -318,6 +349,17 @@ border-color: rgba(255, 255, 255, 0);</string>
   <action name="actionWifi">
    <property name="text">
     <string>&amp;Wifi</string>
+   </property>
+   <property name="toolTip">
+    <string>MRHT Connect To Wifi</string>
+   </property>
+  </action>
+  <action name="actionUpdateFirmware">
+   <property name="text">
+    <string>&amp;UpdateFirmware</string>
+   </property>
+   <property name="toolTip">
+    <string>Update Firmware For MRHT</string>
    </property>
   </action>
  </widget>

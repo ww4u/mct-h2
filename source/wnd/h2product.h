@@ -8,6 +8,33 @@ namespace Ui {
 class H2Product;
 }
 
+class LanCheckedThread : public QThread
+{
+    Q_OBJECT
+public:
+    LanCheckedThread(QObject *parent = NULL);
+    ~LanCheckedThread();
+    void setIp(const QString &ip);
+
+signals:
+    void signalCheckConnect(bool);
+
+protected:
+    virtual void run();
+
+private slots:
+    void slotTimerTimeout();
+
+private:
+    QString m_ip;
+    QTimer *m_timer;
+    int m_timerInterval;
+    int m_timerTimeoutCounter;
+};
+
+
+
+
 class H2Product : public XConfig
 {
     Q_OBJECT
@@ -26,19 +53,28 @@ public:
 
     void translateUI() override;
 
+    bool handCloseFlag() const;
+    void setHandCloseFlag(bool handCloseFlag);
+
 signals:
     void signal_online_clicked(QString);
 
 private slots:
     void on_pushButton_status_clicked();
 
+    void slotCheckLanConnect(bool isConnect);
+
 private:
     Ui::H2Product *ui;
+    LanCheckedThread *m_thread;
 
+    QString m_strDevInfo;
     QString m_IP;
     QString m_Version;
     QString m_Type;
     QString m_SN;
+
+    bool m_handCloseFlag;
 };
 
 #endif // H2PRODUCT_H

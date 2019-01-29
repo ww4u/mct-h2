@@ -14,10 +14,13 @@ void sysError( const QString &info , const int &val);
 
 void sysShowStatus(const QString &statusInfo);
 
+void sysShowProgressBar(const bool isRunning);
+
 bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
 
 QString readFile(QString fileName);
 
 int writeFile(QString fileName, QString text);
 
+bool QtPing(const QString ip);
 #endif // SYSAPI_H
