@@ -60,7 +60,7 @@ void H2Action::slotCurrentRowChanged(QModelIndex index)
 int H2Action::readDeviceConfig()
 {
     int ret = -1;
-    m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".mrp";
+    m_strLocalFileName = MCTHomeDIR() + "/dataset/" + mConfigFileName + ".mrp";
 
     //! 查找文件
     char filenames[1024] = "";
@@ -116,7 +116,7 @@ END:
 
 int H2Action::writeDeviceConfig()
 {
-    m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".mrp";
+    m_strLocalFileName = MCTHomeDIR() + "/dataset/" + mConfigFileName + ".mrp";
 
     int ret = -1;
     ret = mrgStorageMotionFileSaveContext(mViHandle,
@@ -139,11 +139,11 @@ int H2Action::writeDeviceConfig()
 
 int H2Action::loadConfig()
 {
-    m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".mrp";
+    m_strLocalFileName = MCTHomeDIR() + "/dataset/" + mConfigFileName + ".mrp";
     QFile file(m_strLocalFileName);
     //如果不存在配置文件就用公共的默认的配置文件
     if( !file.exists() )
-        m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/action_default.mrp";
+        m_strLocalFileName = qApp->applicationDirPath() + "/dataset/action_default.mrp";
 
     //! load action from csv
 //    sysInfo("H2Action::loadConfig",m_strLocalFileName);
@@ -156,7 +156,7 @@ int H2Action::loadConfig()
 int H2Action::saveConfig()
 {
     //! save action to csv
-    m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".mrp";
+    m_strLocalFileName = qApp->applicationDirPath() + "/dataset/" + mConfigFileName + ".mrp";
     int ret = m_actionModel.output( m_strLocalFileName );   //将界面数据保存到本地文件
     m_fileContext = readFile(m_strLocalFileName);       //保存到类中
     return ret;

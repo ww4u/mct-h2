@@ -126,10 +126,10 @@ int H2ErrMgr::writeDeviceConfig()
 
 int H2ErrMgr::loadConfig()
 {
-    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".xml";
+    QString fileName = MCTHomeDIR() + "/dataset/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
-        fileName = QApplication::applicationDirPath() + "/dataset/errmgr_default.xml";
+        fileName = qApp->applicationDirPath() + "/dataset/errmgr_default.xml";
 
     //! load event from xml
     int ret = mErrManager.load( fileName );
@@ -140,7 +140,7 @@ int H2ErrMgr::loadConfig()
 int H2ErrMgr::saveConfig()
 {
     //! save event to xml
-    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".xml";
+    QString fileName = MCTHomeDIR() + "/dataset/" + mConfigFileName + ".xml";
     int ret = mErrManager.save( fileName );
     return ret;
 }

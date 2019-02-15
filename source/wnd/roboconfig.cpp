@@ -84,9 +84,13 @@ void RoboConfig::loadXmlConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath();
+    QString fileName = MCTHomeDIR();
     QDir dir(fileName);
-    if(!dir.exists()){dir.mkdir(fileName);}
+    if(!dir.exists()){
+        dir.mkdir(fileName);
+        dir.mkdir(fileName + "/dataset");
+        dir.mkdir(fileName + "/robots");
+    }
 
     fileName += "/config.xml";
     mXML.xmlCreate(fileName);
@@ -155,7 +159,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
             {
                 //! delete from xml file
                 MegaXML mXML;
-                QString fileName = QApplication::applicationDirPath() + "/config.xml";
+                QString fileName = MCTHomeDIR() + "/config.xml";
                 QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
                 QMap<QString,QString> mapWrite;
                 for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
@@ -176,7 +180,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
 
     //添加到config.xml中
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
+    QString fileName = MCTHomeDIR() + "/config.xml";
 
     QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
     QMap<QString,QString> mapWrite;
@@ -578,7 +582,7 @@ void RoboConfig::soltActionDelete()
 {
     //! delete from xml file
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
+    QString fileName = MCTHomeDIR() + "/config.xml";
     QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
     QMap<QString,QString> mapWrite;
     for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
@@ -594,7 +598,7 @@ void RoboConfig::soltActionDelete()
     QString strIDn = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
 
     //delete device.xml
-    fileName = QApplication::applicationDirPath() + "/robots/" + strIDn + ".xml";
+    fileName = MCTHomeDIR() + "/robots/" + strIDn + ".xml";
     {
         QFile file(fileName);
         if(file.exists())
@@ -602,14 +606,14 @@ void RoboConfig::soltActionDelete()
     }
     //!
 
-    fileName = QApplication::applicationDirPath() + "/dataset/" + strIDn + ".mrp";
+    fileName = MCTHomeDIR() + "/dataset/" + strIDn + ".mrp";
     {
         QFile file(fileName);
         if(file.exists())
         {   file.remove();  }
     }
 
-    fileName = QApplication::applicationDirPath() + "/dataset/" + strIDn + ".xml";
+    fileName = MCTHomeDIR() + "/dataset/" + strIDn + ".xml";
     {
         QFile file(fileName);
         if(file.exists())
@@ -625,16 +629,16 @@ int RoboConfig::setReset()
 
     //将默认的配置文件替换掉对应的配置文件，更新界面，写入设备
     QString strIDN = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
-    copyFileToPath(QApplication::applicationDirPath() + "/robots/default.xml",
-                   QApplication::applicationDirPath() + "/robots/" + strIDN + ".xml",
+    copyFileToPath(qApp->applicationDirPath() + "/robots/default.xml",
+                   MCTHomeDIR() + "/robots/" + strIDN + ".xml",
                    true);
 
-    copyFileToPath(QApplication::applicationDirPath() + "/dataset/action_default.mrp",
-                   QApplication::applicationDirPath() + "/dataset/" + strIDN + ".mrp",
+    copyFileToPath(qApp->applicationDirPath() + "/dataset/action_default.mrp",
+                   MCTHomeDIR() + "/dataset/" + strIDN + ".mrp",
                    true);
 
-    copyFileToPath(QApplication::applicationDirPath() + "/dataset/errmgr_default.xml",
-                   QApplication::applicationDirPath() + "/dataset/" + strIDN + ".xml",
+    copyFileToPath(qApp->applicationDirPath() + "/dataset/errmgr_default.xml",
+                   MCTHomeDIR() + "/dataset/" + strIDN + ".xml",
                    true);
 
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
@@ -756,12 +760,9 @@ int RoboConfig::deviceOpen(QString strID)
     int ret = -1;
 
     QString strDesc;
-    if(strID.left(3) != "USB")
-    {
+    if(strID.left(3) != "USB"){
         strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strID);
-    }
-    else
-    {
+    }else{
         //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
         QStringList lst = strID.split('_', QString::SkipEmptyParts);
         strDesc = QString("%1::%2::%3::%4::INSTR")
@@ -978,9 +979,6 @@ void RoboConfig::addDeviceWithIP(QString strID)
     {
         mrgCloseGateWay(visa);
         return;
-    }else{
-        int len = strlen(IDN);
-        IDN[len-1] = '\0';
     }
     mrgCloseGateWay(visa);
 

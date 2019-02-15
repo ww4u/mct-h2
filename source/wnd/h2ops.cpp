@@ -343,15 +343,14 @@ void H2Ops::slotLoadConfigAgain()
 {
     m_Data.clear();
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
+    QString fileName = MCTHomeDIR() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
-        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
+        fileName = qApp->applicationDirPath() + "/robots/default.xml";
 
 //    qDebug() << "slotLoadConfigAgain:" << fileName;
     QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map.isEmpty())
-    {
+    if(map.isEmpty()){
         sysError("slotLoadConfigAgain error");
         return;
     }

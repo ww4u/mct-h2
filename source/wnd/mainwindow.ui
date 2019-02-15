@@ -96,6 +96,7 @@
     </widget>
     <addaction name="menuLanguage"/>
     <addaction name="menuStyle"/>
+    <addaction name="actionDPI"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -116,21 +117,17 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <property name="styleSheet">
-    <string notr="true">border-color: rgba(0, 0, 255, 0);
-background-color: rgba(44, 61, 79, 255);</string>
-   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
    <property name="iconSize">
     <size>
-     <width>60</width>
+     <width>50</width>
      <height>50</height>
     </size>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonIconOnly</enum>
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
    </property>
    <property name="floatable">
     <bool>true</bool>
@@ -152,7 +149,7 @@ background-color: rgba(44, 61, 79, 255);</string>
      <normaloff>:/res/image/icon/stop.png</normaloff>:/res/image/icon/stop.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Stop</string>
+    <string>Sto&amp;p</string>
    </property>
    <property name="toolTip">
     <string>Emergency Stop</string>
@@ -316,14 +313,6 @@ background-color: rgba(44, 61, 79, 255);</string>
     <string>Ctrl+L</string>
    </property>
   </action>
-  <action name="actionIP">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>MRX-H2:[0.0.0.0]</string>
-   </property>
-  </action>
   <action name="actionReboot">
    <property name="text">
     <string>&amp;Reboot</string>
@@ -360,6 +349,14 @@ background-color: rgba(44, 61, 79, 255);</string>
    </property>
    <property name="toolTip">
     <string>Update Firmware For MRHT</string>
+   </property>
+  </action>
+  <action name="actionDPI">
+   <property name="text">
+    <string>DPI</string>
+   </property>
+   <property name="toolTip">
+    <string>Display</string>
    </property>
   </action>
  </widget>

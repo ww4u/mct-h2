@@ -2,6 +2,11 @@
 #include "mainwindow.h"
 #include <QProcess>
 
+QString MCTHomeDIR()
+{
+    return QDir::homePath() + "/.MCT";
+}
+
 void sysInfo( const QString &str )
 { MainWindow::requestLogout( str, eLogInfo ); }
 
@@ -93,6 +98,9 @@ int writeFile(QString fileName, QString text)
 
 bool QtPing(const QString ip)
 {
+    if(ip == "127.0.0.1")
+        return true;
+
     // #Linux指令 "ping -s 1 -c 1 IP"
 #ifndef _WIN32
     QString cmdstr = QString("ping -s 1 -c 1 %1").arg(ip);

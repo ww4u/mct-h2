@@ -1,4 +1,4 @@
-#include "SACsvStream.h"
+#include "sacsvstream.h"
 #include <QTextStream>
 #include <QFile>
 class SACsvStreamPrivate

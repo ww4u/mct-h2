@@ -3,6 +3,8 @@
 
 #include <QtCore>
 
+QString MCTHomeDIR();
+
 void sysInfo( const QString &str );
 void sysInfo(const QString &info, const QString &str2 );
 void sysInfo( const QString &info, const int &val );

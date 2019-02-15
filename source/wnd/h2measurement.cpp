@@ -111,10 +111,10 @@ int H2Measurement::loadConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
+    QString fileName = MCTHomeDIR() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
-        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
+        fileName = qApp->applicationDirPath() + "/robots/default.xml";
 
     QMap<QString,QString> map = mXML.xmlRead(fileName);
     if(map.isEmpty()) return -1;
@@ -133,7 +133,7 @@ int H2Measurement::loadConfig()
 int H2Measurement::saveConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
+    QString fileName = MCTHomeDIR() + "/robots/" + mConfigFileName + ".xml";
     QMap<QString,QString> map;
 
     map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));

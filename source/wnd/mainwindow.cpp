@@ -41,6 +41,29 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     m_pDockHelp     = NULL;
     m_pHelpPanel    = NULL;
 
+    m_mapDpiTable.insert("640x480"  , 4 );
+    m_mapDpiTable.insert("800x600"  , 9 );
+    m_mapDpiTable.insert("848x480"  , 14);
+    m_mapDpiTable.insert("1024x768" , 16);
+    m_mapDpiTable.insert("1280x768" , 23);
+    m_mapDpiTable.insert("1280x800" , 28);
+    m_mapDpiTable.insert("1280x960" , 32);
+    m_mapDpiTable.insert("1280x1024", 35);
+    m_mapDpiTable.insert("1360x768" , 39);
+    m_mapDpiTable.insert("1400x1050", 42);
+    m_mapDpiTable.insert("1440x900" , 47);
+    m_mapDpiTable.insert("1600x1200", 51);
+    m_mapDpiTable.insert("1680x1050", 58);
+    m_mapDpiTable.insert("1792x1344", 62);
+    m_mapDpiTable.insert("1856x1392", 65);
+    m_mapDpiTable.insert("1920x1200", 69);
+    m_mapDpiTable.insert("1920x1440", 73);
+    m_mapDpiTable.insert("2560x1600", 77);
+    m_mapDpiTable.insert("1366x768" , 81);
+    m_mapDpiTable.insert("1920x1080", 82);
+    m_mapDpiTable.insert("1280x720" , 85);
+
+
     setupWorkArea();
 
     setupToolBar();
@@ -104,8 +127,6 @@ void MainWindow::setupWorkArea()
 void MainWindow::setupToolBar()
 {
     ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( ui->actionStop );
-    ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionDownload );
     ui->mainToolBar->addAction( ui->actionUpload );
     ui->mainToolBar->addAction( ui->actionStore );
@@ -114,12 +135,28 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addAction( ui->actionSearch );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionConnect );
-    ui->mainToolBar->addAction( ui->actionIP );
+    ui->mainToolBar->addSeparator();
+
+    //! add stop button
+    QWidget *t_widget = new QWidget();
+    QHBoxLayout *t_hBoxLayout = new QHBoxLayout();
+    t_widget->setLayout(t_hBoxLayout);
+    ui->mainToolBar->addWidget(t_widget);
+
+    m_stopButton =  new QToolButton();
+    connect(m_stopButton,SIGNAL(clicked(bool)),ui->actionStop,SLOT(trigger()));
+    m_stopButton->setIcon(QIcon(":/res/image/icon/stop.png"));
+    m_stopButton->setIconSize(QSize(75,50));
+    m_stopButton->setText(tr("STOP"));
+//    m_stopButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t_hBoxLayout->addStretch();
+    t_hBoxLayout->addWidget(m_stopButton);
 
 #ifdef _WIN32
     //! windows禁用这些功能
     ui->actionReboot->setVisible(false);
     ui->actionPoweroff->setVisible(false);
+    ui->actionDPI->setVisible(false);
     ui->actionWifi->setVisible(false);
 #endif
 
@@ -136,7 +173,7 @@ void MainWindow::setupStatusBar()
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1);
     ui->statusBar->insertWidget( 1, m_progressBar, 0);
-    ui->statusBar->insertWidget( 2, m_pLabMctVer, 0 );
+    ui->statusBar->insertWidget( 2, m_pLabMctVer, 0);
 }
 
 void MainWindow::slotUpdateStatus( const QString str )
@@ -146,13 +183,10 @@ void MainWindow::slotUpdateStatus( const QString str )
 
 void MainWindow::slotShowProgressStatus( bool isRun )
 {
-    if(isRun)
-    {
+    if(isRun) {
         m_progressBar->setHidden(false);
         m_progressBar->setMaximum(0);
-    }
-    else
-    {
+    } else {
         m_progressBar->setMaximum(100);
         m_progressBar->setHidden(true);
     }
@@ -195,7 +229,7 @@ void MainWindow::buildConnection()
 void MainWindow::loadConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
+    QString fileName = MCTHomeDIR() + "/config.xml";
     QMap<QString,QString> map = mXML.xmlRead(fileName);
     if(map["Style"] == ""){
         map.clear();
@@ -269,7 +303,7 @@ void MainWindow::changeLanguage()
 {
     QString qmFile = "";
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
+    QString fileName = MCTHomeDIR() + "/config.xml";
     QMap<QString,QString> map;
 
     if( m_language == LANG_CN ){
@@ -293,6 +327,14 @@ void MainWindow::changeLanguage()
 
     mXML.xmlNodeRemove(fileName, "WindowLanguage");
     mXML.xmlNodeAppend(fileName, "WindowLanguage", map);
+
+    //update show
+    QStringList strListDev = m_strDevInfo.split(',', QString::SkipEmptyParts);
+    if(strListDev.length() > 3){
+        QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
+        m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
+        ui->actionConnect->setText(strDeviceName);
+    }
 }
 
 void MainWindow::on_actionMega_triggered()
@@ -323,7 +365,7 @@ void MainWindow::on_actionClassic_triggered()
 void MainWindow::setUiStyle(const QString &styleFile)
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
+    QString fileName = MCTHomeDIR() + "/config.xml";
     QMap<QString,QString> map;
     if( m_style == STYLE_MEGAROBO){
         map.insert("Style", "MegaRobo");
@@ -357,17 +399,17 @@ void MainWindow::slotCurrentRobotChanged(QString strDevInfo, int visa, int devic
         return;//没有切换机器人且状态没有改变
     }
 
-    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
-
-    m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
-
-    ui->actionIP->setText(strDeviceName);
-
     m_strDevInfo = strDevInfo;
     m_ViHandle = visa;
     m_DeviceName = deviceName;
     m_RoboName = roboName;
+
+    QStringList strListDev = m_strDevInfo.split(',', QString::SkipEmptyParts);
+    if(strListDev.length() > 3){
+        QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
+        m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
+        ui->actionConnect->setText(strDeviceName);
+    }
 
     if(m_ViHandle == 0){
         //device closed
@@ -440,4 +482,25 @@ void MainWindow::on_actionWifi_triggered()
 void MainWindow::on_actionUpdateFirmware_triggered()
 {
     m_roboConfig->slotUpdateFirmware();
+}
+
+void MainWindow::on_actionDPI_triggered()
+{
+    QStringList dpiList;
+    QMap<QString,int>::iterator itMap;
+    for ( itMap=m_mapDpiTable.begin(); itMap != m_mapDpiTable.end(); ++itMap ) {
+        dpiList << itMap.key();
+    }
+
+    //显示选择对话框
+    QString dpiItem = QInputDialog::getItem(this, tr("DPI"), tr("Please choose DPI:"), dpiList, -1, false);
+    if(dpiItem == "")
+        return;
+
+    int dpiConfig = m_mapDpiTable[dpiItem];
+    qDebug() << "selected DPI:" << dpiItem << dpiConfig;
+
+    //! TODO 修改/boot/config.txt 的hdmi_mode=
+
+    return;
 }

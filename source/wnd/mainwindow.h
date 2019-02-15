@@ -66,8 +66,12 @@ private slots:
 
 
 
+    void on_actionDPI_triggered();
+
 private:
     Ui::MainWindow *ui;
+
+    QToolButton *m_stopButton;
 
     QLabel *m_pLabStatus, *m_pLabMctVer;
     QProgressBar *m_progressBar;
@@ -96,6 +100,8 @@ private:
     int m_DeviceName;
     int m_RoboName;
     QString m_strDevInfo;
+
+    QMap<QString,int> m_mapDpiTable;
 };
 
 #endif // MAINWINDOW_H
