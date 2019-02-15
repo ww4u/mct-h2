@@ -421,12 +421,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="372"/>
+        <location filename="../../source/wnd/h2homing.ui" line="369"/>
         <source>0.01 - 300</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="424"/>
+        <location filename="../../source/wnd/h2homing.ui" line="421"/>
         <source>Force Limit:</source>
         <translation></translation>
     </message>
@@ -444,17 +444,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="114"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="111"/>
         <source>Crawling Velocity:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="133"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="130"/>
         <source>Crawling Time:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="247"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="238"/>
         <source>Maximum Velocity:</source>
         <translation></translation>
     </message>
@@ -507,22 +507,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="421"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="409"/>
         <source>X-Axis</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="443"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="431"/>
         <source>Project Zero Point:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="462"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="450"/>
         <source>SW Limit Negative:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="539"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="524"/>
         <source>Y-Axis</source>
         <translation></translation>
     </message>
@@ -720,8 +720,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1277"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1330"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1339"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1329"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1338"/>
         <source>Run to Project Zero Point</source>
         <translation></translation>
     </message>
@@ -803,8 +803,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1999"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1048"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1061"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1047"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1060"/>
         <source>Run  Sequence</source>
         <translation></translation>
     </message>
@@ -941,85 +941,85 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="458"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="506"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="457"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="505"/>
         <source>tips</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="458"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="457"/>
         <source>Success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="461"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="460"/>
         <source>Failured!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="506"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="505"/>
         <source>unable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="635"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="634"/>
         <source>load completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="650"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="727"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="649"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="726"/>
         <source>save completed</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.cpp" line="322"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="461"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="666"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="734"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="460"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="733"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="666"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
         <source>Error log upload error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="734"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="733"/>
         <source>failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="784"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="794"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="783"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="793"/>
         <source>Start Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="787"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="786"/>
         <source>Stop Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="859"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="865"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="858"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="864"/>
         <source>warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="859"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="865"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="858"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="864"/>
         <source>Target position over the limit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1064"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1063"/>
         <source>Stop Sequence</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1333"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1332"/>
         <source>Stop</source>
         <translation></translation>
     </message>
@@ -1282,7 +1282,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="68"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="181"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="182"/>
         <source>&amp;Help</source>
         <translation></translation>
     </message>
@@ -1307,229 +1307,270 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="151"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="152"/>
         <source>Sto&amp;p</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="154"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
         <source>Emergency Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="157"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="158"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="162"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
         <source>&amp;Exit</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="165"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="166"/>
         <source>Exit MCT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="168"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="169"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="173"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="174"/>
         <source>&amp;About</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="176"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="177"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="190"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="191"/>
         <source>&amp;Upload</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="193"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="194"/>
         <source>Upload Parameter Config From MRHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="197"/>
         <source>Ctrl+U</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="205"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="206"/>
         <source>&amp;Download</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="209"/>
         <source>Download Parameter Config To MRHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="211"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="212"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="220"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="221"/>
         <source>S&amp;tore</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="223"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="224"/>
         <source>Permanently Stored Config To MRHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="226"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="227"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="235"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="236"/>
         <source>S&amp;ync</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="238"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="239"/>
         <source>Synchronize MRHT and MCT configurations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="241"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="242"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="249"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="250"/>
         <source>&amp;Chinese</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="260"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="261"/>
         <source>&amp;English</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="271"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="272"/>
         <source>&amp;MEGAROBO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="282"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="283"/>
         <source>&amp;Classic</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="291"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="292"/>
         <source>&amp;Search</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="294"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="295"/>
         <source>Search MRHT To The Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="297"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="298"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="306"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="307"/>
         <source>Connect</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="309"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="310"/>
         <source>Connect Or Disconnect MRHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="312"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="313"/>
         <source>Ctrl+L</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="317"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="318"/>
         <source>&amp;Reboot</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="320"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="321"/>
         <source>Reboot System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="323"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="324"/>
         <source>Ctrl+Alt+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="328"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="329"/>
         <source>&amp;Poweroff</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="331"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="332"/>
         <source>Poweroff  System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="334"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="335"/>
         <source>Ctrl+Alt+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="339"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="340"/>
         <source>&amp;Wifi</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="342"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="343"/>
         <source>MRHT Connect To Wifi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="347"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="348"/>
         <source>&amp;UpdateFirmware</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="350"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="351"/>
         <source>Update Firmware For MRHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="93"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="356"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="491"/>
+        <source>DPI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="359"/>
+        <source>Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="107"/>
         <source>Help</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="80"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="94"/>
         <source>Pref</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="83"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="97"/>
         <source>Ops</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="99"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="305"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="113"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="317"/>
         <source>&amp;ShowHelp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="127"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="141"/>
         <source>STOP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="491"/>
+        <source>Please choose DPI:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
+        <source>tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
+        <source>Modify DPI success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
+        <source>Effective after system reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="503"/>
+        <source>error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.cpp" line="503"/>
+        <source>Modify DPI failured!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1641,215 +1682,215 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="150"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="300"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="368"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="436"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="491"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="664"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="738"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="154"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="257"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="304"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="372"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="440"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="668"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="742"/>
         <source>tips</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="150"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="154"/>
         <source>The device already exists in the project.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="201"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="306"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="417"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="439"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="458"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="658"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="862"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="263"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="310"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="381"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="421"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="443"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="462"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="662"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="863"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="271"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="317"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="408"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="450"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="649"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="219"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="275"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="412"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="454"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="653"/>
         <source>Current Device In Offline</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="271"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="317"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="371"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="374"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="387"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="408"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="450"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="649"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="219"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="275"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="375"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="391"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="412"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="454"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="468"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="499"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="653"/>
         <source>warning</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="257"/>
         <source>Download Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="300"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="304"/>
         <source>Upload Succeed!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="306"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="310"/>
         <source>Upload Failure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="374"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
         <source>Store timeout!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="368"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="372"/>
         <source>Store success!</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="37"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="936"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="937"/>
         <source>Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="201"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
         <source>From device upload config faiured</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="263"/>
         <source>Download Failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="371"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="375"/>
         <source>Operation in progress!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="381"/>
         <source>Store error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="387"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="391"/>
         <source>unable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="417"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="421"/>
         <source>Wifi search error or empty!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="425"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="469"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="429"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="473"/>
         <source>Wifi</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="425"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="429"/>
         <source>Please choose wifi:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="430"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="434"/>
         <source>Input</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="430"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="434"/>
         <source>Please input wifi password:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="436"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="440"/>
         <source>Wifi Connect success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="439"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="443"/>
         <source>Wifi Connect error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="458"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="462"/>
         <source>search firmware file error or empty!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="468"/>
         <source>Udisk not found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="469"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="473"/>
         <source>Please Choose Update File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="491"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
         <source>Firmware Update success!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="492"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="496"/>
         <source>Reboot device take effect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="499"/>
         <source>Firmware Update timeout!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
         <source>Firmware Update error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="552"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="556"/>
         <source>close</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="553"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="557"/>
         <source>delete</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="658"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="662"/>
         <source>Reset Failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="664"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="668"/>
         <source>Reset Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="738"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="742"/>
         <source>Device Open Failure!!!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="862"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="863"/>
         <source>Robot type not</source>
         <translation></translation>
     </message>

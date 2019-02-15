@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "../source/wnd/mainwindow.h"
 
-#define MCTVERSION "0.0.1.5"
+#define MCTVERSION "00.00.01.05"
 
 int main(int argc, char *argv[])
 {
