@@ -24,5 +24,7 @@ QString readFile(QString fileName);
 
 int writeFile(QString fileName, QString text);
 
+bool updateConfigFile(QString configFileName, QString item, QString value);
+
 bool QtPing(const QString ip);
 #endif // SYSAPI_H

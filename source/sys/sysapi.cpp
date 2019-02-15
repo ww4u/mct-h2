@@ -96,6 +96,37 @@ int writeFile(QString fileName, QString text)
     return 0;
 }
 
+bool updateConfigFile(QString configFileName, QString item, QString value)
+{
+    bool result = false;
+    QFile file(configFileName);
+    file.open(QIODevice::ReadOnly);
+    if (file.isOpen())
+    {
+        QString strtemp;
+        QTextStream textStream(&file);
+        QString Alltemp;
+        while(!textStream.atEnd()){
+            strtemp = textStream.readLine();
+            if( strtemp.mid(0, item.length()) == item){
+                Alltemp = Alltemp + QString( item + "=" + value).toLatin1();
+                Alltemp += QString('\n').toLatin1();
+                result = true;
+            }
+            else{
+                Alltemp += strtemp.toLatin1();
+                Alltemp += QString('\n').toLatin1();
+            }
+        }
+        file.close();
+        file.open(QIODevice::WriteOnly);
+        QTextStream in(&file);
+        in <<Alltemp;
+        file.close();
+    }
+    return result;
+}
+
 bool QtPing(const QString ip)
 {
     if(ip == "127.0.0.1")
@@ -113,7 +144,7 @@ bool QtPing(const QString ip)
     cmd.waitForReadyRead(1000);
     cmd.waitForFinished(1000);
 
-    QString res = cmd.readAll();
+    QString res = cmd.readAll().toUpper();
     if (res.indexOf("TTL") == -1){
         return false;
     }

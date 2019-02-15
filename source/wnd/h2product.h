@@ -27,7 +27,6 @@ private slots:
 
 private:
     QString m_ip;
-    QTimer *m_timer;
     int m_timerInterval;
     int m_timerTimeoutCounter;
 };

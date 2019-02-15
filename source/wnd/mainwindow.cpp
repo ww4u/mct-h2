@@ -41,28 +41,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     m_pDockHelp     = NULL;
     m_pHelpPanel    = NULL;
 
-    m_mapDpiTable.insert("640x480"  , 4 );
-    m_mapDpiTable.insert("800x600"  , 9 );
-    m_mapDpiTable.insert("848x480"  , 14);
-    m_mapDpiTable.insert("1024x768" , 16);
-    m_mapDpiTable.insert("1280x768" , 23);
-    m_mapDpiTable.insert("1280x800" , 28);
-    m_mapDpiTable.insert("1280x960" , 32);
-    m_mapDpiTable.insert("1280x1024", 35);
-    m_mapDpiTable.insert("1360x768" , 39);
-    m_mapDpiTable.insert("1400x1050", 42);
-    m_mapDpiTable.insert("1440x900" , 47);
-    m_mapDpiTable.insert("1600x1200", 51);
-    m_mapDpiTable.insert("1680x1050", 58);
-    m_mapDpiTable.insert("1792x1344", 62);
-    m_mapDpiTable.insert("1856x1392", 65);
-    m_mapDpiTable.insert("1920x1200", 69);
-    m_mapDpiTable.insert("1920x1440", 73);
-    m_mapDpiTable.insert("2560x1600", 77);
-    m_mapDpiTable.insert("1366x768" , 81);
-    m_mapDpiTable.insert("1920x1080", 82);
-    m_mapDpiTable.insert("1280x720" , 85);
-
+#ifndef _WIN32
+    //! 获取MRHT支持的分辨率
+    system("/opt/vc/bin/tvservice -m DMT > /home/megarobo/.tvConfig");
+    system("chmod 666 /home/megarobo/.tvConfig");
+    QString str = readFile("/home/megarobo/.tvConfig");
+    foreach (QString strLine, str.split("\n", QString::SkipEmptyParts)) {
+        if(strLine.contains("@") && strLine.contains("clock:")){
+            QRegExp rx("(\\d+):\\s+([^,]+),");
+            rx.indexIn(strLine);
+            m_mapDpiTable.insert(rx.cap(2), rx.cap(1).toInt());
+        }
+    }
+#endif
 
     setupWorkArea();
 
@@ -486,6 +477,9 @@ void MainWindow::on_actionUpdateFirmware_triggered()
 
 void MainWindow::on_actionDPI_triggered()
 {
+    if(m_mapDpiTable.isEmpty())
+        return;
+
     QStringList dpiList;
     QMap<QString,int>::iterator itMap;
     for ( itMap=m_mapDpiTable.begin(); itMap != m_mapDpiTable.end(); ++itMap ) {
@@ -493,6 +487,7 @@ void MainWindow::on_actionDPI_triggered()
     }
 
     //显示选择对话框
+    qSort(dpiList);
     QString dpiItem = QInputDialog::getItem(this, tr("DPI"), tr("Please choose DPI:"), dpiList, -1, false);
     if(dpiItem == "")
         return;
@@ -501,6 +496,14 @@ void MainWindow::on_actionDPI_triggered()
     qDebug() << "selected DPI:" << dpiItem << dpiConfig;
 
     //! TODO 修改/boot/config.txt 的hdmi_mode=
+    bool bl = updateConfigFile("/boot/config.txt", "hdmi_mode", QString::number(dpiConfig));
+    if(bl){
+        QMessageBox::information(this,tr("tips"),tr("Modify DPI success!") + "\n" + tr("Effective after system reboot"));
+    }else{
+        QMessageBox::critical(this,tr("error"),tr("Modify DPI failured!"));
+    }
 
     return;
 }
+
+

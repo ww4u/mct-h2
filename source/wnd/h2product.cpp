@@ -143,16 +143,9 @@ void H2Product::translateUI()
 LanCheckedThread::LanCheckedThread(QObject *parent)
     : QThread(parent)
 {
-    m_timer = NULL;
     m_timerInterval = 3000;
     m_timerTimeoutCounter = 0;
     m_ip = "";
-
-    m_timer = new QTimer();//不能指定父对象
-    m_timer->moveToThread(this);
-    m_timer->setInterval(m_timerInterval);
-    connect(this, SIGNAL(started()), m_timer, SLOT(start()));
-    connect(m_timer,SIGNAL(timeout()),this,SLOT(slotTimerTimeout()),Qt::DirectConnection);
 }
 
 LanCheckedThread::~LanCheckedThread()
@@ -163,6 +156,10 @@ LanCheckedThread::~LanCheckedThread()
 
 void LanCheckedThread::run()
 {
+    QTimer *m_timer = new QTimer();//不能指定父对象
+    m_timer->setInterval(m_timerInterval);
+    connect(m_timer,SIGNAL(timeout()),this,SLOT(slotTimerTimeout()),Qt::DirectConnection);
+    m_timer->start();
     exec();
 }
 
