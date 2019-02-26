@@ -50,7 +50,7 @@ int H2Measurement::readDeviceConfig()
         return -1;
     }
 
-    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) ){
+     if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) ){
         qDebug() << "mrgGetRobotSoftWareLimit Positive" << x << y;
         m_SWLimitPositiveX = x;
         m_SWLimitPositiveY = y;
@@ -74,6 +74,14 @@ int H2Measurement::readDeviceConfig()
 int H2Measurement::writeDeviceConfig()
 {
     int ret = 0;
+
+    m_ZeroPoint         = ui->comboBox_AxesZeroPoint->currentIndex();
+    m_ProjectZeroPointX = ui->doubleSpinBox_pzpX->value();
+    m_ProjectZeroPointY = ui->doubleSpinBox_pzpY->value();
+    m_SWLimitPositiveX  = ui->doubleSpinBox_swlp_X->value();
+    m_SWLimitPositiveY  = ui->doubleSpinBox_swlp_Y->value();
+    m_SWLimitNegativeX  = ui->doubleSpinBox_swln_X->value();
+    m_SWLimitNegativeY  = ui->doubleSpinBox_swln_Y->value();
 
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
     ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);

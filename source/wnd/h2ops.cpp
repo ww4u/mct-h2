@@ -300,6 +300,12 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
 //从设备查询加减速比
 bool H2Ops::setSpeedRatio()
 {
+#if 0
+    //! 临时添加
+    mrgMRQPVTTimeScale(mViHandle, mDeviceName, 0, 0, 250, 250);
+    mrgMRQPVTTimeScale(mViHandle, mDeviceName, 1, 0, 250, 250);
+#endif
+
     int speedup1, speedcut1;
     int speedup2, speedcut2;
     int ret = -1;
@@ -877,7 +883,7 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
             ret = mrgRobotRelMove(mViHandle, mRobotName, -1, 0, 0, offset*direct, time, 0);
         }
         qDebug() << "mrgRobotRelMove" << ret << "ax=" << ax << direct;
-        if(ret != 0)
+        if(ret < 0)
             sysError("mrgRobotRelMove", ret);
     };
 

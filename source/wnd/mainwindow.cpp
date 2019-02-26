@@ -121,7 +121,7 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addAction( ui->actionDownload );
     ui->mainToolBar->addAction( ui->actionUpload );
     ui->mainToolBar->addAction( ui->actionStore );
-    ui->mainToolBar->addAction( ui->actionSync );
+//    ui->mainToolBar->addAction( ui->actionSync );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionSearch );
     ui->mainToolBar->addSeparator();

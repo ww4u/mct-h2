@@ -337,6 +337,12 @@ void H2Action::soltActionRunEnd(int ret)
 
 bool H2Action::setSpeedRatio()
 {
+#if 0
+    //! 临时添加
+    mrgMRQPVTTimeScale(mViHandle, mDeviceName, 0, 0, 250, 250);
+    mrgMRQPVTTimeScale(mViHandle, mDeviceName, 1, 0, 250, 250);
+#endif
+
     int speedup1, speedcut1;
     int speedup2, speedcut2;
     int ret = -1;
