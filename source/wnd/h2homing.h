@@ -26,15 +26,6 @@ public:
 public slots:
     void slot_set_direction(QString text);
 
-private slots:
-    void on_comboBox_target_currentIndexChanged(const QString &arg1);
-
-    void on_comboBox_movement_currentIndexChanged(const QString &arg1);
-
-    void on_doubleSpinBox_SearchVelocity_valueChanged(double arg1);
-
-    void on_doubleSpinBox_ForceLimit_valueChanged(double arg1);
-
 private:
     Ui::H2Homing *ui;
 

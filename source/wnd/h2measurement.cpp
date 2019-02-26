@@ -170,17 +170,8 @@ void H2Measurement::updateShow()
     ui->doubleSpinBox_swln_Y->setValue( m_SWLimitNegativeY );
 }
 
-void H2Measurement::on_comboBox_AxesZeroPoint_currentIndexChanged(int index)
-{
-    m_ZeroPoint = index;
-    emit signalModelDataChanged(true);
-}
-
 void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
 {
-    m_ProjectZeroPointX = arg1;
-    emit signalModelDataChanged(true);
-
     ui->doubleSpinBox_pzpX->setRange(0, m_WorkStrokeX);
     ui->doubleSpinBox_pzpX->setValue(arg1);
 
@@ -195,9 +186,6 @@ void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
 
 void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
 {
-    m_ProjectZeroPointY = arg1;
-    emit signalModelDataChanged(true);
-
     ui->doubleSpinBox_pzpY->setRange(0, m_WorkStrokeY);
     ui->doubleSpinBox_pzpY->setValue(arg1);
 
@@ -208,30 +196,6 @@ void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
     ui->doubleSpinBox_swln_Y->setRange(0, arg1);
     ui->doubleSpinBox_swln_Y->setToolTip(QString("%1<->%2").arg(0).arg(arg1));
     ui->doubleSpinBox_swln_Y->setValue(0);
-}
-
-void H2Measurement::on_doubleSpinBox_swlp_X_valueChanged(double arg1)
-{
-    m_SWLimitPositiveX = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2Measurement::on_doubleSpinBox_swlp_Y_valueChanged(double arg1)
-{
-    m_SWLimitPositiveY = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2Measurement::on_doubleSpinBox_swln_X_valueChanged(double arg1)
-{
-    m_SWLimitNegativeX = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2Measurement::on_doubleSpinBox_swln_Y_valueChanged(double arg1)
-{
-    m_SWLimitNegativeY = arg1;
-    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::setWorkStrokeY(double WorkStrokeY)

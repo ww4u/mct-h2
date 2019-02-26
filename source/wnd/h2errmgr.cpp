@@ -10,10 +10,6 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
     setFocuHelpName( "Error_management" );
 
-    connect(&mErrManager, &ErrMgrModel::dataChanged,
-            [=](){emit signalModelDataChanged(true);} );
-
-
     //! 建立错误响应通信和显示对应表
     m_mapRespStrToInt.insert( ACTION_FREEWHEEL, 1 );
     m_mapRespStrToInt.insert( ACTION_QSDEC, 2 );

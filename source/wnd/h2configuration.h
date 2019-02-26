@@ -27,16 +27,8 @@ signals:
     void WorkStrokeXChanged(double);
     void WorkStrokeYChanged(double);
 
-
 private slots:
-    void on_radioButton_b_toggled(bool checked);
-
-    void on_radioButton_t_toggled(bool checked);
-
     void on_sizeComboBox_currentIndexChanged(int index);
-
-    void on_doubleSpinBox_X_valueChanged(double arg1);
-    void on_doubleSpinBox_Y_valueChanged(double arg1);
 
 private:
     Ui::H2Configuration *ui;
@@ -45,9 +37,6 @@ private:
     int     m_Size;
     double  m_WorkStrokeX;
     double  m_WorkStrokeY;
-    int     m_MotorPosition;
-
-    void changeModelLabel();
 };
 
 #endif // FORMTEST_H

@@ -14,11 +14,12 @@ H2Configuration::H2Configuration(QWidget *parent) :
 
     ui->label_family->setText("MRX-H2");
 
-    //暂时隐藏此选择项
-    ui->groupBox_motorPos->setEnabled(false);
-    ui->groupBox_motorPos->setHidden(true);
+    ui->doubleSpinBox_X->setEnabled(false);
+    ui->doubleSpinBox_Y->setEnabled(false);
+    connect(ui->doubleSpinBox_X,SIGNAL(valueChanged(double)),this,SIGNAL(WorkStrokeXChanged(double)));
+    connect(ui->doubleSpinBox_Y,SIGNAL(valueChanged(double)),this,SIGNAL(WorkStrokeYChanged(double)));
 
-    ui->sizeComboBox->setEnabled(false);
+    ui->sizeComboBox->setEnabled(false); //! 只有H2M,暂时不可选
 }
 
 H2Configuration::~H2Configuration()
@@ -61,27 +62,16 @@ int H2Configuration::readDeviceConfig()
     }
     m_Size = ret;
 
-    //WorkStrokeX
-
-    //WorkStrokeY
-
-#if 0
-    int val = 0;
-    ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
-    qDebug() << "mrgMRQMotionReverse_Query" << ret;
-    if(ret < 0) {
-        sysError("mrgMRQMotionReverse_Query", ret);
-        return -1;
-    }
-    m_MotorPosition = val;
-#endif
-
     return 0;
 }
 
 int H2Configuration::writeDeviceConfig()
 {
     int ret = -1;
+
+    m_Size        = ui->sizeComboBox->currentIndex();
+    m_WorkStrokeX = ui->doubleSpinBox_X->value();
+    m_WorkStrokeY = ui->doubleSpinBox_Y->value();
 
     //type:0==>H2S, 1==>H2M, 2==>H2L
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
@@ -90,21 +80,6 @@ int H2Configuration::writeDeviceConfig()
         sysError("mrgSetRobotSubType", ret);
         return -1;
     }
-
-    //WorkStrokeX
-
-
-    //WorkStrokeY
-
-#if 0
-    //states:OFF==>bottom, ON==>top
-    ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
-    qDebug() << "mrgMRQMotionReverse" << ret;
-    if(ret != 0){
-        sysError("mrgMRQMotionReverse", ret);
-        return -1;
-    }
-#endif
 
     return ret;
 }
@@ -123,9 +98,6 @@ int H2Configuration::loadConfig()
 
     m_Family = map["Family"];
     m_Size = map["Size"].toInt();
-//    m_WorkStrokeX = map["WorkStrokeX"].toDouble();
-//    m_WorkStrokeY = map["WorkStrokeY"].toDouble();
-    m_MotorPosition = map["MotorPosition"].toInt();
 
     return 0;
 }
@@ -140,7 +112,6 @@ int H2Configuration::saveConfig()
     map.insert( "Size", QString::number(m_Size));
     map.insert( "WorkStrokeX", QString::number(m_WorkStrokeX));
     map.insert( "WorkStrokeY", QString::number(m_WorkStrokeY));
-    map.insert( "MotorPosition", QString::number(m_MotorPosition));
 
     mXML.xmlNodeRemove(fileName,"H2Configuration");
     mXML.xmlNodeAppend(fileName, "H2Configuration", map);
@@ -156,22 +127,33 @@ void H2Configuration::updateShow()
     ui->doubleSpinBox_Y->setValue(m_WorkStrokeY);
 
     on_sizeComboBox_currentIndexChanged(m_Size);
-
-#if 0
-    if(0 == m_MotorPosition){
-        ui->radioButton_b->setChecked(true);
-        ui->radioButton_t->setChecked(false);
-    }else{
-        ui->radioButton_b->setChecked(false);
-        ui->radioButton_t->setChecked(true);
-    }
-#endif
 }
 
-void H2Configuration::changeModelLabel()
+void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 {
-    QString model = "";
+    if(index < 0) return;
+    m_Size = index;
 
+    if(index == 0){
+        //! MRX-H2-S
+        ui->doubleSpinBox_X->setValue(0); //! TODO
+        ui->doubleSpinBox_Y->setValue(0); //! TODO
+    }
+    else if(index == 1){
+        //! MRX-H2-M 355 x 375
+        ui->doubleSpinBox_X->setValue(355);
+        ui->doubleSpinBox_Y->setValue(375);
+    }
+    else if(index == 2){
+        //! MRX-H2-L
+        ui->doubleSpinBox_X->setValue(0); //! TODO
+        ui->doubleSpinBox_Y->setValue(0); //! TODO
+    }
+    else{
+        //! 定制
+    }
+
+    QString model = "";
     m_Family = ui->label_family->text();
     model += m_Family;
 
@@ -185,87 +167,12 @@ void H2Configuration::changeModelLabel()
         model += "-L";
     }
     else{
-//        model += "-";
-//        model += QString::number(m_WorkStrokeX);
 
-//        model += "-";
-//        model += QString::number(m_WorkStrokeY);
     }
-
-#if 0
-    if(ui->radioButton_b->isChecked()){
-        model += "-B";
-    }
-    else if(ui->radioButton_t->isChecked()){
-        model += "-T";
-    }
-#endif
-
     ui->label_model->setText(model);
-}
-
-
-void H2Configuration::on_radioButton_b_toggled(bool checked)
-{
-    if(checked)
-        m_MotorPosition = 0;
-    emit signalModelDataChanged(true);
-}
-
-void H2Configuration::on_radioButton_t_toggled(bool checked)
-{
-    if(checked)
-        m_MotorPosition = 1;
-
-    emit signalModelDataChanged(true);
-}
-
-void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
-{
-    if(index < 0) return;
-    m_Size = index;
-
-    ui->doubleSpinBox_X->setEnabled(false);
-    ui->doubleSpinBox_Y->setEnabled(false);
-
-    if(index == 0){
-        //! MRX-H2-S
-        ui->doubleSpinBox_X->setValue(0);
-        ui->doubleSpinBox_Y->setValue(0);
-    }
-    else if(index == 1){
-        //! MRX-H2-M 370 x 390
-        ui->doubleSpinBox_X->setValue(370);
-        ui->doubleSpinBox_Y->setValue(390);
-    }
-    else if(index == 2){
-        //! MRX-H2-L
-        ui->doubleSpinBox_X->setValue(0);
-        ui->doubleSpinBox_Y->setValue(0);
-    }
-    else{
-        //! 定制
-    }
-
-    changeModelLabel();
-    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::translateUI()
 {
     ui->retranslateUi(this);
-}
-
-void H2Configuration::on_doubleSpinBox_X_valueChanged(double arg1)
-{
-    m_WorkStrokeX = arg1;
-    emit signalModelDataChanged(true);
-    emit WorkStrokeXChanged(m_WorkStrokeX);
-}
-
-void H2Configuration::on_doubleSpinBox_Y_valueChanged(double arg1)
-{
-    m_WorkStrokeY = arg1;
-    emit signalModelDataChanged(true);
-    emit WorkStrokeYChanged(m_WorkStrokeY);
 }

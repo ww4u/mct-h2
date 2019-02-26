@@ -14,7 +14,6 @@ H2Action::H2Action(QWidget *parent) :
     m_strDeviceFileName = "MCT_motion.mrp";
     m_fileContext = "";
     m_menu = NULL;
-    m_speedRatio = 0;
 
     m_pDelegate = new comboxDelegate(this);
     QStringList prxs;
@@ -25,9 +24,6 @@ H2Action::H2Action(QWidget *parent) :
     m_delegatePosY          = new DoubleSpinBoxDelegate(2, -9999.99, 9999.99, this);
     m_delegateVelocity      = new DoubleSpinBoxDelegate(2, 0.01, 9999.99, this);
     m_delegateAcceleration  = new DoubleSpinBoxDelegate(2, 0, 9999.99, this);
-
-    connect(&m_actionModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            this, SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
 
     connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
@@ -174,12 +170,6 @@ void H2Action::updateShow()
 
 }
 
-void H2Action::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
-{
-//    qDebug() << "slotModelChanged:" << index1 << index2 << vector;
-    emit signalModelDataChanged(true);
-}
-
 void H2Action::translateUI()
 {
     ui->retranslateUi(this);
@@ -247,7 +237,8 @@ void H2Action::soltActionRun()
         return;
     }
 
-    if(false == setSpeedRatio()){
+    double speedRatio = getSpeedRatio();
+    if(speedRatio < 0){
         return;
     }
 
@@ -281,7 +272,7 @@ void H2Action::soltActionRun()
                 return;
             }
 
-            time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (m_speedRatio * velocity) ;
+            time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (speedRatio * velocity) ;
             qDebug() << "mrgRobotMove PA offset time" << posX << posY << time;
             ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
             if(ret < 0) {
@@ -291,7 +282,7 @@ void H2Action::soltActionRun()
             }
         }
         else if(strType == "PRA" || strType == "PRN" ){
-            time = sqrt( pow(posX,2) + pow(posY,2) ) / (m_speedRatio * velocity) ;
+            time = sqrt( pow(posX,2) + pow(posY,2) ) / (speedRatio * velocity) ;
             qDebug() << "mrgRobotRelMove PRA/PRN offset time" << posX << posY << time;
             ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
             if(ret < 0) {
@@ -335,7 +326,7 @@ void H2Action::soltActionRunEnd(int ret)
     }
 }
 
-bool H2Action::setSpeedRatio()
+double H2Action::getSpeedRatio()
 {
 #if 0
     //! 临时添加
@@ -351,28 +342,22 @@ bool H2Action::setSpeedRatio()
     {
         qDebug() << "mrgMRQPVTTimeScale_Query0 error" << ret;
         sysError("mrgMRQPVTTimeScale_Query,0,0", ret);
-        goto ERROR;
+        return -1;
     }
     ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 1, 0, &speedup2, &speedcut2);
     if(ret != 0)
     {
         qDebug() << "mrgMRQPVTTimeScale_Query1 error" << ret;
         sysError("mrgMRQPVTTimeScale_Query,1,0", ret);
-        goto ERROR;
+        return -2;
     }
     if((speedup1 != speedup2) || (speedcut1 != speedcut2))
     {
         QMessageBox::critical(this,tr("error"),tr("The acceleration/deceleration ratios of the two channels are different!"));
-        goto ERROR;
+        return -3;
     }
 
-END:
-    m_speedRatio = ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
-    return true;
-
-ERROR:
-    m_speedRatio = 0;
-    return false;
+    return ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
 }
 
 

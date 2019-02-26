@@ -41,7 +41,6 @@ public slots:
 
 
 private slots:
-    void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
     void slotCurrentRowChanged(QModelIndex index);
 
     void slotShowContextmenu(const QPoint &pos);
@@ -65,8 +64,8 @@ private:
 
     QMenu *m_menu;
 
-    double m_speedRatio;
-    bool setSpeedRatio();
+//    double m_speedRatio;
+    double getSpeedRatio();
 };
 
 #endif // H2ACTION_H

@@ -33,19 +33,9 @@ signals:
 private slots:
     void slotChangeCornerPicture(int index);
 
-    void on_comboBox_AxesZeroPoint_currentIndexChanged(int index);
-
     void on_doubleSpinBox_pzpX_valueChanged(double arg1);
 
     void on_doubleSpinBox_pzpY_valueChanged(double arg1);
-
-    void on_doubleSpinBox_swlp_X_valueChanged(double arg1);
-
-    void on_doubleSpinBox_swlp_Y_valueChanged(double arg1);
-
-    void on_doubleSpinBox_swln_X_valueChanged(double arg1);
-
-    void on_doubleSpinBox_swln_Y_valueChanged(double arg1);
 
 private:
     Ui::H2Measurement *ui;

@@ -23,13 +23,6 @@ public:
 
     void translateUI() override;
 
-private slots:
-    void on_doubleSpinBox_CrawlingVelocity_valueChanged(double arg1);
-
-    void on_doubleSpinBox_CrawlingTime_valueChanged(double arg1);
-
-    void on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1);
-
 private:
     Ui::H2JogMode *ui;
 

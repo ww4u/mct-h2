@@ -22,6 +22,10 @@ int H2Homing::readDeviceConfig()
 
 int H2Homing::writeDeviceConfig()
 {
+    m_Target = ui->comboBox_target->currentText();
+    m_Movement = ui->comboBox_movement->currentText();
+    m_SearchVelocity = ui->doubleSpinBox_SearchVelocity->value();
+    m_ForceLimit = ui->doubleSpinBox_ForceLimit->value();
 
     return 0;
 }
@@ -73,34 +77,9 @@ void H2Homing::updateShow()
     ui->doubleSpinBox_ForceLimit->setValue(m_ForceLimit);
 }
 
-void H2Homing::on_comboBox_target_currentIndexChanged(const QString &arg1)
-{
-    m_Target = arg1;
-    emit signalModelDataChanged(true);
-}
-
 void H2Homing::slot_set_direction(QString text)
 {
     ui->label_direction->setText(text);
-    emit signalModelDataChanged(true);
-}
-
-void H2Homing::on_comboBox_movement_currentIndexChanged(const QString &arg1)
-{
-    m_Movement = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2Homing::on_doubleSpinBox_SearchVelocity_valueChanged(double arg1)
-{
-    m_SearchVelocity = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2Homing::on_doubleSpinBox_ForceLimit_valueChanged(double arg1)
-{
-    m_ForceLimit = arg1;
-    emit signalModelDataChanged(true);
 }
 
 void H2Homing::translateUI()

@@ -22,6 +22,9 @@ int H2JogMode::readDeviceConfig()
 
 int H2JogMode::writeDeviceConfig()
 {
+    m_CrawlingVelocity = ui->doubleSpinBox_CrawlingVelocity->value();
+    m_CrawlingTime     = ui->doubleSpinBox_CrawlingTime->value();
+    m_MaximumVelocity  = ui->doubleSpinBox_MaximumVelocity->value();
 
     return 0;
 }
@@ -66,24 +69,6 @@ void H2JogMode::updateShow()
     ui->doubleSpinBox_CrawlingVelocity->setValue(m_CrawlingVelocity);
     ui->doubleSpinBox_CrawlingTime->setValue(m_CrawlingTime);
     ui->doubleSpinBox_MaximumVelocity->setValue(m_MaximumVelocity);
-}
-
-void H2JogMode::on_doubleSpinBox_CrawlingVelocity_valueChanged(double arg1)
-{
-    m_CrawlingVelocity = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2JogMode::on_doubleSpinBox_CrawlingTime_valueChanged(double arg1)
-{
-    m_CrawlingTime     = arg1;
-    emit signalModelDataChanged(true);
-}
-
-void H2JogMode::on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1)
-{
-    m_MaximumVelocity  =arg1;
-    emit signalModelDataChanged(true);
 }
 
 void H2JogMode::translateUI()

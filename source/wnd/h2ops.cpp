@@ -24,7 +24,7 @@ H2Ops::H2Ops(QWidget *parent) :
     mDeviceName = 0;
     mRobotName = 0;
     m_strDevInfo = "";
-    m_speedRatio = 0;
+    m_speedRatio = -1;
 
     m_recordNumber = -1;
     m_isDebugRunFlag = false;
@@ -298,7 +298,7 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
 }
 
 //从设备查询加减速比
-bool H2Ops::setSpeedRatio()
+double H2Ops::getSpeedRatio()
 {
 #if 0
     //! 临时添加
@@ -314,34 +314,27 @@ bool H2Ops::setSpeedRatio()
     {
         qDebug() << "mrgMRQPVTTimeScale_Query0 error" << ret;
         sysError("mrgMRQPVTTimeScale_Query,0,0", ret);
-        goto ERROR;
+        return -1;
     }
     ret = mrgMRQPVTTimeScale_Query(mViHandle, mDeviceName, 1, 0, &speedup2, &speedcut2);
     if(ret != 0)
     {
         qDebug() << "mrgMRQPVTTimeScale_Query1 error" << ret;
         sysError("mrgMRQPVTTimeScale_Query,1,0", ret);
-        goto ERROR;
+        return -2;
     }
     if((speedup1 != speedup2) || (speedcut1 != speedcut2))
     {
         QMessageBox::critical(this,tr("error"),tr("The acceleration/deceleration ratios of the two channels are different!"));
-        goto ERROR;
+        return -3;
     }
 
-END:
-    m_speedRatio = ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
-    return true;
-
-ERROR:
-    m_speedRatio = 0;
-    return false;
+    return ((speedup1 + speedcut1)/2 + (1000 - speedup1 - speedcut1)) / 1000.0;
 }
 
 void H2Ops::slotSetCurrentRecordNumber(int number)
 {
     m_recordNumber = number;
-//    qDebug() << "m_recordNumber" << m_recordNumber;
     ui->pushButton_apply->setText(tr("Apply as point ") + QString::number(m_recordNumber));
 }
 
@@ -354,7 +347,6 @@ void H2Ops::slotLoadConfigAgain()
     if( !file.exists() )
         fileName = qApp->applicationDirPath() + "/robots/default.xml";
 
-//    qDebug() << "slotLoadConfigAgain:" << fileName;
     QMap<QString,QString> map = mXML.xmlRead(fileName);
     if(map.isEmpty()){
         sysError("slotLoadConfigAgain error");
@@ -382,11 +374,9 @@ void H2Ops::slotRobotStop()
 
 void H2Ops::slot_mct_checked(bool checked)
 {
-    qDebug() << "OPS:slot_mct_checked" << checked;
     for(int i=1; i<ui->tabWidget->count(); i++){
         ui->tabWidget->setTabEnabled(i, checked);
     }
-
 
     if(!checked){
         setTimerStop(m_timerOpsAll);
@@ -402,7 +392,6 @@ void H2Ops::slot_mct_checked(bool checked)
 
 void H2Ops::slot_power_checked(bool checked)
 {
-    qDebug() << "OPS:slot_power_checked" << checked;
     ui->tabWidget->setCurrentIndex(0);
     if(mViHandle == 0) return;
 
@@ -423,8 +412,8 @@ void H2Ops::slot_power_checked(bool checked)
             return;
         }
 
-        bool ok = setSpeedRatio();
-        if(!ok){
+        m_speedRatio = getSpeedRatio();
+        if(m_speedRatio < 0){
             return;
         }
         qDebug() << "m_speedRatio:" << m_speedRatio;
@@ -453,7 +442,6 @@ void H2Ops::slot_power_checked(bool checked)
 
         setAllTabStopWorking();
     }
-
 }
 
 void H2Ops::slot_btnAckError_clicked()
@@ -491,8 +479,6 @@ void H2Ops::setAllTabStopWorking()
 
 void H2Ops::on_tabWidget_currentChanged(int index)
 {
-//    qDebug() << __func__ << index << ui->tabWidget->tabText( index );
-
     emit signal_focus_in( mSubTabs.at(index)->focuHelpName() );
 
     if(mViHandle == 0) return;
@@ -1259,15 +1245,6 @@ LAB1:
         if(v1>=0 && v1<=100 && v2>=0 && v2<=100)
             m_splineChart1->dataAppend(v1,v2);
     }
-
-#if 0
-    qsrand((uint) QTime::currentTime().msec());
-
-    int v1 = qrand() % 101;
-    int v2 = qrand() % 101;
-    m_splineChart1->dataAppend(v1,v2);
-    m_splineChart2->dataAppend(v1,v2);
-#endif
 }
 
 void H2Ops::updateTabDebug()

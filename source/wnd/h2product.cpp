@@ -44,9 +44,6 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
 
 void H2Product::slotCheckLanConnect(bool isconnect)
 {
-    //bool isconnect = QtPing(this->m_IP);
-    qDebug() << "QtPing:" << isconnect;
-
     if(mViHandle > 0) {
         //打开状态
         if(!isconnect){
