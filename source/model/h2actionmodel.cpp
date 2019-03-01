@@ -54,6 +54,8 @@ bool H2ActionModel::setData(const QModelIndex &index, const QVariant &value, int
 {
     if (index.isValid() && role == Qt::EditRole)
     {
+        beginResetModel();
+
         int col = index.column();
         int row = index.row();
         if ( col == 0 )
@@ -71,7 +73,8 @@ bool H2ActionModel::setData(const QModelIndex &index, const QVariant &value, int
         else
         {}
 
-        emit dataChanged(index, index);
+        endResetModel();
+//        emit dataChanged(index, index);
 
         return true;
     }
@@ -331,6 +334,7 @@ int H2ActionModel::input( const QString &fileName )
 
     removeRows( 0, mItems.count(), QModelIndex() );
 
+    beginResetModel();
     //! data
     H2ActionItem item;
     for ( int i = 0; i < pSec->rows(); i++ )
@@ -351,10 +355,7 @@ int H2ActionModel::input( const QString &fileName )
         insertRow( mItems.size() );
         *mItems[ mItems.size()- 1 ] = item;
     }
-
-    emit dataChanged( index(0,0),
-                      index(mItems.count(),
-                      H2ActionItem::columns() - 1) );
+    endResetModel();
 
     return 0;
 }

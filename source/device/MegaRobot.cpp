@@ -7,7 +7,8 @@
 #include <string.h>
 #include "MegaRobot.h"
 
-#define  SEND_BUF   (100)
+#define     SEND_BUF        (100)
+#define     DELAYTIME       (100)  //! 查询延时时间
 
 /*********************** 机器人操作 *******************************/
 /*
@@ -588,7 +589,7 @@ EXPORT_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
     {
         snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", name);
     }
-    else if(wavetable >=0 && wavetable < 10)
+    else if(wavetable >=0 && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:RUN %d,%d\n", name,wavetable);
     }
@@ -610,16 +611,12 @@ EXPORT_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
 EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:STOP %d,%d\n", name, wavetable);
     }
     else {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -641,28 +638,24 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
     char args[SEND_BUF];
     char state[12];
     int time = 0, retlen = 0;
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
     }
     else
     {
-        return -4;
+        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
     }
     while (1)
     {
-        Sleep(200);
+        Sleep(DELAYTIME);
         if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
             if (++error_count > 3)
             {
                 return -1;
             }
-            Sleep(200);
-            time += 200;
+            Sleep(DELAYTIME);
+            time += DELAYTIME;
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
@@ -673,8 +666,8 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
-        time += 200;
+        Sleep(DELAYTIME);
+        time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
                 ret = -3; break;
@@ -692,23 +685,20 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
 * timeout_ms：等待超时时间
 * 返回值：0表示等待成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时;-4:参数出错
 */
-EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int timeout_ms)
 {
     int ret = -3,error_count = 0;
     char args[SEND_BUF];
     char state[100];
     int time = 0, retlen = 0;
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
     }
     else
     {
-        return -4;
+        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
     }
     while (1)
     {
@@ -718,8 +708,8 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
             {
                 return -1;
             }
-            Sleep(50);
-            time += 50;
+            Sleep(DELAYTIME);
+            time += DELAYTIME;
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
@@ -729,8 +719,8 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(50);
-        time += 50;
+        Sleep(DELAYTIME);
+        time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
                 ret = -3; break;
@@ -753,17 +743,14 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
 EXPORT_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f\n", name, x, y, z, time);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f,%d\n", name, x, y, z, time,wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f\n", name, x, y, z, time);
     }
     
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -788,17 +775,13 @@ EXPORT_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, 
 EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f\n", name, ax, speed);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%d\n", name, ax, speed,wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f\n", name, ax, speed);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -820,17 +803,13 @@ EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax
 EXPORT_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", name, ax, cr_time, cr_speed, speed);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%f,%f,%d\n", name, ax, cr_time, cr_speed, speed, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", name, ax, cr_time, cr_speed, speed);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -851,17 +830,13 @@ EXPORT_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int a
 EXPORT_API int CALL mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -886,17 +861,13 @@ EXPORT_API int CALL mrgRobotRelMove(ViSession vi, int name, int wavetable, float
 EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", name, x, y, z, time);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", name, x, y, z, time);
     }
 
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -922,17 +893,13 @@ EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, float x
 EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1175,8 +1142,8 @@ EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
-        time += 200;
+        Sleep(DELAYTIME);
+        time += DELAYTIME;
         if (timeout_ms != 0) {
             if (time > timeout_ms) {
                 ret = -3; break;
@@ -1347,17 +1314,13 @@ EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, float y, 
 EXPORT_API int CALL mrgRobotPointResolve(ViSession vi, int name, int wavetable,int timeout_ms )
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", name);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d,%d\n", name, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", name);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1414,17 +1377,13 @@ EXPORT_API int CALL mrgRobotPvtLoad(ViSession vi, int name, float p, float v, fl
 EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int timeout_ms)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", name);
-    }
-    else if (wavetable >= 0 && wavetable < 10)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d,%d\n", name, wavetable);
     }
     else
     {
-        return -2;
+        snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", name);
     }
 
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -1549,8 +1508,8 @@ EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
-        time += 200;
+        Sleep(DELAYTIME);
+        time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
                 mrgRobotToolStop(vi, name);
@@ -1642,8 +1601,8 @@ EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
-        time += 200;
+        Sleep(DELAYTIME);
+        time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
                 ret = -3; break;

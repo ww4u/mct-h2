@@ -28,7 +28,7 @@ const static char *_errorCodes[] =
     QT_TRANSLATE_NOOP("ERRORS", "Logic voltage exceeded"),
     QT_TRANSLATE_NOOP("ERRORS", "Logic voltage too low"),
     QT_TRANSLATE_NOOP("ERRORS", "Temperature LM-CPU"),
-    QT_TRANSLATE_NOOP("ERRORS", "Intermediate circuit voltage exceede"),
+    QT_TRANSLATE_NOOP("ERRORS", "Intermediate circuit voltage exceeded"),
     QT_TRANSLATE_NOOP("ERRORS", "Intermediate circuit voltage too low"),
     QT_TRANSLATE_NOOP("ERRORS", "CAN Node Guarding, FB has overall control"),
     QT_TRANSLATE_NOOP("ERRORS", "CAN bus communication stopped by master, FB has overall control"),

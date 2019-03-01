@@ -370,7 +370,6 @@ void MainWindow::setUiStyle(const QString &styleFile)
     if( ! QFile::exists(styleFile) )
     {
         qDebug() << "setStyleSheet file not exists!";
-        sysError("setStyleSheet file not exists!" + styleFile);
         return;
     }
 
@@ -380,7 +379,6 @@ void MainWindow::setUiStyle(const QString &styleFile)
         qss.close();
 
         qDebug() << "setStyleSheet:" << styleFile;
-//        sysInfo("setStyleSheet", styleFile);
     }
 }
 

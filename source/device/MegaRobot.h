@@ -15,7 +15,8 @@ enum MRX_TYPE
     MRX_UNKOWN,
 };
 
-
+#define     WAVETABLE_MIN   0   //! 最小波表号
+#define     WAVETABLE_MAX   9   //! 最大波表号
 
 /*********************** 机器人操作 *******************************/
 /*
@@ -241,7 +242,7 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name, int wavetable, int
 * timeout_ms：等待超时时间
 * 返回值：0表示等待成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时;-4:参数出错
 */
-EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int timeout_ms);
+EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int timeout_ms);
 /*
 * 机器人从当前位置移动到指定位置（随机移动）
 * vi :visa设备句柄

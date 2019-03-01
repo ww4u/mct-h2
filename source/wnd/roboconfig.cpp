@@ -790,7 +790,7 @@ int RoboConfig::deviceOpen(QString strID)
         if( (ret <= 0) || (roboNames[0] == 0) )
         {
             qDebug() << "mrgGetRobotName error" << ret;
-            sysError("mrgGetRobotName error");
+//            sysError("mrgGetRobotName error");
             goto BUILD;
         }
         roboName = roboNames[0];//默认选择第一个机器人
@@ -799,7 +799,7 @@ int RoboConfig::deviceOpen(QString strID)
         if( (ret <= 0) || (deviceNames[0] == 0) )
         {
             qDebug() << "mrgGetRobotDevice error" << ret;
-            sysError("mrgGetRobotDevice error");
+//            sysError("mrgGetRobotDevice error");
             goto BUILD;
         }
         deviceName = deviceNames[0];//默认选择第一个驱控器
@@ -871,7 +871,7 @@ END:
     mrgIdentify(visa, 0); //关闭识别防止用户之前打开
 
     qDebug() << "device open" << strID << visa;
-    sysInfo("Device Open", visa);
+    sysInfo("Device Open", strID);
 
     m_RobotList[mIndex].m_Visa = visa;
     m_RobotList[mIndex].m_DeviceName = deviceName;

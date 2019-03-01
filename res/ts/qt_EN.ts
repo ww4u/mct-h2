@@ -6,202 +6,202 @@
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="18"/>
         <source>Software error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="19"/>
         <source>Default parameter file invalid</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="20"/>
         <source>Non-permitted hardware</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="21"/>
         <source>Zero angle determination</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="22"/>
         <source>Encoder</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="23"/>
         <source>Parameter file invalid</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="24"/>
         <source>Firmware update execution error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="25"/>
         <source>I²t malfunction motor</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="26"/>
         <source>Softwarelimit positive</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="27"/>
         <source>Softwarelimit negative</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="28"/>
         <source>Logic voltage exceeded</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="29"/>
         <source>Logic voltage too low</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="30"/>
         <source>Temperature LM-CPU</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="31"/>
-        <source>Intermediate circuit voltage exceede</source>
-        <translation type="unfinished"></translation>
+        <source>Intermediate circuit voltage exceeded</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="32"/>
         <source>Intermediate circuit voltage too low</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="33"/>
         <source>CAN Node Guarding, FB has overall control</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="34"/>
         <source>CAN bus communication stopped by master, FB has overall control</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="35"/>
         <source>Path calculation</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="36"/>
         <source>CAN fieldbus parameters missing</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="37"/>
         <source>Save parameters</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="38"/>
         <source>Homing required</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="39"/>
         <source>Target position behind negative software end position</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="40"/>
         <source>Target position behind positive software end position</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="41"/>
         <source>Firmware update, invalid firmware</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="42"/>
         <source>Incorrect record number</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="43"/>
         <source>I²t warning motor</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="44"/>
         <source>Following error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="45"/>
         <source>Extern stop</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="46"/>
         <source>CVE connection</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="47"/>
         <source>MCT connection</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="48"/>
         <source>Torque Off (TO)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="49"/>
         <source>CAN Node Guarding, warning, FB does not have overall control</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="50"/>
         <source>CAN bus communication stopped by master, warning, FB does not have overall control</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="51"/>
         <source>Standstill monitoring</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="52"/>
         <source>Parameter file access</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="53"/>
         <source>Homing Timeout</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="54"/>
         <source>Start-up event</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="55"/>
         <source>Diagnostic memory</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="56"/>
         <source>Record invalid</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="57"/>
         <source>System reset</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -212,78 +212,78 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="21"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="21"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="21"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="227"/>
+        <location filename="../../source/wnd/h2action.cpp" line="217"/>
         <source>Run</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="246"/>
-        <location filename="../../source/wnd/h2action.cpp" line="258"/>
+        <location filename="../../source/wnd/h2action.cpp" line="236"/>
+        <location filename="../../source/wnd/h2action.cpp" line="249"/>
         <source>warning</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="246"/>
+        <location filename="../../source/wnd/h2action.cpp" line="236"/>
         <source>Device motor uneable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="258"/>
+        <location filename="../../source/wnd/h2action.cpp" line="249"/>
         <source>Device Homing Invalid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="322"/>
+        <location filename="../../source/wnd/h2action.cpp" line="313"/>
         <source>tips</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="322"/>
+        <location filename="../../source/wnd/h2action.cpp" line="313"/>
         <source>Run Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="325"/>
-        <location filename="../../source/wnd/h2action.cpp" line="328"/>
-        <location filename="../../source/wnd/h2action.cpp" line="331"/>
-        <location filename="../../source/wnd/h2action.cpp" line="359"/>
+        <location filename="../../source/wnd/h2action.cpp" line="316"/>
+        <location filename="../../source/wnd/h2action.cpp" line="319"/>
+        <location filename="../../source/wnd/h2action.cpp" line="322"/>
+        <location filename="../../source/wnd/h2action.cpp" line="356"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="325"/>
+        <location filename="../../source/wnd/h2action.cpp" line="316"/>
         <source>Get current position error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="328"/>
+        <location filename="../../source/wnd/h2action.cpp" line="319"/>
         <source>Running error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="331"/>
+        <location filename="../../source/wnd/h2action.cpp" line="322"/>
         <source>Type error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="359"/>
+        <location filename="../../source/wnd/h2action.cpp" line="356"/>
         <source>The acceleration/deceleration ratios of the two channels are different!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -294,69 +294,54 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="88"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="101"/>
         <source>Mechanics</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="109"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="122"/>
         <source>WorkSpace X-Stroke:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="153"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="166"/>
         <source>WorkSpace Y-Stroke:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="172"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="185"/>
         <source>Size:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="191"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="204"/>
         <source>Family:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="248"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="261"/>
         <source>Select Size Of Current MRX-H2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="261"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="274"/>
         <source>Small</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="266"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="279"/>
         <source>Middle</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="271"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="284"/>
         <source>Big</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="328"/>
-        <location filename="../../source/wnd/h2configuration.ui" line="377"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="341"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="390"/>
         <source> mm</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="409"/>
-        <source>Motor Position</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="427"/>
-        <source>Bottom(B)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="449"/>
-        <source>Top(T)</source>
         <translation></translation>
     </message>
 </context>
@@ -423,7 +408,7 @@
     <message>
         <location filename="../../source/wnd/h2homing.ui" line="369"/>
         <source>0.01 - 300</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2homing.ui" line="421"/>
@@ -720,8 +705,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1277"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1329"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1338"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1312"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1321"/>
         <source>Run to Project Zero Point</source>
         <translation></translation>
     </message>
@@ -803,8 +788,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1999"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1047"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1060"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1039"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1052"/>
         <source>Run  Sequence</source>
         <translation></translation>
     </message>
@@ -931,95 +916,95 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="322"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="328"/>
         <source>The acceleration/deceleration ratios of the two channels are different!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="339"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="338"/>
         <source>Apply as point </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="457"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="505"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="451"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="497"/>
         <source>tips</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="457"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="451"/>
         <source>Success!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="460"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="454"/>
         <source>Failured!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="505"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="497"/>
         <source>unable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="634"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="626"/>
         <source>load completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="649"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="726"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="641"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="718"/>
         <source>save completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="322"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="460"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="733"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="328"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="454"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="657"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="725"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="657"/>
         <source>Error log upload error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="733"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="725"/>
         <source>failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="783"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="793"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="775"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="785"/>
         <source>Start Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="786"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="778"/>
         <source>Stop Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="858"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="864"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="850"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="856"/>
         <source>warning</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="858"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="864"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="850"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="856"/>
         <source>Target position over the limit</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1063"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1055"/>
         <source>Stop Sequence</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1332"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1315"/>
         <source>Stop</source>
         <translation></translation>
     </message>
@@ -1059,7 +1044,7 @@
     <message>
         <location filename="../../source/wnd/h2product.ui" line="387"/>
         <source>Connect Or Disconnect</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1067,32 +1052,32 @@
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="56"/>
         <source>Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="57"/>
         <source>Measurements</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="58"/>
         <source>Homing</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="59"/>
         <source>Jog Mode</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="60"/>
         <source>Record Table</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2robo.cpp" line="61"/>
         <source>Error Management</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1161,98 +1146,98 @@
         <location filename="../../source/model/diagnosisitem.cpp" line="6"/>
         <location filename="../../source/model/errmgritem.cpp" line="6"/>
         <source>No.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/debugitem.cpp" line="9"/>
         <source>Delay(s)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="7"/>
         <source>Error Text</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="8"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="9"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="10"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="11"/>
         <source>Reaction on error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="12"/>
         <source>Output stage on</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/errmgritem.cpp" line="13"/>
         <source>Save diagnosis</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="7"/>
         <location filename="../../source/model/h2actionitem.cpp" line="6"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="8"/>
         <source>Timestamp</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="9"/>
         <source>Additional Info</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="10"/>
         <source>Counter</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="11"/>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/h2actionitem.cpp" line="7"/>
         <source>Target X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/h2actionitem.cpp" line="8"/>
         <source>Target Y</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/h2actionitem.cpp" line="9"/>
         <source>Velocity</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/h2actionitem.cpp" line="10"/>
         <source>Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/model/h2actionitem.cpp" line="11"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1309,12 +1294,12 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="152"/>
         <source>Sto&amp;p</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="155"/>
         <source>Emergency Stop</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="158"/>
@@ -1329,7 +1314,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="166"/>
         <source>Exit MCT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="169"/>
@@ -1354,7 +1339,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="194"/>
         <source>Upload Parameter Config From MRHT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="197"/>
@@ -1369,7 +1354,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="209"/>
         <source>Download Parameter Config To MRHT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="212"/>
@@ -1384,7 +1369,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="224"/>
         <source>Permanently Stored Config To MRHT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="227"/>
@@ -1399,7 +1384,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="239"/>
         <source>Synchronize MRHT and MCT configurations</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="242"/>
@@ -1434,7 +1419,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="295"/>
         <source>Search MRHT To The Project</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="298"/>
@@ -1449,7 +1434,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="310"/>
         <source>Connect Or Disconnect MRHT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="313"/>
@@ -1464,7 +1449,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="321"/>
         <source>Reboot System</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="324"/>
@@ -1479,7 +1464,7 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="332"/>
         <source>Poweroff  System</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="335"/>
@@ -1494,28 +1479,28 @@
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="343"/>
         <source>MRHT Connect To Wifi</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="348"/>
         <source>&amp;UpdateFirmware</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="351"/>
         <source>Update Firmware For MRHT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="356"/>
         <location filename="../../source/wnd/mainwindow.cpp" line="491"/>
         <source>DPI</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="359"/>
         <source>Display</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="107"/>
@@ -1536,42 +1521,42 @@
         <location filename="../../source/wnd/mainwindow.cpp" line="113"/>
         <location filename="../../source/wnd/mainwindow.cpp" line="317"/>
         <source>&amp;ShowHelp</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="141"/>
         <source>STOP</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="491"/>
         <source>Please choose DPI:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
         <source>tips</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
         <source>Modify DPI success!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="501"/>
         <source>Effective after system reboot</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="503"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="503"/>
         <source>Modify DPI failured!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1597,7 +1582,7 @@
     <message>
         <location filename="../../source/widget/megainterface.ui" line="62"/>
         <source>MRX-H2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.ui" line="101"/>
@@ -1617,46 +1602,46 @@
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <source>IP</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>SN</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="131"/>
         <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>USBID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="175"/>
         <source>Identify ON</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="176"/>
         <source>Identify OFF</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/widget/megainterface.cpp" line="244"/>
@@ -1679,7 +1664,7 @@
     <message>
         <location filename="../../source/wnd/roboconfig.ui" line="66"/>
         <source>Restore default configuration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="154"/>
@@ -1750,7 +1735,7 @@
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="310"/>
         <source>Upload Failure</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
@@ -1766,7 +1751,7 @@
         <location filename="../../source/wnd/roboconfig.cpp" line="37"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="937"/>
         <source>Project</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
@@ -1832,37 +1817,37 @@
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="462"/>
         <source>search firmware file error or empty!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="468"/>
         <source>Udisk not found!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="473"/>
         <source>Please Choose Update File:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
         <source>Firmware Update success!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="496"/>
         <source>Reboot device take effect</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="499"/>
         <source>Firmware Update timeout!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
         <source>Firmware Update error!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="556"/>

@@ -5,16 +5,16 @@
         <Family>MRX-H2</Family>
         <MotorPosition>0</MotorPosition>
         <Size>1</Size>
-        <WorkStrokeX>370</WorkStrokeX>
-        <WorkStrokeY>390</WorkStrokeY>
+        <WorkStrokeX>355</WorkStrokeX>
+        <WorkStrokeY>375</WorkStrokeY>
     </H2Configuration>
     <H2Measurement id="H2Measurement">
         <ProjectZeroPointX>0.00</ProjectZeroPointX>
         <ProjectZeroPointY>0.00</ProjectZeroPointY>
         <SWLimitNegativeX>0.00</SWLimitNegativeX>
         <SWLimitNegativeY>0.00</SWLimitNegativeY>
-        <SWLimitPositiveX>370.00</SWLimitPositiveX>
-        <SWLimitPositiveY>390.00</SWLimitPositiveY>
+        <SWLimitPositiveX>355.00</SWLimitPositiveX>
+        <SWLimitPositiveY>375.00</SWLimitPositiveY>
 		<Direction>Comer Point 1</Direction>
         <ZeroPoint>0</ZeroPoint>
     </H2Measurement>
@@ -27,6 +27,6 @@
     <H2JogMode id="H2JogMode">
         <CrawlingTime>1000.00</CrawlingTime>
         <CrawlingVelocity>50.00</CrawlingVelocity>
-        <MaximumVelocity>200.00</MaximumVelocity>
+        <MaximumVelocity>100.00</MaximumVelocity>
     </H2JogMode>
 </root>

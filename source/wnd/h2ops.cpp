@@ -622,8 +622,6 @@ void H2Ops::on_btnImport_clicked()
     { return; }
 
     m_pDebugModel->load( fDlg.selectedFiles().first() );
-
-    sysInfo( fDlg.selectedFiles().first(), tr("load completed") );
 }
 
 void H2Ops::on_btnExport_clicked()
@@ -637,8 +635,6 @@ void H2Ops::on_btnExport_clicked()
     { return; }
 
     m_pDebugModel->save( fDlg.selectedFiles().first() );
-
-    sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
 
 //! diagnosis
@@ -714,8 +710,6 @@ void H2Ops::on_btnExport_2_clicked()
     { return; }
 
     m_pDiagnosisModel->save( fDlg.selectedFiles().first() );
-
-    sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
 
 ////////////////////////////////////// 点击发送指令
@@ -975,7 +969,6 @@ void H2Ops::on_pushButton_stop_clicked()
 
     int ret = mrgRobotStop(mViHandle, mRobotName, -1);
     qDebug() << "mrgRobotStop" << ret;
-//    sysInfo("mrgRobotStop", ret);
 
     ui->toolButton_singlestep_x_dec->setEnabled(true);
     ui->toolButton_singlestep_x_inc->setEnabled(true);
@@ -1069,11 +1062,8 @@ void H2Ops::updateBackgroundStatus()
     if(mViHandle <= 0) return;
     int homeVaild = mrgGetRobotHomeRequire(mViHandle, mRobotName);
     qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
-//    sysInfo("mrgGetRobotHomeRequire", homeVaild);
     if(homeVaild == 1)
     {//表示需要回零
-        sysInfo("Robot Need Go Home");
-
         ui->radHome->setChecked(false);
         ui->radioButton_homing_valid->setChecked(false);
 

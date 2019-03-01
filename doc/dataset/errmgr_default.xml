@@ -183,7 +183,7 @@
 </item>
 <item>
 <mNr>26</mNr>
-<mErr>Intermediate circuit voltage exceede</mErr>
+<mErr>Intermediate circuit voltage exceeded</mErr>
 <mEventType>1</mEventType>
 <mbErrorAble>1</mbErrorAble>
 <mbWarnAble>0</mbWarnAble>

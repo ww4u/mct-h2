@@ -26,7 +26,7 @@ void H2Measurement::slotChangeCornerPicture(int index)
     strPixmap += ".PNG";
 
     ui->label_picture->setPixmap(QPixmap(strPixmap));
-    emit signal_AxesZeroPoint_currentTextChanged(ui->comboBox_AxesZeroPoint->currentText());
+    emit signal_AxesZeroPoint_currentTextChanged( ui->comboBox_AxesZeroPoint->currentText() );
 }
 
 int H2Measurement::readDeviceConfig()

@@ -142,7 +142,6 @@ int H2Action::loadConfig()
         m_strLocalFileName = qApp->applicationDirPath() + "/dataset/action_default.mrp";
 
     //! load action from csv
-//    sysInfo("H2Action::loadConfig",m_strLocalFileName);
     int ret = m_actionModel.input(m_strLocalFileName);  //保存到model
     m_fileContext = readFile(m_strLocalFileName);       //保存到类中
 
