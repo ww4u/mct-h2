@@ -49,9 +49,11 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
         //! \note 0x
         if ( role == Qt::DisplayRole )
         {
-            return QVariant( QString("0x%1(%2)")
-                             .arg( mItems[row]->mNr, 2, 16, QChar('0') )
-                             .arg(mItems[row]->mNr, 2, 10, QChar('0')) );
+            QString strCode = QString("0x%1(%2)")
+                    .arg( mItems[row]->mNr, 2, 16, QChar('0') )
+                    .arg(mItems[row]->mNr, 2, 10, QChar('0'));
+
+            return QVariant( strCode.toUpper() );
         }
         else
         { return QVariant( mItems[ row ]->mNr ); }

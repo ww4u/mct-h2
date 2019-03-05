@@ -244,29 +244,6 @@ int DiagnosisModel::serialIn( QXmlStreamReader & reader )
     return 0;
 }
 
-void DiagnosisModel::createDemoData()
-{
-    //! assign
-    delete_all( mItems );
-
-    DiagnosisItem *pItem;
-    for ( int i = 0; i < 10; i++ )
-    {
-        pItem = new DiagnosisItem();
-
-        pItem->mNr = i;
-        pItem->mType = "Err";
-        pItem->mTs = QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z");
-        pItem->mAddInfo = "additional info";
-        pItem->mCounter = i;
-        pItem->mMessage = "no messgage";
-
-        mItems.append( pItem );
-    }
-
-    endResetModel();
-}
-
 
 void DiagnosisModel::appendOneItem(int nr,
                                 QString type,
@@ -279,7 +256,14 @@ void DiagnosisModel::appendOneItem(int nr,
 
     pItem = new DiagnosisItem();
     pItem->mNr = nr;
-    pItem->mType = type;
+
+    if(type == "F")
+        pItem->mType = tr("ERROR");
+    else if(type == "W")
+        pItem->mType = tr("WARNING");
+    else if(type == "I")
+        pItem->mType = tr("INFO");
+
     pItem->mTs = ts;
     pItem->mAddInfo = addInfo;
     pItem->mCounter = counter;

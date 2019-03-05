@@ -13,7 +13,7 @@ code:错误代码值
 error:返回错误代码配置值
 len: 长度
 */
-EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *diagnose, int *response, int *enable)
+EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type,  int *response, int *diagnose, int *enable)
 {
     char error[256] = "";
     int len = 256;
@@ -28,8 +28,7 @@ EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, 
     char *p, *pNext;
     char values[32][64] = {""};
     p = STRTOK_S(error, ",", &pNext);
-    while (p)
-    {
+    while (p){
         strcpy(values[count++], p);
         p = STRTOK_S(NULL, ",", &pNext);
     }
@@ -48,42 +47,46 @@ EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, 
         return -2;
     }
 
-    //! diagnose
-    if(STRCASECMP(values[1], "ON") == 0){
-        *diagnose = 1;
+    //! response
+    if(STRCASECMP(values[1], "A") == 0){
+        *response = 1;
     }
-    else if(STRCASECMP(values[1], "OFF") == 0){
-        *diagnose = 0;
+    else if(STRCASECMP(values[1], "B") == 0){
+        *response = 2;
+    }
+    else if(STRCASECMP(values[1], "C") == 0){
+        *response = 3;
+    }
+    else if(STRCASECMP(values[1], "D") == 0){
+        *response = 4;
+    }
+    else if(STRCASECMP(values[1], "E") == 0){
+        *response = 5;
+    }
+    else if(STRCASECMP(values[1], "F") == 0){
+        *response = 6;
+    }
+    else if(STRCASECMP(values[1], "G") == 0){
+        *response = 7;
+    }
+    else if(STRCASECMP(values[1], "NONE") == 0){
+        *response = -1;
     }
     else{
         return -3;
     }
 
-    //! response
-    if(STRCASECMP(values[2], "A") == 0){
-        *response = 1;
+    //! diagnose
+    if(STRCASECMP(values[2], "ON") == 0){
+        *diagnose = 1;
     }
-    else if(STRCASECMP(values[2], "B") == 0){
-        *response = 2;
-    }
-    else if(STRCASECMP(values[2], "C") == 0){
-        *response = 3;
-    }
-    else if(STRCASECMP(values[2], "D") == 0){
-        *response = 4;
-    }
-    else if(STRCASECMP(values[2], "E") == 0){
-        *response = 5;
-    }
-    else if(STRCASECMP(values[2], "F") == 0){
-        *response = 6;
-    }
-    else if(STRCASECMP(values[2], "G") == 0){
-        *response = 7;
+    else if(STRCASECMP(values[2], "OFF") == 0){
+        *diagnose = 0;
     }
     else{
         return -4;
     }
+
 
     //! enable
     if(STRCASECMP(values[3], "Y") == 0){
@@ -108,7 +111,7 @@ diagnose: 诊断器是否配置 必配/选配 -> 0,1
 response: 错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
 enable: 是否使能 Y/N ->0,1
 */
-EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int diagnose, int response, int enable)
+EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable)
 {
 	char args[SEND_BUF];
 	int retlen = 0;
@@ -118,84 +121,72 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 	char* ps8Response = NULL;
 	char* ps8Enable = NULL;
 
-	if (type == 1)
-	{
+	if (type == 1){
 		ps8Type = "F";
 	}
-	else if (type == 2)
-	{
+	else if (type == 2){
 		ps8Type = "W";
 	}
-	else if (type == 3)
-	{
+	else if (type == 3){
 		ps8Type = "I";
 	}
-	else
-	{
+	else{
 		return -1;
 	}
 
+    if(ps8Type == "F")
+    {
+        if (response == 1){
+            ps8Response = "A";
+        }
+        else if (response == 2){
+            ps8Response = "B";
+        }
+        else if (response == 3){
+            ps8Response = "C";
+        }
+        else if (response == 4){
+            ps8Response = "D";
+        }
+        else if (response == 5){
+            ps8Response = "E";
+        }
+        else if (response == 6){
+            ps8Response = "F";
+        }
+        else if (response == 7){
+            ps8Response = "G";
+        }
+        else{
+            return -2;
+        }
+    }
+    else
+    {
+        ps8Response = "NONE"; //不是错误类型，没有响应选项
+    }
 
-    if (diagnose == 1)
-	{
-		ps8Diagnose = "ON";
-	}
-    else if (diagnose == 0)
-	{
-		ps8Diagnose = "OFF";
-	}
-	else
-	{
-		return -2;
-	}
+    if (diagnose == 1){
+        ps8Diagnose = "ON";
+    }
+    else if (diagnose == 0){
+        ps8Diagnose = "OFF";
+    }
+    else{
+        return -3;
+    }
 
-	if (response == 1)
-	{
-		ps8Response = "A";
-	}
-	else if (response == 2)
-	{
-		ps8Response = "B";
-	}
-	else if (response == 3)
-	{
-		ps8Response = "C";
-	}
-	else if (response == 4)
-	{
-		ps8Response = "D";
-	}
-	else if (response == 5)
-	{
-		ps8Response = "E";
-	}
-	else if (response == 6)
-	{
-		ps8Response = "F";
-	}
-	else if (response == 7)
-	{
-		ps8Response = "G";
-	}
-	else
-	{
-		return -3;
-	}
-
-	if (enable == 0)
-	{
+	if (enable == 0){
 		ps8Enable == "N";
 	}
-	else if (enable == 1)
-	{
+	else if (enable == 1){
 		ps8Enable = "Y";
 	}
-	else
-	{
+	else{
 		return -4;
 	}
 
-    snprintf(args, SEND_BUF, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Diagnose, ps8Response, ps8Enable);
+    snprintf(args, SEND_BUF, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Response, ps8Diagnose, ps8Enable);
 	if ((retlen = busWrite(vi, args, strlen(args))) <= 0) {
 		return -5;
 	}
@@ -221,7 +212,7 @@ EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, 
 	{
 		return -2;
 	}
-    snprintf(args, SEND_BUF, ":ERRLog:UPLoad? %s\n", as8Format[format]);
+    snprintf(args, SEND_BUF, ":ERRLOG:UPLOAD? %s\n", as8Format[format]);
     if (busWrite(vi, args, strlen(args)) == 0)
     {
         return 0;
@@ -269,7 +260,7 @@ EXPORT_API int CALL mrgErrorLogClear(ViSession vi)
 	char args[SEND_BUF];
 	int retlen = 0;
 
-    snprintf(args, SEND_BUF, ":ERRL:CLEar\n");
+    snprintf(args, SEND_BUF, ":ERRLOG:CLEAR\n");
 	if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
 		return -1;
 	}

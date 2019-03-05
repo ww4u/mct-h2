@@ -33,8 +33,6 @@ public:
     int serialOut( QXmlStreamWriter & writer );
     int serialIn( QXmlStreamReader & reader );
 
-    void createDemoData();
-
 public:
     QList< DiagnosisItem *> mItems;
     void appendOneItem(int nr, QString type, QString ts, QString addInfo, int counter, QString message);

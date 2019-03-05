@@ -13,7 +13,7 @@ diagnose: 输出诊断器是否配置 必配/选配 -> 0,1
 response: 输出错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
 enable: 输出是否使能 Y/N ->0,1
 */
-EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *diagnose, int *response, int *enable);
+EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *response, int *diagnose, int *enable);
 
 /*
 下载错误代码配置
@@ -24,7 +24,7 @@ diagnose: 诊断器是否配置 必配/选配 -> 0,1
 response: 错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
 enable: 是否使能 Y/N ->0,1
 */
-EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int diagnose, int response, int enable);
+EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable);
 
 
 /**

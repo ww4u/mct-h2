@@ -272,6 +272,11 @@ void H2Action::soltActionRun()
             }
 
             time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (speedRatio * velocity) ;
+            if(time < 0.01){
+                ret = 0xff; //! 忽略
+                return;
+            }
+
             qDebug() << "mrgRobotMove PA offset time" << posX << posY << time;
             ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
             if(ret < 0) {
@@ -283,6 +288,11 @@ void H2Action::soltActionRun()
         else if(strType == "PRA" || strType == "PRN" ){
             time = sqrt( pow(posX,2) + pow(posY,2) ) / (speedRatio * velocity) ;
             qDebug() << "mrgRobotRelMove PRA/PRN offset time" << posX << posY << time;
+            if(time < 0.01){
+                ret = 0xff; //! 忽略
+                return;
+            }
+
             ret = mrgRobotRelMove(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
             if(ret < 0) {
                 sysError("mrgRobotRelMove", ret);

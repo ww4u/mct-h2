@@ -53,27 +53,27 @@ int H2ErrMgr::readDeviceConfig()
 
 
         //! 45 53 54 55 61 不是error类型
-        if(code == 45 || code == 53 || code == 54 || code == 55 || code == 61)
-            continue;
 
-        int ret=  mrgErrorCodeConfigUpload(mViHandle, code, &type, &diagnose, &response, &enable);
+        int ret=  mrgErrorCodeConfigUpload(mViHandle, code, &type, &response, &diagnose, &enable);
         if(ret < 0){
             sysError("mrgErrorCodeConfigUpload", code);
             qDebug() << "mrgErrorCodeConfigUpload error" << code << ret;
             isOk = -1;
             continue;
         }
-        qDebug() << "ErrorCodeUpload" << ret << ":" << code << type << diagnose << response << enable;
+        qDebug() << "ErrorCodeUpload" << ret << ":" << code << type << response << diagnose << enable;
 
         mErrManager.mItems.at(i)->mEventType = (e_event_type)type;
+        if(type == e_error)
+        {
+            int reaction = 0;
+            int output = 0;
+            parseResponse(response, &reaction, &output);
 
-        int reaction = 0;
-        int output = 0;
-        parseResponse(response, &reaction, &output);
-
-        mErrManager.mItems.at(i)->mAction =  m_mapRespIntToStr[reaction];
-        mErrManager.mItems.at(i)->mbOutput = (output==1) ? true : false;
-        mErrManager.mItems.at(i)->mbSaveDiagnosis = (diagnose==1) ? true : false;
+            mErrManager.mItems.at(i)->mAction =  m_mapRespIntToStr[reaction];
+            mErrManager.mItems.at(i)->mbOutput = (output==1) ? true : false;
+            mErrManager.mItems.at(i)->mbSaveDiagnosis = (diagnose==1) ? true : false;
+        }
     }
 
     return isOk;
@@ -103,12 +103,9 @@ int H2ErrMgr::writeDeviceConfig()
 
         int enable = 1; //默认使能,界面上没有对应的列
 
-        //! 45 53 54 55 61 不是error类型
-        if(code == 45 || code == 53 || code == 54 || code == 55 || code == 61)
-            continue;
-
-        ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
-        qDebug() << "ErrorCodeDownload:" << code << type << diagnose << QChar('A' + response - 1) << enable << "ret:" << ret;
+        ret = mrgErrorCodeConfigDownload(mViHandle, code, type, response, diagnose, enable);
+//        qDebug() << "ErrorCodeDownload:" << code << type << response
+//                 << diagnose << enable << "ret:" << ret;
         if(ret < 0){
             sysError("mrgErrorCodeConfigDownload", code);
             isOk = -1;

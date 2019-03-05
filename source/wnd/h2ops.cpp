@@ -640,20 +640,20 @@ void H2Ops::on_btnExport_clicked()
 //! diagnosis
 void H2Ops::on_btnRead_clicked()
 {
-    int len = 4096;
+    int len = 1024*40;
     char *logBuff = (char *)malloc(len);
+    memset(logBuff,0,len);
     int ret = mrgErrorLogUpload(mViHandle, 1, logBuff, len );
     QString strFileData = QString("%1").arg(logBuff);
     free(logBuff);
 
     qDebug() << "mrgErrorLogUpload" << ret;
-    if(ret <= 0)
+    if(ret < 0)
     {
         sysError("mrgErrorLogUpload");
         QMessageBox::critical(this,tr("error"), tr("Error log upload error!"));
         return;
     }
-
     qDebug() << "mrgErrorLogUpload Data:" << strFileData;
 
     QList<QStringList> lstData;
@@ -664,20 +664,21 @@ void H2Ops::on_btnRead_clicked()
     m_pDiagnosisModel->removeRows( 0, m_pDiagnosisModel->items()->count(), QModelIndex() );
     foreach (QStringList lst, lstData) {
 
+        if(lst.size() < 6)
+            continue;
+
         bool ok = false;
         int code = lst.at(0).toInt(&ok);
         if(!ok) continue;
-        int counter = lst.at(1).toInt(&ok);
-        if(!ok) continue;
-        QString strTime = lst.at(2);
 
-        m_pDiagnosisModel->appendOneItem(
-                    code,
-                    " ", //error type
-                    strTime,
-                    " ", //additional info
-                    counter,
-                    " ");
+        QString strType = lst.at(1);
+        QString strTime = lst.at(2);
+        QString strAdditionInfo = lst.at(3);
+        int counter = lst.at(4).toInt(&ok);
+        if(!ok) continue;
+        QString strMessage = lst.at(5);
+
+        m_pDiagnosisModel->appendOneItem(code,strType,strTime,strAdditionInfo,counter,strMessage);
     };
 
 
@@ -826,17 +827,20 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
 {
     if(mViHandle <= 0) return;
 
-    double curPosX = ui->doubleSpinBox_currentPos_x->value();
-    double curPosY = ui->doubleSpinBox_currentPos_y->value();
-
-    double offset = ui->doubleSpinBox_Increament->value();
-    double speed = ui->doubleSpinBox_Velocity->value();
-    float time = offset/(m_speedRatio*speed); //把速度当成最大速度
-
     double  SWLimitPositiveX = m_Data["SWLimitPositiveX"].toDouble() + 0.5;
     double  SWLimitPositiveY = m_Data["SWLimitPositiveY"].toDouble() + 0.5;
     double  SWLimitNegativeX = m_Data["SWLimitNegativeX"].toDouble() - 0.5;
     double  SWLimitNegativeY = m_Data["SWLimitNegativeY"].toDouble() - 0.5;
+
+    double  ProjectZeroPointX = m_Data["ProjectZeroPointX"].toDouble();
+    double  ProjectZeroPointY = m_Data["ProjectZeroPointY"].toDouble();
+
+    double curPosX = ui->doubleSpinBox_currentPos_x->value() + ProjectZeroPointX;
+    double curPosY = ui->doubleSpinBox_currentPos_y->value() + ProjectZeroPointY;
+
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/(m_speedRatio*speed); //把速度当成最大速度
 
     if(ax == 0){
         double move = curPosX + (offset*direct);
