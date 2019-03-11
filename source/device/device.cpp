@@ -358,5 +358,41 @@ EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode)
     }
     return 0;
 }
-
-
+/*
+*读取MRHT的IO状态
+*vi :visa设备句柄
+*state : xin的状态,低四位
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetXinState(ViSession vi, int* state)
+{
+    char args[SEND_BUF];
+    char as8Ret[100] = { 0 };
+    int len = 0;
+    snprintf(args, SEND_BUF, "PROJ:XREAD? 0");
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
+        return -1;
+    }
+    else {
+        as8Ret[len - 1] = '\0';
+        *state = atoi(as8Ret);
+        return 0;
+    }
+}
+/*
+*设置MRHT的IO输出状态
+*vi :visa设备句柄
+*yout : 0表示Y1,1表示Y2
+*state : YOUT的状态,0表示低电平,1表示高电平
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgSetYoutState(ViSession vi, int yout,int state)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "PROJ:YWRITE %s,%s", yout?"Y2":"Y1", state?"H":"L");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}

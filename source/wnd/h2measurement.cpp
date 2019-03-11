@@ -40,7 +40,7 @@ int H2Measurement::readDeviceConfig()
     }
     m_ZeroPoint = ret;
 
-    double x, y, z;
+    float x, y, z;
     if(0 == mrgGetRobotProjectZero(mViHandle, mRobotName, &x, &y, &z) ){
         qDebug() << "mrgGetRobotProjectZero" << x << y;
         m_ProjectZeroPointX = x;

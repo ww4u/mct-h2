@@ -751,7 +751,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
     auto func = [=](int &result)
     {
         //不等待
-        int ret = mrgRobotGoHome(mViHandle, mRobotName, velocity, -1);
+        int ret = mrgRobotGoHomeWithParam(mViHandle, mRobotName, velocity, -1);
         qDebug() << "mrgRobotGoHome" << ret;
 
         while(1)
@@ -1153,7 +1153,7 @@ void H2Ops::updateTabOpreate()
     ui->doubleSpinBox_RecordNumber->setValue( record );
 
     //! 更新目标位置
-    double dx = -1, dy = -1, dz = -1;
+    float dx = -1, dy = -1, dz = -1;
     ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &dx, &dy, &dz);
     qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
     ui->doubleSpinBox_target_position_x->setValue( dx );

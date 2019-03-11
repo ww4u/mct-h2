@@ -78,7 +78,7 @@ int H2Configuration::readDeviceConfig()
     m_Size = ret;
     if(m_Size == 3){
         //! 定制产品，获取滑块长宽，获取模具类型，获取齿轮齿数
-        double links[6] = {0.0};
+        float links[6] = {0.0};
         int count = -1;
         ret = mrgGetRobotLinks(mViHandle,mRobotName,links,&count);
         if(ret < 0 || count < 6){
@@ -121,7 +121,7 @@ int H2Configuration::writeDeviceConfig()
 
     if(m_Size == 3){
         //! 定制产品，设置滑块长宽，设置模具类型，设置齿轮齿数
-        double links[6] = {m_WorkStrokeX,m_WorkStrokeY,
+        float links[6] = {m_WorkStrokeX,m_WorkStrokeY,
                            m_SliderWidth,m_SliderHeight,
                            m_MouldType,m_TeethQty};
         ret = mrgSetRobotLinks(mViHandle, mRobotName, links, 6);

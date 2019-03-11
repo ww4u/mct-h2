@@ -415,7 +415,7 @@ void RoboConfig::slotWifi()
 
     int ret = -1;
     char wifiList[1024] = "";
-    ret = mrgSysWifiSearch(m_RobotList[mIndex].m_Visa, wifiList);
+    ret = mrgSysWifiScan(m_RobotList[mIndex].m_Visa, wifiList,1024);
     if(ret < 0)
     {
         QMessageBox::critical(this,tr("error"),tr("Wifi search error or empty!"));
@@ -435,7 +435,7 @@ void RoboConfig::slotWifi()
     if(password == "")
         return;
 
-    ret = mrgSysWifiConnect(m_RobotList[mIndex].m_Visa, wifiName.toLocal8Bit().data(), password.toLocal8Bit().data());
+    ret = mrgSysWifiConfig(m_RobotList[mIndex].m_Visa, wifiName.toLocal8Bit().data(), password.toLocal8Bit().data());
     if(ret == 1){
         QMessageBox::information(this,tr("tips"),tr("Wifi Connect success!"));
     }
@@ -443,6 +443,9 @@ void RoboConfig::slotWifi()
         QMessageBox::critical(this,tr("error"),tr("Wifi Connect error!"));
         qDebug() << "mrgSysWifiConnect" << ret;
     }
+
+    mrgSysWifiUpDown(m_RobotList[mIndex].m_Visa, 0);
+    mrgSysWifiUpDown(m_RobotList[mIndex].m_Visa, 1);
     return;
 }
 

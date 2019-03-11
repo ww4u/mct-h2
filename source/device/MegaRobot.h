@@ -23,16 +23,53 @@ enum MRX_TYPE
 
 #define     WAVETABLE_MIN   0   //! 最小波表号
 #define     WAVETABLE_MAX   9   //! 最大波表号
+#define     DEFAULT_WAVETABLE (-1)
 
 /*********************** 机器人操作 *******************************/
 /*
 * 构建一个机器人
 * vi :visa设备句柄
 * robotType：要构建的机器人类型（MRX-T4,MRX-H2,MRX-DELTA）
-* devList：设备列表 “512@0,512@1,”
+* chlist：设备列表 “0@512,1@512,”
 * 返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname);
+EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * chlist, int * robotname);
+/*
+* 构建一个机器人,机器人的名子由用户指定
+* vi :visa设备句柄
+* robotType：要构建的机器人类型（MRX-T4,MRX-H2,MRX-DELTA）
+* devList：设备列表 “0@512,1@512,”
+* robotid: 用户设定的机器人名子
+* robotname :返回的机器人名子
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgBuildRobotNamed(ViSession vi, char * robotType, char * devList, int robotid, int * robotname);
+/*
+* 删除当前机器人
+* vi :visa设备句柄
+* name:机器人名称
+* 返回值：0表示执行成功，－1表示执行失败
+* 说明：此函数目前只对H2有效
+*/
+EXPORT_API int CALL mrgDeleteRobot(ViSession vi, int name);
+/*
+* 设置当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* 返回值：小于零表示出错
+* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
+*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+*/
+EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int name, float * links, int link_count);
+/*
+* 获取当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* link_count: 获取到的连秆长度
+* 返回值：0成功,否则失败
+* 说明：
+*/
+EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int name, float * links, int *link_count);
 /*
 * 查询当前机器人的构形
 * vi :visa设备句柄
@@ -150,7 +187,7 @@ EXPORT_API int CALL mrgGetRobotDevice(ViSession vi, int robotname, int * device)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x, double y, double z);
+EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, float x, float y, float z);
 /*
 * 查询当前机器人的项目零点
 * vi :visa设备句柄
@@ -159,7 +196,7 @@ EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x, dou
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name, double * x, double *y, double *z);
+EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name, float * x, float *y, float *z);
 /*
 * 设置当前机器人的校准零点
 * vi :visa设备句柄
@@ -168,7 +205,7 @@ EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name, double * x, d
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double y, double z);
+EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, float x, float y, float z);
 /*
 * 查询当前机器人的校准零点
 * vi :visa设备句柄
@@ -177,7 +214,7 @@ EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, double *y, double *z);
+EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, float * x, float *y, float *z);
 /*
 * 设置当前机器人的软件限位
 * vi :visa设备句柄
@@ -187,7 +224,7 @@ EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, doub
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name, int type, double x, double y, double z);
+EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name, int type, float x, float y, float z);
 /*
 * 查询当前机器人的校准零点
 * vi :visa设备句柄
@@ -197,7 +234,7 @@ EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name, int type, d
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name, int type, double * x, double *y, double *z);
+EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name, int type, float * x, float *y, float *z);
 /*
 * 设置指定机器人的波表
 * vi :visa设备句柄
@@ -344,7 +381,7 @@ EXPORT_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode
 * step: 插值步长
 * 返回值：0表示执行成功，－1：表示出错，
 */
-EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, double step);
+EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, float step);
 /*
 * 查询机器人当前插值步长
 * vi :visa设备句柄
@@ -352,7 +389,7 @@ EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, double st
 * step: 插值步长
 * 返回值：0表示执行成功，－1：表示出错，
 */
-EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, double* step);
+EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, float* step);
 /*
 * 设置机器人回零位时使用的波表
 * vi :visa设备句柄
@@ -373,12 +410,11 @@ EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name);
 * 机器人回零位操作
 * vi :visa设备句柄
 * name: 机器人名称
-* velocity: 回零速度
 * timeout_ms:表示等待超时时间
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 * 说明：末端保持不动
 */
-EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name,double velocity,int timeout_ms);
+EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name, int timeout_ms);
 /*
 * 机器人回零位操作
 * vi :visa设备句柄
@@ -388,7 +424,7 @@ EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name,double velocity,int ti
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 * 说明：末端保持不动
 */
-EXPORT_API int CALL mrgRobotGoHomeWithParam(ViSession vi, int name, double param, int timeout_ms);
+EXPORT_API int CALL mrgRobotGoHomeWithParam(ViSession vi, int name, float param, int timeout_ms);
 /*
 * 停止机器人回零位操作
 * vi :visa设备句柄
@@ -441,7 +477,7 @@ EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int name);
 * vi :visa设备句柄
 * name: 机器人名称
 * 返回值：1表示需要回零 ，0表示不需要回零，小于零表示出错，
-* 说明：
+* 说明：MRHT在构建机器人后,第一件事就是回零.如果不回零,禁止对机器人的操作
 */
 EXPORT_API int CALL mrgGetRobotHomeRequire(ViSession vi, int name);
 /*
@@ -464,7 +500,7 @@ EXPORT_API int CALL mrgRobotPointClear(ViSession vi, int name);
 * 说明：此函数只是将上位机的坐标点信息下载到MRG中，MRG并未开始解算.
 *  另，  在调用此函数开始下发坐标点前，务必使用mrgRobotPointClear()函数，通知机器人清空其缓存中的坐标点。
 */
-EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float end, float time, int mod);
+EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float end, float time,int mod,float step);
 /*
 * 通知机器人开始解算其缓存中的坐标点，并下发给模块设备，直到模块设备解算完成
 * vi :visa设备句柄
@@ -509,13 +545,31 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable, in
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi, int name, char* filename);
+EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi, int name,char* filename);
+/*
+* 从本地存储器中，导入运动文件到机器人缓存中
+* vi :visa设备句柄
+* name: 机器人名称
+* filename: 点坐标文件名
+* 返回值：0表示执行成功，否则表示失败
+* 说明 :
+*/
+EXPORT_API int CALL mrgRobotMotionFileImportLocal(ViSession vi, int name, char* filename);
+/*
+* 从外部存储器中，导入运动文件到机器人缓存中
+* vi :visa设备句柄
+* name: 机器人名称
+* filename: 点坐标文件名
+* 返回值：0表示执行成功，否则表示失败
+* 说明 :
+*/
+EXPORT_API int CALL mrgRobotMotionFileImportExternal(ViSession vi, int name, char* filename);
 /*
 * 解算当前运动文件内容到模块中
 * vi :visa设备句柄
 * name: 机器人名称
-* section:文件中的哪个段，这是个必须的参数
-* line：一个段中的哪一行（只针对MFC的文件），line从1开始计数。对于非MFC的文件，不关心line值。
+* section:文件中的哪个段，这是个必须的参数. 从零开始计数.
+* line：一个段中的哪一行（只针对MFC的文件），line从1开始计数。对于非MFC的文件，不关心line值。line的值为零时,表示本次要解析整个段的数据.
 * wavetable : 波表索引。如果不想明确指定波表，可设置 为-1.
 * timeout_ms:等等解算完成的超时时间。若timeout_ms＝－1，表示不等待解算完成。timeout_ms ＝ 0，表示无限等待。
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
@@ -535,11 +589,11 @@ EXPORT_API int CALL mrgRobotMotionFileExport(ViSession vi, int name, int locatio
 * 设置末端执行器类型及相应的设备
 * vi :visa设备句柄
 * name: 机器人名称
-* type: 末端执行器类型
-* dev : 末端执行器对应的通道设备
+* type: 末端执行器类型 0->爪子
+* dev : 末端执行器对应的通道设备 (1@513), 哪个设备的哪个轴
 * 返回值：0表示执行成功，－1：表示出错
 */
-EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, char * type, char* dev);
+EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, int type, char* dev);
 /*
 * 等待末端执行器执行完成
 * vi :visa设备句柄
@@ -581,6 +635,14 @@ EXPORT_API int CALL mrgRobotToolStopGoHome(ViSession vi, int name);
 */
 EXPORT_API int CALL mrgRobotToolGoHome(ViSession vi, int name, int timeout_ms);
 /*
+* 获取机器人末端执行器的位置
+* vi :visa设备句柄
+* name: 机器人名称
+* position:末端执行器的位置(相对于机械零点),单位:角度.
+* 返回值：0表示执行正确, 否则执行失败
+*/
+EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int name, float * position);
+/*
 * 获取机器人当前各关节的角度值
 * vi :visa设备句柄
 * name: 机器人名称
@@ -596,13 +658,43 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name, float * angl
 */
 EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x, float *y, float* z);
 /*
+* 机器人某一个轴回零
+* vi :visa设备句柄
+* name: 机器人名称
+* axi :轴索引
+* speed: 回零速度,单位:度/秒
+* timeout_ms:表示等待回零结束的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
+* 返回值：0表示执行成功， －1：表示执行失败
+*/
+EXPORT_API int CALL mrgRobotJointHome(ViSession vi, int name, int axi, float speed, int timeout_ms);
+/*
+* 控制机器人某一个轴运动
+* vi :visa设备句柄
+* name: 机器人名称
+* axi :轴索引
+* position: 轴运行的距离,单位: 度
+* time : 轴运动时所需要的时间. 单位:秒
+* timeout_ms:表示等待回零结束的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
+* 返回值：0表示执行成功， －1：表示执行失败
+*/
+EXPORT_API int CALL mrgRobotJointMove(ViSession vi, int name, int axi, float position, float time, int timeout_ms);
+/*
+* 获取机器人各关节的当前角度
+* vi :visa设备句柄
+* name: 机器人名称
+* joint:指定机器人的关节索引. 0表示第一个关节(对T4来说,0指的是基座, 对H2来说,0指的是左边的关节). 如果为-1,则表示获取所有的关节
+* 返回值：大于零,表示返回的关节角度个数, 否则,出错
+* 说明: angle 是不安全的,请确保外部分配足够的空间给angle
+*/
+EXPORT_API int CALL mrgGetRobotJointAngle(ViSession vi, int name, int joint, float *angle);
+/*
 * 机器人当前的里程数，单位 ：米
 * vi :visa设备句柄
 * name: 机器人名称
 * x,y,z ：各坐标轴方向上的里程
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, double * x, double *y, double* z);
+EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, float * x, float *y, float* z);
 /*
 * 获取机器人的目标位置
 * vi :visa设备句柄
@@ -610,7 +702,7 @@ EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, double * x
 * x,y,z ：各坐标轴方向上的点
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x, double *y, double* z);
+EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, float * x, float *y, float* z);
 /*
 * 获取机器人的当前执行的指令索引
 * vi :visa设备句柄
@@ -620,30 +712,20 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x
 * 此命令只对H2有效！！！！！
 */
 EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record);
-
 /*
-* 设置当前机器人的构形的连秆长度  单位:mm
+* 机器人的折叠功能(包装位)
 * vi :visa设备句柄
-* name:机器人名称
-* 返回值：小于零表示出错
-* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
-*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+* name: 机器人名称
+* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对T4有效！！！！！
 */
-EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int name,double * links,int link_count);
-/*
-* 获取当前机器人的构形的连秆长度  单位:mm
-* vi :visa设备句柄
-* name:机器人名称
-* link_count: 获取到的连秆长度
-* 返回值：0成功,否则失败
-* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
-*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
-*/
-EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int name, double * links, int *link_count);
+EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif
+
 #endif // ! _MEGA_ROBOT_H_
 
 

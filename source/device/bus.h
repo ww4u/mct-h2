@@ -19,6 +19,11 @@ typedef unsigned long ViSession;
 
 #endif
 
+#define  BUS_LAN   0
+#define  BUS_USB   1
+#define  METHOD_VISA  0
+#define  METHOD_UDP  1
+
 
 /*
 * 对于网线连接的网关，查找方式有两种： 一种是用VISA方式查找，另一种是用UDP广播方式查找。

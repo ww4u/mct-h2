@@ -19,6 +19,25 @@ enum RUN_STATE
     RS_RESERVE  //
 };
 
+enum MT_STATE
+{
+    MTSTATE_POWERON,
+    MTSTATE_RESET,
+    MTSTATE_CALCING,
+    MTSTATE_CALCEND,
+    MTSTATE_STANDBY,
+    MTSTATE_RUNNING,
+    MTSTATE_ERROR,
+    MTSTATE_RESERVE,
+};
+enum MT_SWITCH
+{
+    MTSWITCH_RESET,
+    MTSWITCH_STOP,
+    MTSWITCH_RUN,
+    MTSWITCH_PREPARE,
+    MTSWITCH_EMERGSTOP
+};
 /*
 *MRQ模块识别
 *vi :visa设备句柄
@@ -28,6 +47,23 @@ enum RUN_STATE
 */
 EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state);
 /*
+*查询设备模块的IO 状态
+*vi :visa设备句柄
+*name :设备名称
+* state : DIO state
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetMRQDioState(ViSession vi, int name, unsigned short * state);
+/*
+* 将指定的设备分在一个组中
+* vi :visa设备句柄
+* devList :设备名称 "512,513,514"
+* groupID : 组ID,由下层返回.
+* grouptype: 0:GOUPID1, 1:GROUPID2
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetMRQGroup(ViSession vi, char * devList, unsigned int * groupID, int grouptype);
+/*
 *设置运行状态是否自动上报给微控器
 *vi :visa设备句柄
 *name：机器人
@@ -35,6 +71,7 @@ EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state);
 *state：状态
 *返回值：0表示执行成功，－1表示失败
 */
+
 EXPORT_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int ch, int state);
 /*
 *查询上报状态
@@ -138,7 +175,7 @@ EXPORT_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, int ch
 *displace:位移
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch, double *distance);
+EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch, float *distance);
 /*
 *查询增量编码器的AB相的计数值
 *vi :visa设备句柄
@@ -181,7 +218,7 @@ EXPORT_API int CALL mrgMRQMotionReverse_Query(ViSession vi, int name,int * rever
 * timeout_ms:等待超时时间。-1表示不等待运行结束；0表示无限等待
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQAdjust(ViSession vi, int name, int ch, float position, float time, int timeout_ms);
+EXPORT_API int CALL mrgMRQAdjust(ViSession vi, int name, int ch, int wavetable,float position, float time, int timeout_ms);
 /*
 *时钟同步
 *vi :visa设备句柄
@@ -272,7 +309,7 @@ EXPORT_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int ch, i
 *millimeter:电机直线运动时的导程
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, double millimeter);
+EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, float millimeter);
 /*
 *查询电机直线运动时的导程
 *vi :visa设备句柄
@@ -281,7 +318,7 @@ EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, double milli
 *millimeter:电机直线运动时的导程
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, double *millimeter);
+EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, float *millimeter);
 /*
 *设置电机的尺寸
 *vi :visa设备句柄
@@ -326,7 +363,7 @@ EXPORT_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int ch, int
 *current:额定电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, double current);
+EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, float current);
 /*
 *查询电机的额定电流
 *vi :visa设备句柄
@@ -335,7 +372,7 @@ EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, double cu
 *current:额定电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, double *current);
+EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, float *current);
 /*
 *设置电机的反向间隙
 *vi :visa设备句柄
@@ -344,7 +381,7 @@ EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, dou
 *lash:电机的反向间隙
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, double lash);
+EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, float lash);
 /*
 *查询电机的反向间隙
 *vi :visa设备句柄
@@ -353,7 +390,7 @@ EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, double l
 *lash:电机的反向间隙
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, double *lash);
+EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, float *lash);
 /*
 *PVT配置命令
 *vi :visa设备句柄
@@ -375,7 +412,17 @@ EXPORT_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int ch, int wavetabl
 *t:PVT 点的时间值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int ch, int wavetable, double p, double v, double t);
+EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int ch, int wavetable, float p, float v, float t);
+/*
+*设置当前PVT的状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*state1:PVT的状态  0:RESET ,1:STOP ,2:RUN ,3:PREPARE,4:EMERGSTOP
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable, int state);
 /*
 *查询当前PVT下发的状态
 *vi :visa设备句柄
@@ -386,6 +433,16 @@ EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int ch, int wavetable
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int ch, int wavetable, int *state1);
+/*
+*等待当前PVT的状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*state:期望等待的状态   0:POWERON; 1:IDLE;2:CALCING;3:CALCEND; 4:STANDBY,5:RUNNING,6:ERROR;
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavetable, int state, int timeout_ms);
 /*
 *设置S曲线的加减速占比，两段一起，千分之
 *vi :visa设备句柄
@@ -513,7 +570,7 @@ EXPORT_API int CALL mrgMRQPVTModePlan(ViSession vi, int name, int ch, int waveta
 *mode:规划模式 0 - 2  CUBICPOLY|TRAPEZOID｜SCURVE
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int ch, int wavetable, char *mode);
+EXPORT_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int ch, int wavetable, int *mode);
 /*
 *设置运动模式:PVT或者LVT
 *vi :visa设备句柄
@@ -533,7 +590,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int ch, int wave
 *pattern:模式
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, int wavetable, char *pattern);
+EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, int wavetable, int *pattern);
 /*
 *设置LVT模式下进行时间调整的占比
 *vi :visa设备句柄
@@ -543,7 +600,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, in
 *duty:占空比
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wavetable, double duty);
+EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wavetable, float duty);
 /*
 *查询LVT模式下进行时间调整的占比
 *vi :visa设备句柄
@@ -553,7 +610,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wave
 *duty:占空比
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, double *duty);
+EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, float *duty);
 /*
 *设置是否为速度保持
 *vi :visa设备句柄
@@ -573,7 +630,7 @@ EXPORT_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int ch, int waveta
 *pattern:模式
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int ch, int wavetable, char *pattern);
+EXPORT_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int ch, int wavetable, int *pattern);
 
 /*
 *设置急停方式,立即停止或者减速停止
@@ -604,7 +661,7 @@ EXPORT_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int ch, int 
 *time:急停的时间
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int wavetable, double time);
+EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int wavetable, float time);
 /*
 *查询急停时间
 *vi :visa设备句柄
@@ -614,7 +671,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int waveta
 *time:急停的时间
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int wavetable, double *time);
+EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int wavetable, float *time);
 /*
 *设置减速停止时的减速距离
 *vi :visa设备句柄
@@ -624,7 +681,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int 
 *distance:减速距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wavetable, double distance);
+EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wavetable, float distance);
 /*
 *查询减速停止时的减速距离
 *vi :visa设备句柄
@@ -634,7 +691,49 @@ EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wa
 *distance:减速距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, int ch, int  wavetable, double *distance);
+EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, int ch, int  wavetable, float *distance);
+/*
+*设置波表的起始地址
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*address:波表起始地址
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableAddress(ViSession vi, int name, int ch, int wavetable, unsigned int address);
+/*
+*查询波表的起始地址
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*address:波表起始地址
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableAddress_Query(ViSession vi, int name,
+    int ch, int  wavetable, unsigned int * address);
+/*
+*设置波表的大小
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*size:波表大小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableSize(ViSession vi, int name, int ch, int wavetable, unsigned int size);
+/*
+*查询波表的大小
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*size:波表大小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableSize_Query(ViSession vi, int name,
+    int ch, int  wavetable, unsigned int * size);
 /*
 *查询失步的状态,阈值及失步后的反应
 *vi :visa设备句柄
@@ -645,7 +744,7 @@ EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, int ch, 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
-										int ch, int wavetable, int *state,double *threshold, int *resp);
+										int ch, int wavetable, int *state,float *threshold, int *resp);
 /*
 *设置失步的状态,阈值及失步后的反应
 *vi :visa设备句柄
@@ -658,7 +757,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, 
-					int ch, int wavetable, int state, double threshold, int resp);
+					int ch, int wavetable, int state, float threshold, int resp);
 /*
 *设置线间失步告警状态
 *vi :visa设备句柄
@@ -688,7 +787,7 @@ EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, in
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, double value);
+EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, float value);
 /*
 *查询线间失步阈值
 *vi :visa设备句柄
@@ -698,7 +797,7 @@ EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int 
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, int ch, int wavetable, double *value);
+EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, int ch, int wavetable, float *value);
 /*
 *设置当步数偏差超过LOSTNUM后的响应方式
 *vi :visa设备句柄
@@ -725,10 +824,11 @@ EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int 
 *name:设备名称（SEND_ID）
 *ch：通道号
 *funs: 0 ~ 5 TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN
-*buf:返回的功能
+*state:上报功能是否打开 0->off, 1->ON
+*period:指定类型数据的上报周期,单位：ms
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, char *buf);
+EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, int *state, float *period);
 /*
 *设置上报功能配置
 *vi :visa设备句柄
@@ -739,7 +839,7 @@ EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int
 *period:指定类型数据的上报周期
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs, int state, double period);
+EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs, int state, float period);
 /*
 *设置上报状态
 *vi :visa设备句柄
@@ -830,7 +930,7 @@ EXPORT_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int ch, int 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, int ch, int trig, 
-										int * state, int * type, double *period, int * response);
+										int * state, int * type, float *period, int * response);
 /*
 *设置电平触发配置
 *vi :visa设备句柄
@@ -844,7 +944,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, int c
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int ch, int trig, 
-                    int state, int type, double period, int response);
+                    int state, int type, float period, int response);
 /*
 *设置电平触发，打开或关闭
 *vi :visa设备句柄
@@ -914,7 +1014,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name, int
 *period:采样周期,单位：s
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int trig, double period);
+EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int trig, float period);
 /*
 *查询触发电平采样周期
 *vi :visa设备句柄
@@ -924,7 +1024,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int
 *period:采样周期,单位：s
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, int ch, int trig, double *period);
+EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, int ch, int trig, float *period);
 /*
 *查询驱动板配置
 *vi :visa设备句柄
@@ -936,7 +1036,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, int c
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch, 
-										int *state, int *microstep, double*current);
+										int *state, int *microstep, float*current);
 /*
 *设置驱动板配置
 *vi :visa设备句柄
@@ -948,7 +1048,7 @@ EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch, 
-										int state, int microstep, double current);
+										int state, int microstep, float current);
 /*
 *查询驱动板类型
 *vi :visa设备句柄
@@ -966,7 +1066,7 @@ EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, int *
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, double current);
+EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, float current);
 /*
 *查询驱动板电流
 *vi :visa设备句柄
@@ -975,7 +1075,7 @@ EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, double c
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, double *current);
+EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, float *current);
 /*
 *设置驱动板空闲电流
 *vi :visa设备句柄
@@ -984,7 +1084,7 @@ EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, do
 *current:驱动板空闲电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, double current);
+EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, float current);
 /*
 *查询驱动板空闲电流
 *vi :visa设备句柄
@@ -993,7 +1093,7 @@ EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, doub
 *current:驱动板空闲电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, double *current);
+EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, float *current);
 /*
 *设置电机微步数
 *vi :visa设备句柄
@@ -1253,6 +1353,115 @@ EXPORT_API int CALL mrgMRQEncoderFeedback(ViSession vi, int name, int ch, int va
 */
 EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int ch, int *value);
 /*
+*设置编码器方向
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*value:编码器方向。0表示编码器逆时针转动，数值增加；1表示编码器逆时针转，数据减小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQEncoderDirection(ViSession vi, int name, int ch, int value);
+/*
+*查询编码器方向
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*value:编码器方向。0表示编码器逆时针转动，数值增加；1表示编码器逆时针转，数据减小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQEncoderDirection_Query(ViSession vi, int name, int ch, int *value);
+/*
+* 设置绝对值编码器的报警状态
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* state:编码器报警状态 0:OFF; 1:ON
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmState(ViSession vi, int name, int ch, int state);
+/*
+* 查询绝对值编码器的报警状态
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* state:编码器报警状态 0:OFF; 1:ON
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmState_Query(ViSession vi, int name, int ch, int *state);
+/*
+* 设置绝对值编码器的报警上限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警上限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit(ViSession vi, int name, int ch, int value);
+/*
+* 查绝对值编码器的报警上限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警上限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit_Query(ViSession vi, int name, int ch, int *value);
+/*
+* 设置绝对值编码器的报警下限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警下限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit(ViSession vi, int name, int ch, int value);
+/*
+* 查绝对值编码器的报警下限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警下限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit_Query(ViSession vi, int name, int ch, int *value);
+/*
+* 设置绝对值编码器的报警响应类型
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:响应类型 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse(ViSession vi, int name, int ch, int value);
+/*
+* 查绝对值编码器的报警响应类型
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:响应类型 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse_Query(ViSession vi, int name, int ch, int *value);
+/*
+* 设置绝对值编码器的零位值
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器零位值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderZeroValue(ViSession vi, int name, int ch, int value);
+/*
+* 查绝对值编码器的零位值
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器零位值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int ch, int *value);
+
+/*
 *设置串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
 *name:设备名称（SEND_ID）
@@ -1261,7 +1470,7 @@ EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int ch, 
 *stopbit:RS232 数据帧中停止位的位数： 1、 0.5、 2 或 1.5
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, char *parity, int wordlen, double stopbit);
+EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, char *parity, int wordlen, float stopbit);
 /*
 *查询串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
@@ -1443,7 +1652,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int ch, int
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int name, int num, int ch, double distance);
+EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int name, int num, int ch, float distance);
 /*
 *查询测距报警的响应距离
 *vi :visa设备句柄
@@ -1453,7 +1662,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int name, int num, int ch,
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, int ch, double *distance);
+EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, int ch, float *distance);
 /*
 *查询驱动板类型（只支持10轴）
 *vi :visa设备句柄
@@ -1470,7 +1679,7 @@ EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, ch
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, double current);
+EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, float current);
 /*
 *查询驱动板电流（只支持10轴）
 *vi :visa设备句柄
@@ -1478,7 +1687,7 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, double curren
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, double *current);
+EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, float *current);
 /*
 *设置电机微步数（只支持10轴）
 *vi :visa设备句柄

@@ -26,7 +26,16 @@ char *changeReportFuncToString(int fun1)
     char *fun[6] = { "TORQUE" ,"CYCLE" ,"SGALL" ,"SGSE","DIST","ABSEN" };
     return fun[fun1];
 }
-
+char *changeSwitchStateToString(int fun1)
+{
+    char *fun[6] = { "RESET" ,"STOP" ,"RUN" ,"PREPARE","EMERGSTOP"};
+    return fun[fun1];
+}
+char *motionStateToString(int fun1)
+{
+    char *fun[7] = { "POWERON" ,"IDLE" ,"CALCING" ,"CALCEND","STANDBY","RUNNING","ERROR" };
+    return fun[fun1];
+}
 /*********************** MRQ 设备操作 *******************************/
 /*
 *MRQ模块识别
@@ -45,6 +54,53 @@ EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
     }
     return 0;
 }
+
+/*
+*查询设备模块的IO 状态
+*vi :visa设备句柄
+*name :设备名称
+* state : DIO state
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetMRQDioState(ViSession vi, int name, unsigned short * state)
+{
+    char args[SEND_BUF];
+    char as8Ret[100] = { 0 };
+    int len = 0;
+    snprintf(args, SEND_BUF, "DEVice:DIOSTATe? %d", name);
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
+        return -1;
+    }
+    else {
+        as8Ret[len - 1] = '\0';
+        *state = atoi(as8Ret);
+        return 0;
+    }
+}
+/*
+* 将指定的设备分在一个组中
+* vi :visa设备句柄
+* devList :设备名称 "512,513,514"
+* groupID : 组ID,由下层返回.
+* grouptype: 0:GOUPID1, 1:GROUPID2
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetMRQGroup(ViSession vi, char * devList, unsigned int * groupID,int grouptype)
+{
+    char args[SEND_BUF];
+    char as8Ret[100] = { 0 };
+    int len = 0;
+    snprintf(args, SEND_BUF, "DEVice:GROUP:ALLOC? (%s),%s", devList, grouptype?"GROUPID2": "GROUPID1");
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
+        return -1;
+    }
+    else {
+        as8Ret[len - 1] = '\0';
+        *groupID = atoi(as8Ret);
+        return 0;
+    }
+}
+
 /*
 *设置运行状态是否自动上报给微控器
 *vi :visa设备句柄
@@ -56,7 +112,7 @@ EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 EXPORT_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int ch, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s\n",
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s\n", 
 						name, ch, state == 0 ? "ACTIVE" : "QUERY");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -105,6 +161,7 @@ EXPORT_API int CALL mrgMRQMotionStateReport_Query(ViSession vi, int name, int ch
 *ch：通道号
 *wavetable:波表索引值，取值范围0~9
 *返回值：0表示执行成功，－1表示失败
+* 在使用此函数时,需要确保模块已进入解算完成状态.使用 mrgMRQMotionRunState_Query
 */
 EXPORT_API int CALL mrgMRQMotionRun(ViSession vi, int name, int ch, int wavetable)
 {
@@ -200,10 +257,12 @@ EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wa
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
         time += 200;
-        if (time > timeout_ms) {
-            ret = -3; break;
+        if (timeout_ms > 0)
+        {
+            if (time > timeout_ms) {
+                ret = -3; break;
+            }
         }
     }
     return ret;
@@ -236,18 +295,20 @@ EXPORT_API int CALL mrgMRQMotionWaitEnd(ViSession vi, int name, int ch, int wave
             continue;
         }
         state[retLen - 1] = '\0';//去掉回车符
-        if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
+        if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
         {
             ret = 0; break;
         }
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
         time += 200;
-        if (time > timeout_ms) {
-            ret = -3; break;
-        }
+        if (timeout_ms > 0)
+        {
+            if (time > timeout_ms) {
+                ret = -3; break;
+            }
+        }   
     }
     return ret;
 }
@@ -337,7 +398,7 @@ EXPORT_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, int ch,
 EXPORT_API int CALL mrgMRQMotionOffsetState(ViSession vi, int name, int ch, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s\n",
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s\n", 
 										name, ch, state == 0 ? "OFF" : "ON");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -383,7 +444,7 @@ EXPORT_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, int ch
 *displace:位移
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch, double *distance)
+EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch, float *distance)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -413,7 +474,7 @@ EXPORT_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int ch)
     int retLen = 0;
     snprintf(args, SEND_BUF,  "DEVICE:MRQ:MOTion:ABCOUNt? %d,%d\n", name, ch);
     if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
-        return -1;
+        return 0;
     }
     else {
         as8Ret[retLen-1] = '\0';
@@ -494,20 +555,28 @@ EXPORT_API int CALL mrgMRQMotionReverse_Query(ViSession vi, int name,int * rever
 * timeout_ms:等待超时时间。-1表示不等待运行结束；0表示无限等待
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQAdjust(ViSession vi, int name, int ch, 
+EXPORT_API int CALL mrgMRQAdjust(ViSession vi, int name, int ch, int wavetable,
 						float position, float time,int timeout_ms)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:ADJust %d,%d,%f,%f\n", 
-								name, ch, position, time);
-    if (busWrite(vi, args, strlen(args)) == 0) {
+    mrgMRQPVTConfig(vi, name, ch, wavetable, 1); //clear
+    mrgMRQPVTValue(vi, name, ch, wavetable, 0.0, 0.0, 0.0);//第一个点
+    mrgMRQPVTValue(vi, name, ch, wavetable, position, 0.0, time);//第二个点
+    mrgMRQPVTConfig(vi, name, ch, wavetable, 0); //end
+    if (mrgMRQPVTStateWait(vi, name, ch, wavetable, MTSTATE_CALCEND, timeout_ms) != 0)//等待计算结束
+    {
         return -1;
     }
-	if(timeout_ms < 0)
-	{
-		return 0;
-	}
-    return mrgMRQMotionWaitEnd(vi,name,ch,1,timeout_ms); //微调固定为small波表
+    mrgMRQPVTState(vi, name, ch, wavetable, MTSWITCH_PREPARE); //
+    if (mrgMRQPVTStateWait(vi, name, ch, wavetable, MTSTATE_STANDBY, timeout_ms) != 0)//等待standy
+    {
+        return -1;
+    }
+    mrgMRQPVTState(vi, name, ch, wavetable, MTSWITCH_RUN); //
+    if (mrgMRQPVTStateWait(vi, name, ch, wavetable, MTSTATE_CALCEND, timeout_ms) != 0)//等待计算结束
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
 *时钟同步
@@ -748,7 +817,7 @@ EXPORT_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int ch, i
 *millimeter:电机直线运动时的导程
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, double millimeter)
+EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, float millimeter)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD %d,%d,%f\n", name, ch, millimeter);
@@ -765,7 +834,7 @@ EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, double milli
 *millimeter:电机直线运动时的导程
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, double *millimeter)
+EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, float *millimeter)
 {
     char args[SEND_BUF];
     char as8Ret[12];
@@ -874,7 +943,7 @@ EXPORT_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int ch, int
 *current:额定电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, double current)
+EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, float current)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent %d,%d,%f\n", name, ch, current);
@@ -891,7 +960,7 @@ EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, double cu
 *current:额定电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, double *current)
+EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, float *current)
 {
     char args[SEND_BUF];
     char as8Ret[12];
@@ -916,7 +985,7 @@ EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, dou
 *lash:电机的反向间隙
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, double lash)
+EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, float lash)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash %d,%d,%f\n", name, ch, lash);
@@ -933,7 +1002,7 @@ EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, double l
 *lash:电机的反向间隙
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, double *lash)
+EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, float *lash)
 {
     char args[SEND_BUF];
     char state[100];
@@ -980,11 +1049,32 @@ EXPORT_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int ch, int wavetabl
 *t:PVT 点的时间值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wavetable, double p, double v, double t)
+EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wavetable, float p, float v, float t)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:VALue %d,%d,%s,%f,%f,%f\n", 
 					name, devList, wavetableToString(wavetable), p, v, t);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+*设置当前PVT的状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*state1:PVT的状态  0:RESET ,1:STOP ,2:RUN ,3:PREPARE,4:EMERGSTOP
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable, int state)
+{
+    char args[SEND_BUF];
+    char as8Ret[100];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe %d,%d,%s,%s\n",
+        name, ch, wavetableToString(wavetable), changeSwitchStateToString(state));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -996,7 +1086,7 @@ EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wave
 *name:设备名称(SEND_ID)
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
-*state1:PVT下发的状态   0:IDLE; 1:LOADING;2:READY;3:RUNNING;4:STOP; 5:ERROR; 
+*state1:PVT下发的状态   0:POWERON; 1:IDLE;2:CALCING;3:CALCEND; 4:STANDBY,5:RUNNING,6:ERROR,7:RESERVE; 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devList, int wavetable, int *state)
@@ -1013,30 +1103,72 @@ EXPORT_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devList, in
     {
         as8Ret[retLen - 1] = '\0';
     }
-	if(STRCASECMP(as8Ret,"IDLE") == 0 || STRCASECMP(as8Ret,"0") == 0)
+	if(STRCASECMP(as8Ret,"POWERON") == 0 || STRCASECMP(as8Ret,"0") == 0)
 	{
-		*state = 0;
+		*state = MTSTATE_POWERON;
 	}
-	else if(STRCASECMP(as8Ret,"LOADING") == 0 || STRCASECMP(as8Ret,"1") == 0)
+	else if(STRCASECMP(as8Ret,"IDLE") == 0 || STRCASECMP(as8Ret,"1") == 0)
 	{
-		*state = 1;
+		*state = MTSTATE_RESET;
 	}
-	else if(STRCASECMP(as8Ret,"READY") == 0 || STRCASECMP(as8Ret,"2") == 0)
+	else if(STRCASECMP(as8Ret,"CALCING") == 0 || STRCASECMP(as8Ret,"2") == 0)
 	{
-		*state = 2;
+		*state = MTSTATE_CALCING;
 	}
-	else if(STRCASECMP(as8Ret,"RUNNING") == 0 || STRCASECMP(as8Ret,"3") == 0)
+	else if(STRCASECMP(as8Ret,"CALCEND") == 0 || STRCASECMP(as8Ret,"3") == 0)
 	{
-		*state = 3;
+		*state = MTSTATE_CALCEND;
 	}
-	else if(STRCASECMP(as8Ret,"STOP") == 0 || STRCASECMP(as8Ret,"4") == 0)
+	else if(STRCASECMP(as8Ret,"STANDBY") == 0 || STRCASECMP(as8Ret,"4") == 0)
 	{
-		*state = 4;
+		*state = MTSTATE_STANDBY;
 	}
+    else if (STRCASECMP(as8Ret, "RUNNING") == 0 || STRCASECMP(as8Ret, "5") == 0)
+    {
+        *state = MTSTATE_RUNNING;
+    }
+    else if (STRCASECMP(as8Ret, "ERROR") == 0 || STRCASECMP(as8Ret, "6") == 0)
+    {
+        *state = MTSTATE_ERROR;
+    }
 	else{
-		*state = 5;
+		*state = MTSTATE_RESERVE; //mrq 没有返回状态给MRHT
 	}
     return 0;
+}
+/*
+*等待当前PVT的状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*state:期望等待的状态   0:POWERON; 1:IDLE;2:CALCING;3:CALCEND; 4:STANDBY,5:RUNNING,6:ERROR;
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavetable, int state, int timeout_ms)
+{
+    int ret = -3, error_count = 0;
+    char args[SEND_BUF];
+    int readState;
+    int time = 0, retlen = 0;
+    
+    while (1)
+    {
+        Sleep(200);
+        mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
+        Sleep(200);
+        if (readState == state)
+        {
+           return 0;
+        }
+        time += 200;
+        if (timeout_ms > 0) {
+            if (time > timeout_ms) {
+                ret = -3; break;
+            }
+        }
+    }
+    return ret;
 }
 /*
 *设置S曲线的加减速占比，两段一起，千分之
@@ -1459,8 +1591,9 @@ EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, in
 EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int wavetable, int duty)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%s,%d\n", 
-							name, devList, wavetableToString(wavetable), duty);
+    char *as8duty[4] = { "1/4","1/8","1/16","1/32" };
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%s,%s\n", 
+							name, devList, wavetableToString(wavetable), as8duty[duty]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1476,7 +1609,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
-									int ch, int wavetable, double *duty)
+									int ch, int wavetable, float *duty)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -1490,8 +1623,26 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
     {
         as8Ret[retLen - 1] = '\0';
     }
-
-    *duty = strtod(as8Ret,NULL);
+    if (STRCASECMP(as8Ret, "1/4") == 0)
+    {
+        *duty = 0;
+    }
+    else if(STRCASECMP(as8Ret, "1/8") == 0)
+    {
+        *duty = 1;
+    }
+    else if (STRCASECMP(as8Ret, "1/16") == 0)
+    {
+        *duty = 2;
+    }
+    else if (STRCASECMP(as8Ret, "1/32") == 0)
+    {
+        *duty = 3;
+    }
+    else
+    {
+        return -1;
+    }
     return 0;
 }
 /*
@@ -1611,7 +1762,7 @@ EXPORT_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int ch, int 
 *time:急停的时间
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int wavetable, double time)
+EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int wavetable, float time)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe %d,%d,%s,%f\n", 
@@ -1630,7 +1781,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int waveta
 *time:急停的时间
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int wavetable, double *time)
+EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int wavetable, float *time)
 {
     char args[SEND_BUF];
     char state[10];
@@ -1657,7 +1808,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int 
 *distance:减速距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wavetable, double distance)
+EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wavetable, float distance)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance %d,%d,%s,%f\n", 
@@ -1677,7 +1828,7 @@ EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wa
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, 
-									int ch, int  wavetable, double *distance)
+									int ch, int  wavetable, float *distance)
 {
     char args[SEND_BUF];
     char state[10];
@@ -1696,6 +1847,99 @@ EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name,
     return 0;
 }
 /*
+*设置波表的起始地址
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*address:波表起始地址
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableAddress(ViSession vi, int name, int ch, int wavetable, unsigned int address)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess %d,%d,%s,%u\n",
+        name, ch, wavetableToString(wavetable), address);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+*查询波表的起始地址
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*address:波表起始地址
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableAddress_Query(ViSession vi, int name,
+    int ch, int  wavetable, unsigned int * address)
+{
+    char args[SEND_BUF];
+    char tmp[20];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess? %d,%d,%s\n",
+        name, ch, wavetableToString(wavetable));
+    if ((retLen = busQuery(vi, args, strlen(args), tmp, 20)) == 0) {
+        return -1;
+    }
+    else
+    {
+        tmp[retLen - 1] = '\0';
+    }
+    *address = strtoul(tmp,NULL,0);
+    return 0;
+}
+/*
+*设置波表的大小
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*size:波表大小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableSize(ViSession vi, int name, int ch, int wavetable, unsigned int size)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:SIZE %d,%d,%s,%u\n",
+        name, ch, wavetableToString(wavetable), size);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+*查询波表的大小
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*size:波表大小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTWavetableSize_Query(ViSession vi, int name,
+    int ch, int  wavetable, unsigned int * size)
+{
+    char args[SEND_BUF];
+    char tmp[20];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:SIZE? %d,%d,%s\n",
+        name, ch, wavetableToString(wavetable));
+    if ((retLen = busQuery(vi, args, strlen(args), tmp, 20)) == 0) {
+        return -1;
+    }
+    else
+    {
+        tmp[retLen - 1] = '\0';
+    }
+    *size = strtoul(tmp, NULL, 0);
+    return 0;
+}
+
+/*
 *查询失步的状态,阈值及失步后的反应
 *vi :visa设备句柄
 *name:设备名称(SEND_ID)
@@ -1707,7 +1951,7 @@ EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
-										int ch, int wavetable, int *state,double *threshold, int *resp)
+										int ch, int wavetable, int *state,float *threshold, int *resp)
 {
     char args[SEND_BUF];
 	char as8Ret[100];
@@ -1779,7 +2023,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, 
-					int ch, int wavetable, int state, double threshold, int resp)
+					int ch, int wavetable, int state, float threshold, int resp)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%f,%s\n", 
@@ -1854,7 +2098,7 @@ EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, in
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, double value)
+EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, float value)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%f\n", 
@@ -1874,7 +2118,7 @@ EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, 
-									int ch, int wavetable, double *value)
+									int ch, int wavetable, float *value)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -1964,7 +2208,7 @@ EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int 
 *buf:返回的功能
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, int *state,double *period)
+EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, int *state,float *period)
 {
     char args[SEND_BUF];
     int retLen = 0;
@@ -2008,7 +2252,7 @@ EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int
 *period:指定类型数据的上报周期
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs, int state, double period)
+EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs, int state, float period)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n", 
@@ -2124,7 +2368,7 @@ EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int f
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:VALue? %d,%d,%s\n", 
 						name, ch, changeReportFuncToString(func));
     if ((retLen = busQuery(vi, args, strlen(args), buff, 100)) == 0) {
-        return -1;
+        return 0;
     }
     else
     {
@@ -2158,7 +2402,6 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     {
         if (buff[0] != '#')//格式错误
         {
-            data[count] = 0;
             return count;
         }
         lenOfLen = buff[1] - 0x30;
@@ -2171,13 +2414,11 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
         }
         else
         {
-            data[count] = 0;
             return count;
         }
         memcpy((char*)&data[count], buff, retLen);
         count += retLen / 4;
     }
-    data[count] = 0;
     return count;
 }
 /*
@@ -2243,7 +2484,7 @@ EXPORT_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int ch, int 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, 
-			int ch, int trig, int * state, int * type, double *period,int * response)
+			int ch, int trig, int * state, int * type, float *period,int * response)
 {
     char args[SEND_BUF];
 	char as8Ret[100];
@@ -2340,7 +2581,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int devList, int trig, 
-                                    int state, int type, double period, int response)
+                                    int state, int type, float period, int response)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig %d,%d,%s,%s,%s,%f,%s\n", 
@@ -2548,7 +2789,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name, int
 *period:采样周期,单位：秒
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int trig, double period)
+EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int trig, float period)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%f\n", 
@@ -2568,7 +2809,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, 
-										int ch, int trig, double *period)
+										int ch, int trig, float *period)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -2597,7 +2838,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch, 
-											int *state,int *microstep,double*current )
+											int *state,int *microstep,float*current )
 {
     char args[SEND_BUF];
 	char as8Ret[100];
@@ -2660,7 +2901,7 @@ EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch, 
-											int state, int microstep, double current)
+											int state, int microstep, float current)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig %d,%d,%s,%d,%f\n", 
@@ -2713,7 +2954,7 @@ EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, char 
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, double current)
+EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, float current)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:VALue %d,%d,%f\n", name, ch, current);
@@ -2730,7 +2971,7 @@ EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, double c
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, double *current)
+EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, float *current)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -2754,7 +2995,7 @@ EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, do
 *current:驱动板空闲电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, double current)
+EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, float current)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:IDLE %d,%d,%f\n", name, ch, current);
@@ -2771,7 +3012,7 @@ EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, doub
 *current:驱动板空闲电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, double *current)
+EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, float *current)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -2841,7 +3082,7 @@ EXPORT_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int devL
 EXPORT_API int CALL mrgMRQDriverState(ViSession vi, int name, int devList, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, devList, state?"ON":"OFF");
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, devList, state? "ON":"OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3551,6 +3792,293 @@ EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int devL
     return 0;
 }
 /*
+*设置编码器方向 
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*value:编码器方向。0表示编码器逆时针转动，数值增加；1表示编码器逆时针转，数据减小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQEncoderDirection(ViSession vi, int name, int ch, int value)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:DIRECTION %d,%d,%s\n", name, ch, value?"NEGATIVE":"POSITIVE");
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+*查询编码器方向
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*value:编码器方向。0表示编码器逆时针转动，数值增加；1表示编码器逆时针转，数据减小
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQEncoderDirection_Query(ViSession vi, int name, int ch, int *value)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:DIRECTION? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    if (STRCASECMP("POSITIVE", as8Ret) == 0 || STRCASECMP("0", as8Ret) == 0)
+    {
+        *value = 0;
+    }
+    else if (STRCASECMP("NEGATIVE", as8Ret) == 0 || STRCASECMP("1", as8Ret) == 0)
+    {
+        *value = 1;
+    }
+    else
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+/*
+* 设置绝对值编码器的报警状态
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* state:编码器报警状态 0:OFF; 1:ON
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmState(ViSession vi, int name, int ch, int state)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查询绝对值编码器的报警状态
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* state:编码器报警状态 0:OFF; 1:ON
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmState_Query(ViSession vi, int name, int ch, int *state)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    if (STRCASECMP("OFF", as8Ret) == 0 || STRCASECMP("0", as8Ret) == 0)
+    {
+        *state = 0;
+    }
+    else if (STRCASECMP("ON", as8Ret) == 0 || STRCASECMP("1", as8Ret) == 0)
+    {
+        *state = 1;
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 设置绝对值编码器的报警上限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警上限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit(ViSession vi, int name, int ch, int value)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP %d,%d,%d\n", name, ch, value);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查绝对值编码器的报警上限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警上限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit_Query(ViSession vi, int name, int ch, int *value)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    *value = atoi(as8Ret);
+    return 0;
+}
+/*
+* 设置绝对值编码器的报警下限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警下限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit(ViSession vi, int name, int ch, int value)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN %d,%d,%d\n", name, ch, value);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查绝对值编码器的报警下限
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器报警下限值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit_Query(ViSession vi, int name, int ch, int *value)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    *value = atoi(as8Ret);
+    return 0;
+}
+/*
+* 设置绝对值编码器的报警响应类型
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:响应类型 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse(ViSession vi, int name, int ch, int value)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse %d,%d,%s\n", name, ch, changeResponseToString(value));
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查绝对值编码器的报警响应类型
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:响应类型 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse_Query(ViSession vi, int name, int ch, int *value)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    if (STRCASECMP(as8Ret, "NONE") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *value = 0;
+    }
+    else if (STRCASECMP(as8Ret, "ALARM") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *value = 1;
+    }
+    else if (STRCASECMP(as8Ret, "STOP") == 0 || STRCASECMP(as8Ret, "2") == 0)
+    {
+        *value = 2;
+    }
+    else if (STRCASECMP(as8Ret, "ALARM&STOP") == 0 || STRCASECMP(as8Ret, "3") == 0)
+    {
+        *value = 3;
+    }
+    else {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 设置绝对值编码器的零位值
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器零位值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderZeroValue(ViSession vi, int name, int ch, int value)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe %d,%d,%d\n", name, ch, value);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查绝对值编码器的零位值
+* vi :visa设备句柄
+* name:设备名称(SEND_ID)
+* ch：通道号
+* value:编码器零位值(编码器线数)
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int ch, int *value)
+{
+    char args[SEND_BUF];
+    int retLen = 0;
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        as8Ret[retLen - 1] = '\0';
+    }
+    *value = atoi(as8Ret);
+    return 0;
+}
+/*
 *设置串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
 *name:设备名称(SEND_ID)
@@ -4041,7 +4569,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int ch, int
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int num, int name, int ch, double distance)
+EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int num, int name, int ch, float distance)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:ALARm%d:DISTance %d,%d,%f\n", num, name, ch, distance);
@@ -4059,7 +4587,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int num, int name, int ch,
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, int ch, double *distance)
+EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, int ch, float *distance)
 {
     char args[SEND_BUF];
     char state[10];
@@ -4105,7 +4633,7 @@ EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, ch
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, double current)
+EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, float current)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent %d,%f\n", name, current);
@@ -4121,7 +4649,7 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, double curren
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, double *current)
+EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, float *current)
 {
     char args[SEND_BUF];
     char state[10];

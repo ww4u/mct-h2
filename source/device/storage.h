@@ -1,5 +1,5 @@
-#ifndef MR_STORAGE_H
-#define MR_STORAGE_H
+#ifndef _MEGA_STORAGE_H
+#define _MEGA_STORAGE_H
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 extern "C" {
@@ -17,6 +17,15 @@ extern "C" {
 */
 EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* fileList, int len);
 /*
+* 删除本地存储器中的运动文件
+* vi :visa设备句柄
+* location:0表示本地存储（本地文件系统）；1表示外部存储（U盘之类）
+* fileList: 点坐标文件名列表，以逗号分隔
+* len : fileList的缓存长度
+* 返回值：大于零表示返回实际的字节数，小于零表示出错
+*/
+EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* fileName);
+/*
 * 读取运动文件内容到上位机
 * vi :visa设备句柄
 * filename: 文件名
@@ -25,7 +34,6 @@ EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* file
 * 返回值：返回实际的文件长度
 */
 EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context, int wantlen);
-
 /*
 * 保存运动文件内容到本地存储器,
 * vi :visa设备句柄
@@ -43,14 +51,7 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName,cha
 * saveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName);
-
-/*
-* 等待文件写入完成
-* vi :visa设备句柄
-* 返回值：0表示等待成功，－1：表示等待过程中出错
-*/
-EXPORT_API int CALL waitMotionFileWirteEnd(int vi);
+EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context, int len, char * saveFileName);
 
 
 #if defined(__cplusplus) || defined(__cplusplus__)

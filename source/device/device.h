@@ -154,6 +154,30 @@ EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * seri
 */
 EXPORT_API int CALL mrgIdentify(ViSession vi, int state);
 
+/*
+*切换 MRH - T 的模式
+*vi :visa设备句柄
+*mode : MRH - T 的模式，取值范围： [0,1]
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode);
+/*
+*读取MRHT的IO状态
+*vi :visa设备句柄
+*state : xin的状态,低四位
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgGetXinState(ViSession vi, int* state);
+/*
+*设置MRHT的IO输出状态
+*vi :visa设备句柄
+*yout : 0表示Y1,1表示Y2
+*state : YOUT的状态,0表示低电平,1表示高电平
+* 返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgSetYoutState(ViSession vi, int yout, int state);
+
+
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif
