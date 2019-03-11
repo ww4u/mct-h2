@@ -185,26 +185,26 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
         ret[retlen - 1] = 0;
         if (STRCASECMP(ret, "MRX-T4") == 0)
         {
-            return MRX_T4;
+            return MRX_TYPE_T4;
         }
         else if (STRCASECMP(ret, "MRX-AS") == 0)
         {
-            return MRX_AS;
+            return MRX_TYPE_AS;
         }
         else if (STRCASECMP(ret, "MRX-H2") == 0)
         {
-            return MRX_H2;
+            return MRX_TYPE_H2;
         }
         else if (STRCASECMP(ret, "MRX-DELTA") == 0)
         {
-            return MRX_DELTA;
+            return MRX_TYPE_DELTA;
         }
         else if (STRCASECMP(ret, "MRX-RAW") == 0)
         {
-            return MRX_RAW;
+            return MRX_TYPE_RAW;
         }
     }
-    return MRX_UNKOWN;
+    return MRX_TYPE_UNKOWN;
 }
 /*
 * 保存当前系统中所有机器人构形
@@ -2057,7 +2057,7 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 {
     int device = 0;
     //如果不是T4,则返回错误
-    if (mrgGetRobotType(vi,name) != MRX_T4)
+    if (mrgGetRobotType(vi,name) != MRX_TYPE_T4)
     {
         return -1;
     }

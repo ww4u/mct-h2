@@ -50,19 +50,19 @@ int H2Configuration::readDeviceConfig()
     int ret = -1;
     int type = mrgGetRobotType(mViHandle, mRobotName);
     qDebug() << "mrgGetRobotType" << type;
-    if (type == MRX_T4){
+    if (type == MRX_TYPE_T4){
         m_Family = "MRX-T4";
     }
-    else if (type == MRX_AS){
+    else if (type == MRX_TYPE_AS){
         m_Family = "MRX-AS";
     }
-    else if (type == MRX_H2){
+    else if (type == MRX_TYPE_H2){
         m_Family = "MRX-H2";
     }
-    else if (type == MRX_DELTA){
+    else if (type == MRX_TYPE_DELTA){
         m_Family = "MRX-DELTA";
     }
-    else if (type == MRX_RAW){
+    else if (type == MRX_TYPE_RAW){
         m_Family = "MRX-RAW";
     }else{
         sysError("mrgGetRobotType error", type);

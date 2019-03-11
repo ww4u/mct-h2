@@ -12,13 +12,13 @@ extern "C" {
 
 enum MRX_TYPE
 {
-    MRX_T4 = 0,  //arm
-    MRX_AS,  //megatron
-    MRX_H2,  //H2
-    MRX_DELTA,
-    MRX_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
-    MRX_OTHER,
-    MRX_UNKOWN,
+    MRX_TYPE_T4 = 0,  //arm
+    MRX_TYPE_AS,  //megatron
+    MRX_TYPE_H2,  //H2
+    MRX_TYPE_DELTA,
+    MRX_TYPE_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
+    MRX_TYPE_OTHER,
+    MRX_TYPE_UNKOWN,
 };
 
 #define     WAVETABLE_MIN   0   //! 最小波表号

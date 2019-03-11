@@ -280,11 +280,11 @@ EXPORT_API int CALL mrgSysGetPowerOn(ViSession vi, int * value)
 *interface: 上电值 LAN|USB|IO
 *返回值：0表示执行成功；－1表示执行失败
 */
-EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int interface)
+EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int face)
 {
     char args[SEND_BUF];
     char *ps8Interface[3] = { "LAN", "USB", "IO" };
-    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE %s\n", ps8Interface[interface]);
+    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE %s\n", ps8Interface[face]);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -297,7 +297,7 @@ EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int interface)
 * interface: 控制接口 LAN|USB|IO
 * 返回值：0表示执行成功；－1表示执行失败
 */
-EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * interface)
+EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * face)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -311,15 +311,15 @@ EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * interface)
     as8Ret[retLen - 1] = 0;
     if (STRCASECMP(as8Ret, "LAN") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
-        *interface = 0;
+        *face = 0;
     }
     else if (STRCASECMP(as8Ret, "USB") == 0 || STRCASECMP(as8Ret, "1") == 0)
     {
-        *interface = 1;
+        *face = 1;
     }
     else if (STRCASECMP(as8Ret, "IO") == 0 || STRCASECMP(as8Ret, "2") == 0)
     {
-        *interface = 2;
+        *face = 2;
     }
     else
     {

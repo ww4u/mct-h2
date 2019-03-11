@@ -111,14 +111,14 @@ EXPORT_API int CALL mrgSysGetPowerOn(ViSession vi, int * value);
 *interface: 上电值 LAN|USB|IO
 *返回值：0表示执行成功；－1表示执行失败
 */
-//EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int interface);
+EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int face);
 /*
 * 查询系统控制接口
 * vi :visa设备句柄
 * interface: 控制接口 LAN|USB|IO
 * 返回值：0表示执行成功；－1表示执行失败
 */
-//EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int *interface);
+EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int *face);
 /*
 *设置紧急停止
 *vi :visa设备句柄
