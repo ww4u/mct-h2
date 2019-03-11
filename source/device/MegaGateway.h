@@ -4,8 +4,8 @@
 #include "export.h"
 
 #include "device.h"
-#include "mrqDevice.h"
-#include "MegaRobot.h"
+#include "mrqdevice.h"
+#include "megarobot.h"
 #include "system.h"
 #include "storage.h"
 #include "errorcode.h"

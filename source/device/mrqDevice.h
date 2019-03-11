@@ -600,7 +600,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, in
 *duty:占空比
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wavetable, float duty);
+EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wavetable, int duty);
 /*
 *查询LVT模式下进行时间调整的占比
 *vi :visa设备句柄
@@ -1470,7 +1470,7 @@ EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int 
 *stopbit:RS232 数据帧中停止位的位数： 1、 0.5、 2 或 1.5
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, char *parity, int wordlen, float stopbit);
+EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, int baud,char parity, int wordlen, int stopbit);
 /*
 *查询串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
@@ -1478,7 +1478,7 @@ EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, char *pari
 *buf:信息
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int num, int name, char *buf);
+EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int num, int name, int *baud,char * parity,int * wordlen,int * stopbit);
 /*
 *设置串口硬件控制流
 *vi :visa设备句柄

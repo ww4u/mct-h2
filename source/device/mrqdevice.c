@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mrqDevice.h"
+#include "mrqdevice.h"
 
 #define  SEND_BUF   (100)
 
@@ -1551,7 +1551,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int ch, int wave
 *mode:运动模式 0 - 2 PVT|LVT_CORRECT|LVT_NOCORRECT
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, int wavetable, char *mode)
+EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, int wavetable, int *mode)
 {
     char args[SEND_BUF];
     int retLen = 0;
@@ -2164,7 +2164,7 @@ EXPORT_API int CALL mrgMRQLostStepResponse(ViSession vi, int name, int ch, int w
 *resp:  0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int wavetable, char *resp)
+EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int wavetable, int *resp)
 {
     char args[SEND_BUF];
 	char as8Ret[100];
@@ -2290,7 +2290,7 @@ EXPORT_API int CALL mrgMRQReportState(ViSession vi, int name, int ch, int funs, 
 *state1:状态on/off
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, char *state1)
+EXPORT_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, int *state1)
 {
     char args[SEND_BUF];
     int retLen = 0;
@@ -2919,7 +2919,7 @@ EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch,
 *type:驱动板的类型  0:D17  ; 1: D23
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, char *type)
+EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, int *type)
 {
     char args[SEND_BUF];
 	char as8Ret[100];
@@ -4089,12 +4089,12 @@ EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int 
 *stopbit:RS232 数据帧中停止位的位数： 0:1个停止位；1：2个停止位；
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, 
-								int baud,char parity, int wordlen, int stopbit)
+EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name,
+                                int baud,char parity, int wordlen, int stopbit)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy %d,%d,%c,%d,%d\n", 
-						num, name,baud, parity, wordlen, stopbit);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy %d,%d,%c,%d,%d\n",
+                        num, name,baud, parity, wordlen, stopbit);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }

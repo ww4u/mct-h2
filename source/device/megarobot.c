@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "MegaRobot.h"
-#include "MRQDevice.h"
+#include "megarobot.h"
+#include "mrqdevice.h"
 
 #define     SEND_BUF        (100)
 #define     DELAYTIME       (100)  //! 查询延时时间

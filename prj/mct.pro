@@ -35,8 +35,8 @@ HEADERS += ../include/mystd.h           \
     ../source/device/bus.h              \
     ../source/device/device.h           \
     ../source/device/MegaGateway.h      \
-    ../source/device/MegaRobot.h        \
-    ../source/device/mrqDevice.h        \
+    ../source/device/megarobot.h        \
+    ../source/device/mrqdevice.h        \
     ../source/device/storage.h          \
     ../source/device/errorcode.h        \
     ../source/device/export.h           \
@@ -82,13 +82,13 @@ HEADERS += ../include/mystd.h           \
     ../source/widget/megainterface.h
 
 SOURCES += ../source/main/main.cpp      \
-    ../source/device/bus.cpp            \
-    ../source/device/device.cpp         \
-    ../source/device/MegaRobot.cpp      \
-    ../source/device/mrqDevice.cpp      \
-    ../source/device/storage.cpp        \
-    ../source/device/errorcode.cpp      \
-    ../source/device/system.cpp         \
+    ../source/device/bus.c              \
+    ../source/device/device.c           \
+    ../source/device/megarobot.c        \
+    ../source/device/mrqdevice.c        \
+    ../source/device/storage.c          \
+    ../source/device/errorcode.c        \
+    ../source/device/system.c           \
     ../source/sys/sysapi.cpp            \
     ../source/sys/megaxml.cpp           \
     ../source/sys/sacsvstream.cpp       \
