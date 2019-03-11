@@ -1,5 +1,10 @@
 #ifndef _MRQ_DEVICE_H_
 #define _MRQ_DEVICE_H_
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+        
 #include "bus.h"
 #include "export.h"
 
@@ -1510,6 +1515,9 @@ EXPORT_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int ch, i
 EXPORT_API int CALL mrgMRQNewDriverState(ViSession vi, int name, int ch, int state);
 
 
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
 
 
 #endif // !_MRQ_DEVICE_H_

@@ -3,6 +3,12 @@
  * It was generated using rpcgen.
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "vxi11.h"
 
 bool_t
@@ -460,3 +466,8 @@ xdr_Device_SrqParms (XDR *xdrs, Device_SrqParms *objp)
         return FALSE;
     return TRUE;
 }
+
+
+#ifdef __cplusplus
+}
+#endif

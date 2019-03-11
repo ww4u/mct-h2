@@ -365,6 +365,10 @@ void H2Ops::slotRobotStop()
         on_pushButton_starting_home_clicked();
     }
 
+    if(m_isDebugRunFlag){
+        on_toolButton_debugRun_clicked();
+    }
+
     if(m_isPrjZeroRunFlag){
         on_pushButton_go_prjZero_clicked();
     }
@@ -464,13 +468,13 @@ void H2Ops::setAllTabStopWorking()
     setTimerStop(m_timerOpsDebug);
     setOpsMonitorTimerStop();
 
-    if(!m_isHomgingRunFlag){ //不是回零过程中
+    if(!m_isHomgingRunFlag && !m_isDebugRunFlag){ //不是回零过程中
         on_pushButton_stop_clicked();
     }
 
-    if(m_isDebugRunFlag){
-        on_toolButton_debugRun_clicked();
-    }
+//    if(m_isDebugRunFlag){
+//        on_toolButton_debugRun_clicked();
+//    }
 
     if(m_isPrjZeroRunFlag){
         on_pushButton_go_prjZero_clicked();
@@ -658,26 +662,42 @@ void H2Ops::on_btnRead_clicked()
 
     QList<QStringList> lstData;
     foreach (QString str, strFileData.split('\n', QString::SkipEmptyParts)) {
-        lstData << str.split(",", QString::SkipEmptyParts);
+        lstData << str.split(","); //! 不忽略空白
     };
+
 
     m_pDiagnosisModel->removeRows( 0, m_pDiagnosisModel->items()->count(), QModelIndex() );
     foreach (QStringList lst, lstData) {
 
-        if(lst.size() < 6)
-            continue;
+        int code = 0;
+        QString strType;
+        QString strTime;
+        QString strAdditionInfo;
+        int counter = 0;
+        QString strMessage;
 
-        bool ok = false;
-        int code = lst.at(0).toInt(&ok);
-        if(!ok) continue;
-
-        QString strType = lst.at(1);
-        QString strTime = lst.at(2);
-        QString strAdditionInfo = lst.at(3);
-        int counter = lst.at(4).toInt(&ok);
-        if(!ok) continue;
-        QString strMessage = lst.at(5);
-
+        if(lst.size() > 0){
+            bool ok = false;
+            code = lst.at(0).toInt(&ok);
+            if(!ok) continue;
+        }
+        if(lst.size() > 1){
+            strType      = lst.at(1);
+        }
+        if(lst.size() > 2){
+            strTime = lst.at(2);
+        }
+        if(lst.size() > 3){
+            strAdditionInfo = lst.at(3);
+        }
+        if(lst.size() > 4){
+            bool ok = false;
+            counter = lst.at(4).toInt(&ok);
+            if(!ok) continue;
+        }
+        if(lst.size() > 5){
+            strMessage   = lst.at(5);
+        }
         m_pDiagnosisModel->appendOneItem(code,strType,strTime,strAdditionInfo,counter,strMessage);
     };
 
@@ -1074,7 +1094,7 @@ void H2Ops::updateBackgroundStatus()
         ui->tab_Manual->setEnabled(false);
         ui->tab_Debug->setEnabled(false);
         ui->tab_Monitor->setEnabled(false);
-        ui->tabWidget->setCurrentIndex(3);
+//        ui->tabWidget->setCurrentIndex(3);
 
         return;
     }

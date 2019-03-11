@@ -1,5 +1,10 @@
 #ifndef _DEVICE_H_
 #define _DEVICE_H_
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+
 #include "bus.h"
 #include "export.h"
 
@@ -148,6 +153,10 @@ EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * seri
 * 返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgIdentify(ViSession vi, int state);
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
 
 #endif // !_DEVICE_H_
 

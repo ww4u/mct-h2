@@ -1,6 +1,10 @@
 #ifndef _MEGA_ERROR_CODE_H_
 #define _MEGA_ERROR_CODE_H_
 
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+
 #include "bus.h"
 #include "export.h"
 
@@ -42,6 +46,10 @@ EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, 
 vi :visa设备句柄
 */
 EXPORT_API int CALL mrgErrorLogClear(ViSession vi);
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
 
 #endif
 

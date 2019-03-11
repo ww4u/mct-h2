@@ -6,6 +6,7 @@
 
 class DiagnosisModel : public MegaTableModel
 {
+    Q_OBJECT
 public:
     DiagnosisModel();
     ~DiagnosisModel();

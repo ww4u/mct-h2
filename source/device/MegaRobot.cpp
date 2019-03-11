@@ -1406,7 +1406,7 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int
 EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi,int name,char* filename)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %d,%s\n",name, filename);
+    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:LOCAL %d,%s\n",name, filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1779,3 +1779,64 @@ EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record
     return 0;
 }
 
+/*
+* 设置当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* 返回值：小于零表示出错
+* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
+*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+*/
+EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int name,double * links,int link_count)
+{
+    char args[SEND_BUF];
+    char as8Links[SEND_BUF] = { 0 }, tmp[20] = {0};
+    for (int i = 0; i < link_count; i++)
+    {
+        if (i != 0)
+        {
+            strcat(as8Links, ",");
+        }
+        snprintf(tmp, 20, "%f", links[i]);
+        strcat(as8Links, tmp);
+    }
+    snprintf(args, SEND_BUF, "ROBOT:LINK %d,(%s)\n", name, as8Links);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 获取当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* link_count: 获取到的连秆长度
+* 返回值：0成功,否则失败
+* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
+*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+*/
+EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int name, double * links, int *link_count)
+{
+    char args[SEND_BUF];
+    char ret[100];
+    char *pNext,*p;
+    int retlen = 0;
+    *link_count = 0;
+    snprintf(args, SEND_BUF, "ROBOT:LINK? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+        return -1;
+    }
+    else
+    {
+        ret[retlen - 1] = 0;
+        p = STRTOK_S(ret, ",", &pNext);
+        while (p)
+        {
+            *links++ = atof(p);
+            p = STRTOK_S(NULL, ",", &pNext);
+            (*link_count)++;
+        }
+    }
+    return 0;
+}

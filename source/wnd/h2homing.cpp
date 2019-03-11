@@ -8,6 +8,8 @@ H2Homing::H2Homing(QWidget *parent) :
     ui->setupUi(this);
 
     setFocuHelpName( "Homing" );
+    ui->comboBox_target->setEnabled(false);
+    ui->comboBox_movement->setEnabled(false); //暂不可选,结构不支持，没有对应的图片
 }
 
 H2Homing::~H2Homing()
@@ -17,15 +19,30 @@ H2Homing::~H2Homing()
 
 int H2Homing::readDeviceConfig()
 {
+    int ret = mrgGetRobotHomeMode(mViHandle,mRobotName);
+    qDebug() << "mrgGetRobotHomeMode" << ret;
+    if(ret < 0){
+        sysError("mrgGetRobotHomeMode", ret);
+        return -1;
+    }
+    m_HomingMode = ret;
+
     return 0;
 }
 
 int H2Homing::writeDeviceConfig()
 {
     m_Target = ui->comboBox_target->currentText();
-    m_Movement = ui->comboBox_movement->currentText();
+    m_HomingMode = ui->comboBox_movement->currentIndex();
     m_SearchVelocity = ui->doubleSpinBox_SearchVelocity->value();
     m_ForceLimit = ui->doubleSpinBox_ForceLimit->value();
+
+    int ret = mrgSetRobotHomeMode(mViHandle,mRobotName, m_HomingMode);
+    qDebug() << "mrgSetRobotHomeMode" << ret;
+    if(ret != 0){
+        sysError("mrgSetRobotHomeMode", ret);
+        return -1;
+    }
 
     return 0;
 }
@@ -43,8 +60,7 @@ int H2Homing::loadConfig()
     if(map.isEmpty()) return -1;
 
     m_Target        = map["Target"];
-    m_Movement      = map["Movement"];
-
+    m_HomingMode      = map["HomingMode"].toInt();
     m_SearchVelocity = map["SearchVelocity"].toDouble();
     m_ForceLimit     = map["ForceLimit"].toDouble();
 
@@ -58,8 +74,7 @@ int H2Homing::saveConfig()
     QMap<QString,QString> map;
 
     map.insert("Target", ui->comboBox_target->currentText() );
-
-    map.insert("Movement", ui->comboBox_movement->currentText() );
+    map.insert("HomingMode", QString::number(m_HomingMode,10) );
     map.insert("SearchVelocity", QString::number(m_SearchVelocity,10,2));
     map.insert("ForceLimit", QString::number(m_ForceLimit,10,2));
 
@@ -72,7 +87,7 @@ int H2Homing::saveConfig()
 void H2Homing::updateShow()
 {
     ui->comboBox_target->setCurrentText(this->m_Target);
-    ui->comboBox_movement->setCurrentText(this->m_Movement);
+    ui->comboBox_movement->setCurrentIndex(m_HomingMode);
     ui->doubleSpinBox_SearchVelocity->setValue(m_SearchVelocity);
     ui->doubleSpinBox_ForceLimit->setValue(m_ForceLimit);
 }

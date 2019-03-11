@@ -30,6 +30,8 @@ signals:
 private slots:
     void on_sizeComboBox_currentIndexChanged(int index);
 
+    void set_control_interface_picture(int index);
+
 private:
     Ui::H2Configuration *ui;
 
@@ -37,6 +39,13 @@ private:
     int     m_Size;
     double  m_WorkStrokeX;
     double  m_WorkStrokeY;
+
+    double  m_SliderWidth;
+    double  m_SliderHeight;
+    double  m_MouldType;
+    double  m_TeethQty;
+
+    int m_ControlInterface;
 };
 
 #endif // FORMTEST_H

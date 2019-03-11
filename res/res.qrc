@@ -57,5 +57,8 @@
         <file>image/h2product/disconnect.png</file>
         <file>image/widget/arrow_down_2.png</file>
         <file>image/widget/arrow_right_2.png</file>
+        <file>image/h2configuration/CVE.png</file>
+        <file>image/h2configuration/IO.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

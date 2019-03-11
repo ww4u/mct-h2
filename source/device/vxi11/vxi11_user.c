@@ -8,6 +8,11 @@
 #include <rpc/rpc.h>
 #include "vxi11.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define	VXI11_CLIENT		CLIENT
 #define	VXI11_LINK		Create_LinkResp
 
@@ -295,3 +300,8 @@ static int _vxi11_close_link(VXI11_CLINK * clink, const char *address)
     }
     return 0;
 }
+
+
+#ifdef __cplusplus
+}
+#endif

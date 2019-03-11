@@ -1,8 +1,14 @@
 
 #ifndef  _MEGA_ROBOT_H_
 #define  _MEGA_ROBOT_H_
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+
 #include "bus.h"
 #include "export.h"
+
 
 enum MRX_TYPE
 {
@@ -614,6 +620,30 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x
 * 此命令只对H2有效！！！！！
 */
 EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record);
+
+/*
+* 设置当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* 返回值：小于零表示出错
+* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
+*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+*/
+EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int name,double * links,int link_count);
+/*
+* 获取当前机器人的构形的连秆长度  单位:mm
+* vi :visa设备句柄
+* name:机器人名称
+* link_count: 获取到的连秆长度
+* 返回值：0成功,否则失败
+* 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度
+*  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
+*/
+EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int name, double * links, int *link_count);
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
 #endif // ! _MEGA_ROBOT_H_
 
 

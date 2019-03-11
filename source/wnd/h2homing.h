@@ -30,10 +30,10 @@ private:
     Ui::H2Homing *ui;
 
     QString m_Target;    
-    QString m_Movement;
-
-    double m_SearchVelocity;
-    double m_ForceLimit    ;
+//    QString m_Movement;
+    int     m_HomingMode;
+    double  m_SearchVelocity;
+    double  m_ForceLimit    ;
 };
 
 #endif // H2HOMING_H

@@ -3,6 +3,11 @@
  * It was generated using rpcgen.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <memory.h> /* for memset */
 #include "vxi11.h"
 
@@ -263,3 +268,7 @@ device_intr_srq_1(Device_SrqParms *argp, CLIENT *clnt)
     }
     return ((void *)&clnt_res);
 }
+
+#ifdef __cplusplus
+}
+#endif

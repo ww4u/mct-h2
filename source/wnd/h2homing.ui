@@ -120,6 +120,11 @@
           <string>First in direction of X,then Y</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>First in direction of Y,then X</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="2" column="0">

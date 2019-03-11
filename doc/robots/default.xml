@@ -3,10 +3,14 @@
     <Header Corporation="MegaRobot Technology Ltd."/>
     <H2Configuration id="H2Configuration">
         <Family>MRX-H2</Family>
-        <MotorPosition>0</MotorPosition>
         <Size>1</Size>
         <WorkStrokeX>355</WorkStrokeX>
         <WorkStrokeY>375</WorkStrokeY>
+        <SliderWidth>44</SliderWidth>
+        <SliderHeight>69.6</SliderHeight>
+        <MouldType>2</MouldType>
+        <TeethQty>30</TeethQty>
+        <ControlInterface>0</ControlInterface>
     </H2Configuration>
     <H2Measurement id="H2Measurement">
         <ProjectZeroPointX>0.00</ProjectZeroPointX>
@@ -20,7 +24,7 @@
     </H2Measurement>
     <H2Homing id="H2Homing">
         <ForceLimit>75.00</ForceLimit>
-        <Movement>First in direction of X,then Y</Movement>
+        <HomingMode>0</HomingMode>
         <SearchVelocity>50.00</SearchVelocity>
         <Target>Block</Target>
     </H2Homing>

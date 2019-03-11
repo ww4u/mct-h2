@@ -1,5 +1,11 @@
 #ifndef MR_SYSTEM_H
 #define MR_SYSTEM_H
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+
+
 #include "bus.h"
 #include "export.h"
 /*
@@ -56,6 +62,11 @@ EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename);
  * @return 成功返回0，失败返回负数，正在升级返回1
  */
 EXPORT_API int CALL mrgSysUpdateFirmwareStatusQuery(ViSession vi);
+
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
 
 #endif // !MR_SYSTEM_H
 

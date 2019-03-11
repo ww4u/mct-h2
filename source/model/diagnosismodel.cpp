@@ -258,11 +258,11 @@ void DiagnosisModel::appendOneItem(int nr,
     pItem->mNr = nr;
 
     if(type == "F")
-        pItem->mType = tr("ERROR");
+        pItem->mType = "ERROR";
     else if(type == "W")
-        pItem->mType = tr("WARNING");
+        pItem->mType = "WARNING";
     else if(type == "I")
-        pItem->mType = tr("INFO");
+        pItem->mType = "INFO";
 
     pItem->mTs = ts;
     pItem->mAddInfo = addInfo;

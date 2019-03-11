@@ -1,5 +1,10 @@
 #ifndef MR_STORAGE_H
 #define MR_STORAGE_H
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+extern "C" {
+#endif
+
 #include "bus.h"
 #include "export.h"
 /*
@@ -46,4 +51,10 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
 * 返回值：0表示等待成功，－1：表示等待过程中出错
 */
 EXPORT_API int CALL waitMotionFileWirteEnd(int vi);
+
+
+#if defined(__cplusplus) || defined(__cplusplus__)
+}
+#endif
+
 #endif // !MR_SYSTEM_H
