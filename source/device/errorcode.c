@@ -116,46 +116,46 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 	char args[SEND_BUF];
 	int retlen = 0;
 
-	char* ps8Type = NULL;
-	char* ps8Diagnose = NULL;
-	char* ps8Response = NULL;
-	char* ps8Enable = NULL;
+    char ps8Type[10] = "";
+    char ps8Diagnose[10] = "";
+    char ps8Response[10] = "";
+    char ps8Enable[10] = "";
 
 	if (type == 1){
-		ps8Type = "F";
+        strcpy(ps8Type, "F");
 	}
 	else if (type == 2){
-		ps8Type = "W";
+        strcpy(ps8Type , "W");
 	}
 	else if (type == 3){
-		ps8Type = "I";
+        strcpy(ps8Type, "I");
 	}
 	else{
 		return -1;
 	}
 
-    if(ps8Type == "F")
+    if( STRCASECMP(ps8Type,"F") == 0 )
     {
         if (response == 1){
-            ps8Response = "A";
+            strcpy(ps8Response, "A");
         }
         else if (response == 2){
-            ps8Response = "B";
+            strcpy(ps8Response, "B");
         }
         else if (response == 3){
-            ps8Response = "C";
+            strcpy(ps8Response, "C");
         }
         else if (response == 4){
-            ps8Response = "D";
+            strcpy(ps8Response, "D");
         }
         else if (response == 5){
-            ps8Response = "E";
+            strcpy(ps8Response, "E");
         }
         else if (response == 6){
-            ps8Response = "F";
+            strcpy(ps8Response, "F");
         }
         else if (response == 7){
-            ps8Response = "G";
+            strcpy(ps8Response, "G");
         }
         else{
             return -2;
@@ -163,24 +163,24 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
     }
     else
     {
-        ps8Response = "NONE"; //不是错误类型，没有响应选项
+        strcpy(ps8Response, "NONE"); //不是错误类型，没有响应选项
     }
 
     if (diagnose == 1){
-        ps8Diagnose = "ON";
+        strcpy(ps8Diagnose, "ON");
     }
     else if (diagnose == 0){
-        ps8Diagnose = "OFF";
+        strcpy(ps8Diagnose, "OFF");
     }
     else{
         return -3;
     }
 
 	if (enable == 0){
-		ps8Enable == "N";
+        strcpy(ps8Enable, "N");
 	}
 	else if (enable == 1){
-		ps8Enable = "Y";
+        strcpy(ps8Enable, "Y");
 	}
 	else{
 		return -4;

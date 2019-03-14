@@ -185,9 +185,9 @@ int waitMotionFileWirteEnd(int vi)
 */
 EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, char * saveFileName)
 {
-    int retlen = 0, count = 0, filesize = 0, writeLen = 0, cmdLen = 0;
+    int filesize = 0, writeLen = 0, cmdLen = 0;
     char args[SEND_BUF];
-    char as8Ret[1024], as8StrLen[20];
+    char as8Ret[1024];
     FILE * pFile = NULL;
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
     if ((pFile = fopen(srcFileName, "r")) == NULL)
@@ -239,9 +239,9 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
 */
 EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
 {
-    int retlen = 0, count = 0, writeLen = 0, cmdLen = 0;
+    int count = 0, writeLen = 0, cmdLen = 0;
     char args[SEND_BUF];
-    char as8Ret[1024], as8StrLen[20];
+    char as8Ret[1024];
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
     
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名

@@ -37,13 +37,13 @@ private:
 
     QString m_Family;
     int     m_Size;
-    double  m_WorkStrokeX;
-    double  m_WorkStrokeY;
+    float  m_WorkStrokeX;
+    float  m_WorkStrokeY;
 
-    double  m_SliderWidth;
-    double  m_SliderHeight;
-    double  m_MouldType;
-    double  m_TeethQty;
+    float  m_SliderWidth;
+    float  m_SliderHeight;
+    float  m_MouldType;
+    float  m_TeethQty;
 
     int m_ControlInterface;
 };

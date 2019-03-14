@@ -584,7 +584,6 @@ int busFindDevice(int bus, char *output, int len,int method)
         else if (method == METHOD_UDP)
         {
             char ip_list[256][100];
-            char * ptr = NULL;
             status = socketFindResources(ip_list, 256, 500);
             for (int i = 0; i < status; i++)
             {
@@ -633,7 +632,6 @@ int busOpenDevice(char * ip, int timeout)
     if (status < VI_SUCCESS)
     {
         vi = -1;
-        printf("viOpen failured:%d\n",status);
         return status;
     }
     if (_strnicmp(ip, "USB",3)== 0)
@@ -736,11 +734,9 @@ int getHostIpAddr(char strHostIp[][100], int len)
     //调用GetAdaptersInfo函数,填充pIpAdapterInfo指针变量;其中stSize参数既是一个输入量也是一个输出量
     int nRel = GetAdaptersInfo(pIpAdapterInfo, &stSize);
     //记录网卡数量
-    int netCardNum = 0;
     int ipcount = 0;
 
     //记录每张网卡上的IP地址数量
-    int IPnumPerNetCard = 0;
     if (ERROR_BUFFER_OVERFLOW == nRel)
     {
         //如果函数返回的是ERROR_BUFFER_OVERFLOW

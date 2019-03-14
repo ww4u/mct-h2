@@ -792,7 +792,6 @@ EXPORT_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int ch, i
 {
     char args[SEND_BUF];
     int retLen = 0;
-    int i = 0;
     char as8Ret[100];
     char *p = NULL, *pNext = NULL;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio? %d,%d\n", name, ch);
@@ -1071,8 +1070,6 @@ EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wave
 EXPORT_API int CALL mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable, int state)
 {
     char args[SEND_BUF];
-    char as8Ret[100];
-    int retLen = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe %d,%d,%s,%s\n",
         name, ch, wavetableToString(wavetable), changeSwitchStateToString(state));
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -1147,10 +1144,9 @@ EXPORT_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devList, in
 */
 EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavetable, int state, int timeout_ms)
 {
-    int ret = -3, error_count = 0;
-    char args[SEND_BUF];
+    int ret = -3;
     int readState;
-    int time = 0, retlen = 0;
+    int time = 0;
     
     while (1)
     {
@@ -1250,7 +1246,6 @@ EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wav
 {
     char args[SEND_BUF];
     char as8Ret[100];
-    char *p, *pNext;
     int retLen = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CYCLE? %d,%d,%s\n",
         name, ch, wavetableToString(wavetable));
@@ -1293,7 +1288,6 @@ EXPORT_API int CALL mrgMRQPVTFifoBufferTime_Query(ViSession vi, int name, int ch
 {
     char args[SEND_BUF];
     char as8Ret[100];
-    char *p, *pNext;
     int retLen = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:FIFO:TIMe? %d,%d,%s\n",
         name, ch, wavetableToString(wavetable));
@@ -3369,7 +3363,6 @@ EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate(ViSession vi, int name, in
 */
 EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate_Query(ViSession vi, int name, int ch, int *speedUp, int *speedDown)
 {
-    int i = 0;
     char args[SEND_BUF];
     char as8Ret[100];
     int retLen = 0;

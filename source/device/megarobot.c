@@ -1799,7 +1799,6 @@ EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int name, float * posi
     int  retlen = 0;
     char args[SEND_BUF];
     char tmp[100];
-    char * p, *pNext = NULL;
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:POSITion:CURRent? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
     {
@@ -1880,11 +1879,8 @@ EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x
 */
 EXPORT_API int CALL mrgRobotJointHome(ViSession vi, int name, int axi, float speed,int timeout_ms)
 {
-    int count = 0, retlen = 0;
+    int retlen = 0;
     char args[SEND_BUF];
-    char tmp[100];
-    float position[3];
-    char * p, *pNext = NULL;
 
     snprintf(args, SEND_BUF, "ROBOT:JOINT:HOMe %d,%d,%f\n", name, axi, speed);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
@@ -1909,9 +1905,8 @@ EXPORT_API int CALL mrgRobotJointHome(ViSession vi, int name, int axi, float spe
 */
 EXPORT_API int CALL mrgRobotJointMove(ViSession vi, int name, int axi, float position,float time, int timeout_ms)
 {
-    int count = 0, retlen = 0;
+    int retlen = 0;
     char args[SEND_BUF];
-    char tmp[100];
     snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", name, axi, position, time);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
@@ -2032,11 +2027,9 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, float * x,
 */
 EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record)
 {
-    int count = 0, retlen = 0;
+    int retlen = 0;
     char args[SEND_BUF];
     char as8Ret[100];
-    float position[3];
-    char * p, *pNext = NULL;
     snprintf(args, SEND_BUF, "ROBOT:CURRENT:RECORD? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
     {

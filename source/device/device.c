@@ -50,7 +50,7 @@ EXPORT_API int CALL mrgCloseGateWay(ViSession  vi)
 */
 EXPORT_API int CALL mrgGateWaySendCmd(ViSession  vi, char* cmd, int len)
 {
-    return busWrite(vi, cmd, strlen(cmd));
+    return busWrite(vi, cmd, len);
 }
 /*
 * 向网关直接发送查询命令。
