@@ -105,214 +105,6 @@ END:
     return 0;
 }
 
-
-//使用TCP的Socket
-#ifndef _VXI11_ //TCP Socket
-static int connectWithBlock(char *ip)
-{
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(sockfd <= 0)
-        return -1;
-
-    struct sockaddr_in servaddr;
-    memset(&servaddr, 0, sizeof(servaddr));
-
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(MEGA_TCP_SOCKET_PORT);
-    servaddr.sin_addr.s_addr = inet_addr(ip);
-    inet_pton(AF_INET, ip, &servaddr.sin_addr); //ipV6
-
-    int ret = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-    if(ret != 0)
-    {
-        perror("connectBloking");
-        close(sockfd);
-        return -1;
-    }
-
-    return sockfd;
-}
-
-static int connectWithNoblock(char *ip, int timeout_ms)
-{
-    int ret, error;
-    struct timeval timeout;
-    struct sockaddr_in servaddr;
-
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(sockfd <= 0)
-        return -1;
-
-    timeout.tv_sec = timeout_ms/1000;
-    timeout.tv_usec = (timeout_ms % 1000) * 1000;
-
-    memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(MEGA_TCP_SOCKET_PORT);
-    servaddr.sin_addr.s_addr = inet_addr(ip);
-
-    int flags;
-    socklen_t len;
-    fd_set rset,wset;
-
-    //设置为非阻塞
-    flags = fcntl(sockfd, F_GETFL, 0);
-    ret = fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
-    if(ret != 0){
-        perror("Socket Set noblock error");
-        close(sockfd);
-        return -1;
-    }
-
-    if( (ret = connect(sockfd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) ) < 0){
-        if(errno != EINPROGRESS){
-            close(sockfd);
-            return -2;
-        }
-    }
-
-    //如果server与client在同一主机上，有些环境socket设为非阻塞会返回 0
-    if(0 == ret)
-        goto END;
-
-    FD_ZERO(&rset);
-    FD_SET(sockfd,&rset);
-
-    FD_ZERO(&wset);
-    FD_SET(sockfd,&wset);
-
-    if( ( ret = select(sockfd+1, NULL, &wset, NULL, &timeout) ) <= 0){
-        perror("connect time out");
-        close(sockfd);
-        return -3;
-    }
-    else{
-        len = sizeof(error);
-        getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len);
-        if(error)
-        {
-            fprintf(stderr, "Error in connection() %d - %s/n", error, strerror(error));
-            close(sockfd);
-            return -4;
-        }
-    }
-
-END:
-    //还原到阻塞模式
-    ret = fcntl(sockfd, F_SETFL, flags);
-    if(ret != 0){
-        perror("Socket Set noblock error");
-        close(sockfd);
-        return -1;
-    }
-
-    return sockfd;
-}
-
-int busOpenDevice(char *ip, int timeout_ms)
-{
-    // TCPIP0::192.168.1.2::inst0::INSTR,
-    char buff[20][64] = {""};
-    char *p, *pNext;
-    int index = 0;
-    p = STRTOK_S(ip, "::", &pNext);
-    while ( p && (index<20) )
-    {
-        strcpy(buff[index++], p);
-        p = STRTOK_S(NULL, "::", &pNext);
-    }
-    char *strIP = buff[1];
-
-    int sockfd = -1;
-    if(timeout_ms == -1){
-        sockfd = connectWithBlock(strIP);
-    }
-    else{
-        sockfd = connectWithNoblock(strIP, timeout_ms);
-    }
-
-    //设置收发超时
-    int error, ret;
-    struct timeval timeout;
-    timeout.tv_sec = timeout_ms/1000;
-    timeout.tv_usec = (timeout_ms % 1000) * 1000;
-
-    ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval));
-    if (ret == -1) {
-        error = errno;
-        while ( (errno == EINTR) && (close(sockfd) == -1) ) ;
-        errno = error;
-        return -1;
-    }
-
-    ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(struct timeval));
-    if (ret == -1) {
-        error = errno;
-        while ( (errno == EINTR) && (close(sockfd) == -1) ) ;
-        errno = error;
-        return -1;
-    }
-
-    return sockfd;
-}
-
-static int SyncSend(int fd, char *buf, int dataLen, int isBlock)
-{
-    int ret = -1;
-    if(fd <= 0)
-        return -1;
-
-    char data[4096];
-    memset(data, 0, sizeof(data));
-    memcpy(data, buf, dataLen);
-    //    if(data[len-1] != '\n')
-    //        data[len-1] = '\n';
-
-    /* 同步阻塞模式 */
-    if(isBlock != 0)
-    {
-        ret = send(fd, data, dataLen, 0);
-        return ret;
-    }
-
-    /* 同步非阻塞模式 */
-    while( (ret = send(fd, data, dataLen, MSG_DONTWAIT)) == -1)
-    {
-        usleep(100000);
-    }
-
-    return ret;
-}
-
-static int SyncRead(int fd, char *data, int dataLen, int isBlock)
-{
-    int ret = -1;
-    if(fd <= 0)
-        return -1;
-
-    memset(data, '\0', dataLen);
-    if(isBlock != 0)
-    {
-        /* 同步阻塞模式 */
-        ret = recv(fd, data, dataLen, 0);
-    }
-    else
-    {
-        /* 同步非阻塞模式 */
-        ret = recv(fd, data, dataLen, MSG_DONTWAIT);
-    }
-    return ret;
-}
-
-int busCloseDevice(ViSession vi)
-{
-    if(vi > 0)
-    {   close(vi);    }
-    return 0;
-}
-
-#else //_VXI11_ Vxi11
-
 char _g_device_IP[512] = ""; //设备IP，用于关闭
 int _g_timeout = 2000; //收发超时时间
 VXI11_CLINK *_g_clink = NULL;    //vxi11句柄
@@ -346,7 +138,9 @@ int busOpenDevice(char *ip, int timeout_ms)
     _g_clink = clink;
     _g_timeout = timeout_ms;
 
-    return 100;//随便返回一个非零数字
+    void *pvoid;
+    int value = (unsigned int)pvoid%10000;
+    return value;//随便返回一个非零数字
 }
 
 static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
@@ -357,9 +151,10 @@ static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
     int ret = vxi11_send(_g_clink, buf, dataLen);
     if(ret > 0)
         return ret;
-    else{
-        return -1;
+    if(ret < 0){
+            perror("SyncSend error!");
     }
+    return -1;
 }
 
 static int SyncRead(int vi, char *data, int dataLen, int isBlock)
@@ -377,11 +172,13 @@ static int SyncRead(int vi, char *data, int dataLen, int isBlock)
         // -VXI11_NULL_READ_RESP 超时未判断
         ret = vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
     }
-    if(ret > 0)
-        return ret;
-    else{
-        return -1;
+    if(ret > 0){
+            return ret;
     }
+    if(ret < 0){
+        perror("SyncRead error!");
+    }
+    return -1;
 }
 
 int busCloseDevice(ViSession vi)
@@ -395,15 +192,12 @@ int busCloseDevice(ViSession vi)
     _g_clink = NULL;
     return 0;
 }
-#endif //_VXI11_
-
 
 unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 {
     LOCK();
     int retCount = SyncSend(vi, data, len, 1);
     if(retCount < 0){
-        perror("busWrite error!");
         UNLOCK();
         return 0;
     }
@@ -417,7 +211,6 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
     LOCK();
     int retCount = SyncRead(vi, buf, len, 1);
     if(retCount < 0){
-        perror("busRead error!");
         UNLOCK();
         return 0;
     }
@@ -441,8 +234,6 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     LOCK();
     retCount = SyncSend(vi, input, inputlen, 1);
     if(retCount < 0){
-//        printf("TO_QUERY error\n");
-        perror("busQuery Write error!");
         UNLOCK();
         return 0;
     }
@@ -451,7 +242,6 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     retCount = SyncRead(vi, output, wantlen, 1);
     if(retCount < 0){
 //        printf("RECV_QUERY error\n");
-        perror("busQuery Read error!");
         UNLOCK();
         return 0;
     }

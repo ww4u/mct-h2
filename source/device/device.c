@@ -222,7 +222,7 @@ EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * versi
         return -1;
     }
     else {
-        version[len] = '\0';
+        version[len-1] = '\0';
         return 0;
     }
 }

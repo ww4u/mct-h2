@@ -11,9 +11,6 @@ extern "C" {
 #include "visa.h"
 #else
 
-//定义下面宏则使用VX11为Linux平台通信，否则使用TCP的socket
-#define _VXI11_
-
 typedef unsigned long ViSession;
 #include <vxi11/vxi11_user.h>
 
