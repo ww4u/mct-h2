@@ -93,7 +93,13 @@ int H2Configuration::readDeviceConfig()
         m_TeethQty  = links[5];
     }
 
-//    m_ControlInterface
+    int ifce = 0;
+    ret = mrgSysGetInterface(mViHandle, &ifce);
+    if(ret < 0 || ifce < 0 || ifce > 2){
+        sysError("mrgSysGetInterface " + QString::number(ifce), ret);
+        return -1;
+    }
+    m_ControlInterface = ifce;
 
     return 0;
 }
@@ -110,6 +116,16 @@ int H2Configuration::writeDeviceConfig()
     m_SliderHeight   = ui->doubleSpinBox_sliderY->value();
     m_MouldType = ui->doubleSpinBox_mouldType->value();
     m_TeethQty  = ui->doubleSpinBox_teethQty->value();
+
+    if(ui->comboBox_control->currentText() == "CVE"){
+        m_ControlInterface = 0;
+    }
+    else if(ui->comboBox_control->currentText() == "USB"){
+        m_ControlInterface = 1;
+    }
+    else if(ui->comboBox_control->currentText() == "IO"){
+        m_ControlInterface = 2;
+    }
 
     //type:0==>H2S, 1==>H2M, 2==>H2L, 4==>定制
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
@@ -131,7 +147,11 @@ int H2Configuration::writeDeviceConfig()
         }
     }
 
-//    m_ControlInterface
+    ret = mrgSysSetInterface(mViHandle, m_ControlInterface);
+    if(ret < 0){
+        sysError("mrgSysSetInterface", ret);
+        return -1;
+    }
 
     return ret;
 }
@@ -196,7 +216,16 @@ void H2Configuration::updateShow()
     ui->doubleSpinBox_sliderY->setValue(m_SliderHeight);
     ui->doubleSpinBox_mouldType->setValue(m_MouldType);
     ui->doubleSpinBox_teethQty->setValue(m_TeethQty);
-    ui->comboBox_control->setCurrentIndex(m_ControlInterface);
+
+    if(m_ControlInterface == 0){
+        ui->comboBox_control->setCurrentIndex(0);
+    }
+    else if(m_ControlInterface == 1){
+        ui->comboBox_control->setCurrentIndex(-1); //无USB
+    }
+    else if(m_ControlInterface == 2){
+        ui->comboBox_control->setCurrentIndex(1);
+    }
 
     on_sizeComboBox_currentIndexChanged(m_Size);
 }
