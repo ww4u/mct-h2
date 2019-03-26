@@ -647,7 +647,7 @@ void H2Ops::on_btnRead_clicked()
     int len = 1024*40;
     char *logBuff = (char *)malloc(len);
     memset(logBuff,0,len);
-    int ret = mrgErrorLogUpload(mViHandle, 1, logBuff, len );
+    int ret = mrgErrorLogUpload(mViHandle, 1, logBuff);
     QString strFileData = QString("%1").arg(logBuff);
     free(logBuff);
 

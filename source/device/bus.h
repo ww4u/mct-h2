@@ -1,4 +1,3 @@
-
 #ifndef _BUS_H_
 #define _BUS_H_
 
@@ -6,21 +5,12 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-#include "visatype.h"
-#include "visa.h"
-#else
-
-typedef unsigned long ViSession;
-#include <vxi11/vxi11_user.h>
-
-#endif
+#include "platform.h"
 
 #define  BUS_LAN   0
 #define  BUS_USB   1
 #define  METHOD_VISA  0
 #define  METHOD_UDP  1
-
 
 /*
 * 对于网线连接的网关，查找方式有两种： 一种是用VISA方式查找，另一种是用UDP广播方式查找。
@@ -39,7 +29,6 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif
-
 
 #endif // !_BUS_H_
 

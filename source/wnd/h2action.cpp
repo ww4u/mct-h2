@@ -79,7 +79,7 @@ int H2Action::readDeviceConfig()
     int len = 4096 * 1024;
     char *pData = (char *)malloc(len);
     memset(pData, 0, len);
-    ret = mrgStorageMotionFileContextRead(mViHandle, m_strDeviceFileName.toLocal8Bit().data(), pData, len);
+    ret = mrgStorageMotionFileContextRead(mViHandle, m_strDeviceFileName.toLocal8Bit().data(), pData);
     qDebug() << "mrgStorageMotionFileContextRead" << ret;
     if(ret <= 0){
         m_fileContext = "";

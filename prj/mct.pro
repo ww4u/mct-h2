@@ -29,19 +29,49 @@ CONFIG += C++11 #use lambda
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += ../include
+INCLUDEPATH += ../source/sys
+INCLUDEPATH += ../source/mrp
+INCLUDEPATH += ../source/device
+INCLUDEPATH += ../source/model
+INCLUDEPATH += ../source/wnd
+INCLUDEPATH += ../source/widget
+
+#### SDK ####
+SOURCES += ../source/device/bus.c \
+        ../source/device/device.c \
+        ../source/device/errorcode.c \
+        ../source/device/megarobot.c \
+        ../source/device/mrqdevice.c \
+        ../source/device/project.c \
+        ../source/device/storage.c \
+        ../source/device/system.c
+
+
+HEADERS += ../source/device/bus.h \
+        ../source/device/device.h \
+        ../source/device/errorcode.h \
+        ../source/device/MegaGateway.h \
+        ../source/device/megarobot.h \
+        ../source/device/mrqdevice.h \
+        ../source/device/platform.h \
+        ../source/device/project.h \
+        ../source/device/storage.h \
+        ../source/device/system.h
+
+unix {
+INCLUDEPATH += ../source/device/vxi11
+HEADERS += ../source/device/vxi11/vxi11.h
+HEADERS += ../source/device/vxi11/vxi11_user.h
+SOURCES += ../source/device/vxi11/vxi11_clnt.c
+SOURCES += ../source/device/vxi11/vxi11_user.c
+SOURCES += ../source/device/vxi11/vxi11_xdr.c
+}
+
+#### ui ####
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
     ../include/mydef.h                  \
-    ../source/device/bus.h              \
-    ../source/device/device.h           \
-    ../source/device/MegaGateway.h      \
-    ../source/device/megarobot.h        \
-    ../source/device/mrqdevice.h        \
-    ../source/device/storage.h          \
-    ../source/device/errorcode.h        \
-    ../source/device/export.h           \
-    ../source/device/stdafx.h           \
-    ../source/device/system.h           \
     ../source/sys/sysapi.h              \
     ../source/sys/megaxml.h             \
     ../source/sys/sacsvstream.h         \
@@ -82,13 +112,6 @@ HEADERS += ../include/mystd.h           \
     ../source/widget/megainterface.h
 
 SOURCES += ../source/main/main.cpp      \
-    ../source/device/bus.c              \
-    ../source/device/device.c           \
-    ../source/device/megarobot.c        \
-    ../source/device/mrqdevice.c        \
-    ../source/device/storage.c          \
-    ../source/device/errorcode.c        \
-    ../source/device/system.c           \
     ../source/sys/sysapi.cpp            \
     ../source/sys/megaxml.cpp           \
     ../source/sys/sacsvstream.cpp       \
@@ -129,14 +152,6 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megainterface.cpp
 
 
-
-!win32: HEADERS += ../source/device/vxi11/vxi11.h
-!win32: HEADERS += ../source/device/vxi11/vxi11_user.h
-!win32: SOURCES += ../source/device/vxi11/vxi11_clnt.c
-!win32: SOURCES += ../source/device/vxi11/vxi11_user.c
-!win32: SOURCES += ../source/device/vxi11/vxi11_xdr.c
-
-
 FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/h2ops.ui              \
     ../source/wnd/h2action.ui           \
@@ -152,22 +167,6 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/roboconfig.ui         \
     ../source/widget/megainterface.ui
 
-INCLUDEPATH += ../include
-INCLUDEPATH += ../source/sys
-INCLUDEPATH += ../source/mrp
-INCLUDEPATH += ../source/device
-INCLUDEPATH += ../source/model
-INCLUDEPATH += ../source/wnd
-INCLUDEPATH += ../source/widget
-
-
-win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
-
-win32:LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
-win32:LIBS += -lvisa32
-
-win32:LIBS += -L"../3rdlib"
-win32:LIBS += -llibws2_32 -llibiphlpapi
 
 RESOURCES += ../res/res.qrc
 
@@ -178,3 +177,11 @@ TRANSLATIONS += ../res/ts/qt_EN.ts
 
 #target.path=/home/megarobo/MCT/
 #INSTALLS += target
+
+win32 {
+INCLUDEPATH += "../3rdlib"
+DEPENDPATH += "../3rdlib"
+LIBS += -L"../3rdlib" -llibws2_32
+LIBS += -L"../3rdlib" -llibiphlpapi
+LIBS += -L"../3rdlib" -lvisa32
+}

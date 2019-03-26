@@ -1,12 +1,12 @@
 #ifndef _MEGA_STORAGE_H
 #define _MEGA_STORAGE_H
 
+#include "bus.h"
+
 #if defined(__cplusplus) || defined(__cplusplus__)
 extern "C" {
 #endif
 
-#include "bus.h"
-#include "export.h"
 /*
 * 查询存储器中，可用的运动文件
 * vi :visa设备句柄
@@ -15,7 +15,7 @@ extern "C" {
 * len : fileList的缓存长度
 * 返回值：大于零表示返回实际的字节数，小于零表示出错
 */
-EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* fileList, int len);
+int mrgStorageMotionFileQuery(ViSession vi, int type, char* fileList, int len);
 /*
 * 删除本地存储器中的运动文件
 * vi :visa设备句柄
@@ -24,7 +24,7 @@ EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* file
 * len : fileList的缓存长度
 * 返回值：大于零表示返回实际的字节数，小于零表示出错
 */
-EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* fileName);
+int mrgStorageMotionFileDelete(ViSession vi, char* fileName);
 /*
 * 读取运动文件内容到上位机
 * vi :visa设备句柄
@@ -33,7 +33,7 @@ EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* fileName);
 * wantlen： context（存储区）的长度
 * 返回值：返回实际的文件长度
 */
-EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context, int wantlen);
+int mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context);
 /*
 * 保存运动文件内容到本地存储器,
 * vi :visa设备句柄
@@ -41,7 +41,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
 * saveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName,char* saveFileName);
+int mrgStorageMotionFileSave(ViSession vi, char* srcFileName,char* saveFileName);
 
 /*
 * 保存运动文件内容到本地存储器
@@ -51,7 +51,7 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName,cha
 * saveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context, int len, char * saveFileName);
+int mrgStorageMotionFileSaveContext(ViSession vi, char* context, int len, char * saveFileName);
 
 
 #if defined(__cplusplus) || defined(__cplusplus__)
