@@ -8,132 +8,200 @@ extern "C" {
 #endif
 	
 /*
-*启动MARH的CAN口
-*vi :visa设备句柄
-*返回值：0表示执行成功，－1表示失败
-*/
+ * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
+ * vi :visa设备句柄
+ * name：机器人
+ * state：识别状态
+ * 返回值：0表示执行成功，－1表示失败
+ */
+int mrgIdentify(ViSession vi, int state);
+/*
+ * 切换 MRH - T 的模式
+ * vi :visa设备句柄
+ * mode : MRH - T 的模式，取值范围： [0,1]
+ * 返回值：0表示执行成功，－1表示失败
+ */
+int mrgModeSwitch(ViSession vi, int mode);
+/*
+ * 查询 MRH-T 软件版本号
+ * vi :visa设备句柄
+ * 返回值：0回读正确;否则回读失败
+ */
+int mrgSysGetSoftVersion(ViSession vi, char * version);
+/*
+ * 查询 MRH-T 背板的软件版本号
+ * vi :visa设备句柄
+ * 返回值：0回读正确;否则回读失败
+ */
+int mrgSysGetBackBoardSoftVersion(ViSession vi, char * version);
+/*
+ *查询 MRH-T 背板的硬件版本号
+ *vi :visa设备句柄
+ *返回值：0回读正确;否则回读失败
+ */
+int mrgSysGetBackBoardHardVersion(ViSession vi, char * version);
+/*
+ *启动MARH的CAN口
+ *vi :visa设备句柄
+ *返回值：0表示执行成功，－1表示失败
+ */
 int mrgSysStartCan(ViSession vi);
 /*
-*复位MRH的CAN口
-*vi :visa设备句柄
-*返回值：0表示执行成功，－1表示失败
-*/
+ *复位MRH的CAN口
+ *vi :visa设备句柄
+ *返回值：0表示执行成功，－1表示失败
+ */
 int mrgSysResetCan(ViSession vi);
 /*
-*配置MRH的CAN口波特率
-*vi :visa设备句柄
-*baud:波特率 1000000,800000,500000,250000,125000,100000
-*返回值：0表示执行成功，－1表示失败
-*/
+ *配置MRH的CAN口波特率
+ *vi :visa设备句柄
+ *baud:波特率 1000000,800000,500000,250000,125000,100000
+ *返回值：0表示执行成功，－1表示失败
+ */
 int mrgSysConfCan(ViSession vi, int baud);
 /*
-*切换 MRH-T 的模式
-*vi :visa设备句柄
-*mode:MRH-T 的模式，取值范围： [0, 1]
-*返回值：0表示执行成功，－1表示失败
-*/
+ *获取MRH的CAN口波特率
+ *vi :visa设备句柄
+ *baud:波特率 1000000,800000,500000,250000,125000,100000
+ *返回值：0表示执行成功，－1表示失败
+ */
+int mrgSysConfCan_Query(ViSession vi, int* baud);
+/*
+ *切换 MRH-T 的模式
+ *vi :visa设备句柄
+ *mode:MRH-T 的模式，取值范围： [0, 1]
+ *返回值：0表示执行成功，－1表示失败
+ */
 int mrgSysModeSwitch(ViSession vi, int mode);
 /*
-*查询 MRH-T 的模式
-*vi :visa设备句柄
-*返回值：MRH-T 的模式
-*/
+ *查询 MRH-T 的模式
+ *vi :visa设备句柄
+ *返回值：MRH-T 的模式
+ */
 int mrgGetSysMode(ViSession vi);
 /*
-*扫描可用的WIFI
-*vi :visa设备句柄
-*result：可用的WIFI命令，以逗号分隔
-*返回值：返回实际接收到的数据长度
-*/
+ *设置指令表的模式 按行执行或者按段执行
+ *vi :visa设备句柄
+ *mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+ *返回值：0表示执行成功，－1表示失败
+ */
+int mrgSysInstructionMode(ViSession vi, int mode);
+/*
+ *查询指令表的模式
+ *vi :visa设备句柄
+ *mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+ *返回值：0表示执行成功,否则表示执行失败
+ */
+int mrgSysInstructionMode_Query(ViSession vi, int* mode);
+/*
+ * 设置网络的IP模式
+ * vi :visa设备句柄
+ * mode : IP 模式 0->静态IP; 1->DHCP
+ * 返回值：0设置成功,-1设置失败
+ */
+int mrgSysSetNetworkIPMode(ViSession vi, int mode);
+/*
+ * 获取网络的IP模式
+ * vi :visa设备句柄
+ * mode : IP 模式 0->静态IP; 1->DHCP
+ * 返回值：0执行成功,否则执行失败
+ */
+int mrgSysGetNetworkIPMode(ViSession vi, int* mode);
+/*
+ *扫描可用的WIFI
+ *vi :visa设备句柄
+ *result：可用的WIFI命令，以逗号分隔
+ *返回值：返回实际接收到的数据长度
+ */
 int mrgSysWifiScan(ViSession vi, char* result, int len);
 /*
-*配置WIFI
-*vi :visa设备句柄
-*name：WIFi名称
-* passwd：密码
-*返回值：返回实际接收到的数据长度
-*/
+ *配置WIFI
+ *vi :visa设备句柄
+ *name：WIFi名称
+ * passwd：密码
+ *返回值：返回实际接收到的数据长度
+ */
 int mrgSysWifiConfig(ViSession vi, char* name, char* passwd);
 /*
-*停止或启动无线网卡
-*vi :visa设备句柄
-*state：0表示停止， 1表示启用
-*返回值：0:执行成功； 否则执行失败
-*/
+ *停止或启动无线网卡
+ *vi :visa设备句柄
+ *state：0表示停止， 1表示启用
+ *返回值：0:执行成功； 否则执行失败
+ */
 int mrgSysWifiUpDown(ViSession vi, int state);
 /*
-*检查WIFI的连接状态
-*vi :visa设备句柄
-*timeout_ms：等待超时时间，单位：ms
-*返回值：0:连接超时或未连接； 1：连接成功
-*/
+ *检查WIFI的连接状态
+ *vi :visa设备句柄
+ *timeout_ms：等待超时时间，单位：ms
+ *返回值：0:连接超时或未连接； 1：连接成功
+ */
 int mrgSysWifiCheckState(ViSession vi, int timeout_ms);
 /*
-*查询当前已连接上的WIFI名称
-*vi :visa设备句柄
-*name：WIFI名
-*返回值：0:执行成功； 否则执行失败
-*/
+ *查询当前已连接上的WIFI名称
+ *vi :visa设备句柄
+ *name：WIFI名
+ *返回值：0:执行成功； 否则执行失败
+ */
 int mrgSysGetWifiConnected(ViSession vi, char* name);
 
 /*
-*设置系统的心跳时间,单位:秒
-*vi :visa设备句柄
-*value: 心跳时间,单位:秒
-*返回值：0表示执行成功；－1表示执行失败
-*/
+ *设置系统的心跳时间,单位:秒
+ *vi :visa设备句柄
+ *value: 心跳时间,单位:秒
+ *返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysSetHeartPeriod(ViSession vi, int value);
 /*
-*查询系统的心跳时间,单位:秒
-*vi :visa设备句柄
-* value: 心跳时间,单位:秒
-*返回值：0表示执行成功；－1表示执行失败
-*/
+ *查询系统的心跳时间,单位:秒
+ *vi :visa设备句柄
+ * value: 心跳时间,单位:秒
+ *返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysGetHeartPeriod(ViSession vi, int * value);
 /*
-*设置系统上电值
-*vi :visa设备句柄
-*value: 上电值 DEFAULT|LAST
-*返回值：0表示执行成功；－1表示执行失败
-*/
+ *设置系统上电值
+ *vi :visa设备句柄
+ *value: 上电值 DEFAULT|LAST
+ *返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysSetPowerOn(ViSession vi, int value);
 /*
-*查询系统上电值
-*vi :visa设备句柄
-* value: 上电值 0:DEFAULT; 1:LAST
-*返回值：0表示执行成功；－1表示执行失败
-*/
+ *查询系统上电值
+ *vi :visa设备句柄
+ * value: 上电值 0:DEFAULT; 1:LAST
+ *返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysGetPowerOn(ViSession vi, int * value);
 /*
-*设置系统控制接口
-*vi :visa设备句柄
-*interface: 上电值 LAN|USB|IO
-*返回值：0表示执行成功；－1表示执行失败
-*/
+ *设置系统控制接口
+ *vi :visa设备句柄
+ *interface: 上电值 LAN|USB|IO
+ *返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysSetInterface(ViSession vi, int face);
 /*
-* 查询系统控制接口
-* vi :visa设备句柄
-* interface: 控制接口 LAN|USB|IO
-* 返回值：0表示执行成功；－1表示执行失败
-*/
+ * 查询系统控制接口
+ * vi :visa设备句柄
+ * interface: 控制接口 LAN|USB|IO
+ * 返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgSysGetInterface(ViSession vi, int *face);
 /*
-*设置紧急停止
-*vi :visa设备句柄
-*state: 0->OFF| 1->ON
-*返回值：0表示执行成功；－1表示执行失败
-*紧急停止时,会停止当前系统CAN网络中的所有设备,并设置紧急停止标志位.在紧急标志位被清除前,不接受任何CAN帧.
-* 当state为OFF时,只是清除标志位
-*/
+ *设置紧急停止
+ *vi :visa设备句柄
+ *state: 0->OFF| 1->ON
+ *返回值：0表示执行成功；－1表示执行失败
+ *紧急停止时,会停止当前系统CAN网络中的所有设备,并设置紧急停止标志位.在紧急标志位被清除前,不接受任何CAN帧.
+ * 当state为OFF时,只是清除标志位
+ */
 int mrgSysSetEmergencyStop(ViSession vi, int state);
 /*
-* 查询紧急停止标志位,主要用来清除标志位
-* vi :visa设备句柄
-* state:  0->OFF| 1->ON
-* 返回值：0表示执行成功；－1表示执行失败
-* 紧急停止时,会自动设置此标志位
-*/
+ * 查询紧急停止标志位,主要用来清除标志位
+ * vi :visa设备句柄
+ * state:  0->OFF| 1->ON
+ * 返回值：0表示执行成功；－1表示执行失败
+ * 紧急停止时,会自动设置此标志位
+ */
 int mrgSysGetEmergencyStopState(ViSession vi, int *state);
 
 
@@ -207,10 +275,9 @@ int mrgScriptStop(ViSession vi);
  */
 int mrgScriptGetCurrentStates(ViSession vi);
 
-
-
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif
+
 #endif // !MR_SYSTEM_H
 

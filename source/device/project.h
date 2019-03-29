@@ -8,43 +8,51 @@ extern "C" {
 #endif
 
 /*
-* 设置系统为工程模式
-* vi :visa设备句柄
-* state: 0->OFF| 1->ON
-* 返回值：0表示执行成功；－1表示执行失败
-* 说明: 只有在工程模式下,才允许读取IO状态
-*/
+ * 设置系统为工程模式
+ * vi :visa设备句柄
+ * state: 0->OFF| 1->ON
+ * 返回值：0表示执行成功；－1表示执行失败
+ * 说明: 只有在工程模式下,才允许读取IO状态
+ */
 int mrgSetProjectMode(ViSession vi, int state);
 /*
-* 查询外部IO的状态
-* vi :visa设备句柄
-* state: 每一位表示一个IO的状态
-* 返回值：0表示执行成功；－1表示执行失败
-*/
+ * 查询外部IO的状态
+ * vi :visa设备句柄
+ * state: 每一位表示一个IO的状态
+ * 返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgProjectGetXinState(ViSession vi, unsigned int *state);
 /*
-* 设置系统的外部输出IO的状态
-* vi :visa设备句柄
-* index: 0->YOUT1; 1->YOUT2
-* state: 0->low| 1->high
-* 返回值：0表示执行成功；－1表示执行失败
-* 说明: 只有在工程模式下,才允许读取IO状态
-*/
+ * 设置系统的外部输出IO的状态
+ * vi :visa设备句柄
+ * index: 0->YOUT1; 1->YOUT2
+ * state: 0->low| 1->high
+ * 返回值：0表示执行成功；－1表示执行失败
+ * 说明: 只有在工程模式下,才允许读取IO状态
+ */
 int mrgProjectSetYout(ViSession vi, int index, int state);
 /*
-* 设置系统的序列号
-* vi :visa设备句柄
-* serial: 序列号
-* 返回值：0表示执行成功；－1表示执行失败
-*/
+ * 设置系统的序列号
+ * vi :visa设备句柄
+ * serial: 序列号
+ * 返回值：0表示执行成功；－1表示执行失败
+ */
 int mrgProjectSetSerialNum(ViSession vi, char * serial);
 /*
-* 查询系统的序列号
-* vi :visa设备句柄
-* serial: 序列号
-* 返回值：返回序列号的长度
-*/
+ * 查询系统的序列号
+ * vi :visa设备句柄
+ * serial: 序列号
+ * 返回值：返回序列号的长度
+ */
 int mrgProjectGetSerialNum(ViSession vi, char * serial);
+/*
+ * 写入设备的序列号
+ * idn :返回的设备描述符
+ * len：idn缓存长度
+ * 返回值：
+ * 说明：此函数为工程接口函数，不对外开放
+ */
+int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

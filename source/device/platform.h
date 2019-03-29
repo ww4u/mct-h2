@@ -12,14 +12,12 @@
 #ifdef _WIN32
 //////////////////////////////////
 //Windows头文件
-
 #ifdef NTDDI_VERSION
 #undef NTDDI_VERSION
 #define NTDDI_VERSION NTDDI_WINXPSP3
 #endif
-
 #include <windows.h>
-#include <winsock2.h>
+#include <WINSOCK2.H>
 #include <IPHlpApi.h>
 
 #include "visatype.h"

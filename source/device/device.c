@@ -8,13 +8,13 @@
  * output：查找到的设备描述符，多个设备之间以逗号分隔
  * len : output的最大容量（字节个数）
  * method:当网关设备使用网络连接时，在查找网关设备时有两种查找方式：
- method = 0,使用VISA查找方式；
- method = 1,使用UDP方式查找
+ * method = 0,使用VISA查找方式；
+ * method = 1,使用UDP方式查找
  * 返回值：查找到的设备个数
  */
 int mrgFindGateWay(int  bus, char *output, int len,int method)
 {
-	return busFindDevice(bus, output, len,method);
+    return busFindDevice(bus, output, len,method);
 }
 /*
  * 打开网关设备。
@@ -24,7 +24,7 @@ int mrgFindGateWay(int  bus, char *output, int len,int method)
  */
 int mrgOpenGateWay(char * desc, int timeout_ms)
 {
-	return busOpenDevice(desc, timeout_ms);
+    return busOpenDevice(desc, timeout_ms);
 }
 /*
  * 关闭网关设备。
@@ -34,7 +34,7 @@ int mrgOpenGateWay(char * desc, int timeout_ms)
  */
 int mrgCloseGateWay(ViSession  vi)
 {
-	return busCloseDevice(vi);
+    return busCloseDevice(vi);
 }
 /*
  * 向网关直接发送设置命令。
@@ -45,7 +45,25 @@ int mrgCloseGateWay(ViSession  vi)
  */
 int mrgGateWaySendCmd(ViSession  vi, char* cmd, int len)
 {
-	return busWrite(vi, cmd, len);
+    return busWrite(vi, cmd, len);
+}
+/*
+ * 向网关发送读取命令。
+ * vi :设备句柄
+ * output:查询命令的返回
+ * wantlen:期望查询命令返回的长度，即output的长度
+ * 返回值：实际返回的数据长度
+ */
+int mrgGateWayRead(ViSession  vi, char * output, int wantlen)
+{
+    int retlen = 0;
+    if (wantlen > 1024)
+    {
+        //return -1;
+    }
+    retlen = busRead(vi,output, wantlen);
+    output[retlen] = 0;
+    return retlen;
 }
 /*
  * 向网关直接发送查询命令。
@@ -58,13 +76,13 @@ int mrgGateWaySendCmd(ViSession  vi, char* cmd, int len)
  */
 int mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int wantlen)
 {
-	int retlen = 0;
-	if (wantlen > 1024)
-	{
-		return -1;
-	}
-	retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen);
-	return retlen;
+    int retlen = 0;
+    if (wantlen > 1024)
+    {
+	return -1;
+    }
+    retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen);
+    return retlen;
 }
 
 /*
@@ -75,15 +93,15 @@ int mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int wantlen)
  */
 int mrgGateWayIDNQuery(ViSession  vi, char * idn)
 {
-	char args[SEND_BUF];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "*IDN?\n");
-	if ((retlen = busQuery(vi, args, strlen(args), idn, 100)) <= 0)
-	{
-		return -1;
-	}
-	idn[retlen-1] = 0;
-	return 0;
+    char args[SEND_BUF];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "*IDN?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), idn, 100)) <= 0)
+    {
+	return -1;
+    }
+    idn[retlen-1] = 0;
+    return 0;
 }
 
 /*
@@ -94,22 +112,22 @@ int mrgGateWayIDNQuery(ViSession  vi, char * idn)
  */
 int mrgFindDevice(ViSession vi, int timeout_ms)
 {
-	char ret[40];
-	char args[SEND_BUF];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "DEVICE:SEARCH\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return 0;
-	}
-	Sleep(timeout_ms);
-	snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
-	{
-		return 0;
-	}
-	ret[retlen] = 0;
-	return atoi(ret);
+    char ret[40];
+    char args[SEND_BUF];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:SEARCH\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return 0;
+    }
+    Sleep(timeout_ms);
+    snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
+    {
+	return 0;
+    }
+    ret[retlen] = 0;
+    return atoi(ret);
 }
 /*
  * 获取所有与网关相连的设备名称（sendid的字符形式）
@@ -119,27 +137,27 @@ int mrgFindDevice(ViSession vi, int timeout_ms)
  */
 int mrgGetDeviceName(ViSession vi, int * name)
 {
-	int count = 0, retlen = 0,tmp = 0;
-	char args[SEND_BUF];
-	char names[1024];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "DEVICE:NAME?\n");
-	if ((retlen = busQuery(vi, args, strlen(args), names, 1024)) == 0)
+    int count = 0, retlen = 0,tmp = 0;
+    char args[SEND_BUF];
+    char names[1024];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "DEVICE:NAME?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), names, 1024)) == 0)
+    {
+	return -1;
+    }
+    name[retlen - 1] = 0;
+    p = STRTOK_S(names, ",", &pNext);
+    while (p)
+    {
+	tmp = atoi(p);
+	if (tmp != 0)
 	{
-		return -1;
+	    name[count++] = tmp;
 	}
-	name[retlen - 1] = 0;
-	p = STRTOK_S(names, ",", &pNext);
-	while (p)
-	{
-		tmp = atoi(p);
-		if (tmp != 0)
-		{
-			name[count++] = tmp;
-		}
-		p = STRTOK_S(NULL, ",", &pNext);
-	}
-	return count;
+	p = STRTOK_S(NULL, ",", &pNext);
+    }
+    return count;
 }
 /*
  * 获取指定设备的类型
@@ -151,15 +169,15 @@ int mrgGetDeviceName(ViSession vi, int * name)
  */
 int mrgGetDeviceType(ViSession vi, int name, char * type)
 {
-	char args[SEND_BUF];
-	int len = 0;
-	snprintf(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
-	if ((len = busQuery(vi, args, strlen(args), type, 12)) == 0)
-	{
-		return -1;
-	}
-	type[len-1] = '\0';
-	return 0;
+    char args[SEND_BUF];
+    int len = 0;
+    snprintf(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), type, 12)) == 0)
+    {
+	return -1;
+    }
+    type[len-1] = '\0';
+    return 0;
 }
 /*
  *查询指定设备的通道个数,name为仪器名
@@ -169,18 +187,18 @@ int mrgGetDeviceType(ViSession vi, int name, char * type)
  */
 int mrgGetDeviceChannelCount(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	int retLen = 0;
-	char state[10];
-	snprintf(args, SEND_BUF, "DEVice:CHANnel:COUNt? %d\n", name);
-	if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
-		return -1;
-	}
-	else
-	{
-		state[retLen - 1] = '\0';
-	}
-	return atoi(state);
+    char args[SEND_BUF];
+    int retLen = 0;
+    char state[10];
+    snprintf(args, SEND_BUF, "DEVice:CHANnel:COUNt? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+	return -1;
+    }
+    else
+    {
+	state[retLen - 1] = '\0';
+    }
+    return atoi(state);
 }
 /*
  * 获取指定设备的信息，包括（序列号：硬件版本号：软件版本号：boot版本号：逻辑版本号）
@@ -190,16 +208,16 @@ int mrgGetDeviceChannelCount(ViSession vi, int name)
  */
 int mrgGetDeviceInfo(ViSession vi, int name, char * info)
 {
-	char args[SEND_BUF];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), info, 100)) == 0) {
-		return -1;
-	}
-	else {
-		info[retlen - 1] = '\0';
-		return 0;
-	}
+    char args[SEND_BUF];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), info, 100)) == 0) {
+	return -1;
+    }
+    else {
+	info[retlen - 1] = '\0';
+	return 0;
+    }
 }
 /*
  * 获取指定设备的软件版本号
@@ -210,16 +228,16 @@ int mrgGetDeviceInfo(ViSession vi, int name, char * info)
  */
 int mrgGetDeviceSoftVersion(ViSession vi, int name, char * version)
 {
-	char args[SEND_BUF];
-	int len = 0;
-	snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
-	if ((len = busQuery(vi, args, strlen(args), version, 20)) == 0) {
-		return -1;
-	}
-	else {
-		version[len-1] = '\0';
-		return 0;
-	}
+    char args[SEND_BUF];
+    int len = 0;
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), version, 20)) == 0) {
+	return -1;
+    }
+    else {
+	version[len-1] = '\0';
+	return 0;
+    }
 }
 /*
  *查询设备硬件版本号
@@ -230,17 +248,17 @@ int mrgGetDeviceSoftVersion(ViSession vi, int name, char * version)
  */
 int mrgGetFirmWareHard(ViSession vi, int name, char *buf)
 {
-	char args[SEND_BUF];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "DEVice:FIRMware:HARD? %d\n", name);
-	if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
-		return -1;
-	}
-	else
-	{
-		buf[retLen - 1] = '\0';
-	}
-	return 0;
+    char args[SEND_BUF];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVice:FIRMware:HARD? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
+	return -1;
+    }
+    else
+    {
+	buf[retLen - 1] = '\0';
+    }
+    return 0;
 }
 /*
  *查询设备BOOT版本号
@@ -251,17 +269,17 @@ int mrgGetFirmWareHard(ViSession vi, int name, char *buf)
  */
 int mrgGetFirmWareBoot(ViSession vi, int name, char *buf)
 {
-	char args[SEND_BUF];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "DEVice:FIRMware:BOOT? %d\n", name);
-	if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
-		return -1;
-	}
-	else
-	{
-		buf[retLen - 1] = '\0';
-	}
-	return 0;
+    char args[SEND_BUF];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVice:FIRMware:BOOT? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
+	return -1;
+    }
+    else
+    {
+	buf[retLen - 1] = '\0';
+    }
+    return 0;
 }
 /*
  *查询设备逻辑版本号
@@ -272,33 +290,17 @@ int mrgGetFirmWareBoot(ViSession vi, int name, char *buf)
  */
 int mrgGetFirmWareFpga(ViSession vi, int name, char *buf)
 {
-	char args[SEND_BUF];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "DEVice:FIRMware:FPGA? %d\n", name);
-	if ((retLen = busQuery(vi, args, strlen(args), buf, 40)) == 0) {
-		return -1;
-	}
-	else
-	{
-		buf[retLen - 1] = '\0';
-	}
-	return 0;
-}
-/*
- * 查询网关设备的*IDN。
- * idn :返回的设备描述符
- * len：idn缓存长度
- * 返回值：查找到的设备个数
- */
-int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s\n", name, serial);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVice:FIRMware:FPGA? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), buf, 40)) == 0) {
+	return -1;
+    }
+    else
+    {
+	buf[retLen - 1] = '\0';
+    }
+    return 0;
 }
 /*
  * 获取指定设备的序列号
@@ -309,85 +311,15 @@ int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
  */
 int mrgGetDeviceSerialNumber(ViSession vi, int name, char * serial)
 {
-	char args[SEND_BUF];
-	int len = 0;
-	snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
-	if ((len = busQuery(vi, args, strlen(args), serial, 20)) == 0) {
-		return -1;
-	}
-	else {
-		serial[len-1] = '\0';
-		return 0;
-	}
-}
-/*
- * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
- * vi :visa设备句柄
- * name：机器人
- * state：识别状态
- * 返回值：0表示执行成功，－1表示失败
- */
-int  mrgIdentify(ViSession vi, int state)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
+    char args[SEND_BUF];
+    int len = 0;
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), serial, 20)) == 0) {
+	return -1;
+    }
+    else {
+	serial[len-1] = '\0';
 	return 0;
+    }
 }
-/*
- *切换 MRH - T 的模式
- *vi :visa设备句柄
- *mode : MRH - T 的模式，取值范围： [0,1]
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgModeSwitch(ViSession vi, int mode)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
-/*
- *读取MRHT的IO状态
- *vi :visa设备句柄
- *state : xin的状态,低四位
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgGetXinState(ViSession vi, int* state)
-{
-	char args[SEND_BUF];
-	char as8Ret[100] = { 0 };
-	int len = 0;
-	snprintf(args, SEND_BUF, "PROJ:XREAD? 0");
-	if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
-		return -1;
-	}
-	else {
-		as8Ret[len - 1] = '\0';
-		*state = atoi(as8Ret);
-		return 0;
-	}
-}
-/*
- *设置MRHT的IO输出状态
- *vi :visa设备句柄
- *yout : 0表示Y1,1表示Y2
- *state : YOUT的状态,0表示低电平,1表示高电平
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgSetYoutState(ViSession vi, int yout,int state)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "PROJ:YWRITE %s,%s", yout?"Y2":"Y1", state?"H":"L");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
+

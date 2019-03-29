@@ -2,6 +2,7 @@
 //
 #include "megarobot.h"
 #include "mrqdevice.h"
+#include "device.h"
 
 #define     SEND_BUF        (100)
 #define     DELAYTIME       (100)  //! 查询延时时间
@@ -17,32 +18,32 @@
  */
 int mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname)
 {
-	char args[SEND_BUF];
-	char name[8];
-	int  id = 0;
-	int retLen = 0;
-	if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s\n", robotType);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s)\n", robotType, devList);
-	}
+    char args[SEND_BUF];
+    char name[8];
+    int  id = 0;
+    int retLen = 0;
+    if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s\n", robotType);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s)\n", robotType, devList);
+    }
     
-	if ((retLen = busQuery(vi, args, strlen(args), name,8)) == 0) {
-		return -1;
-	}
-	else {
-		name[retLen-1] = '\0'; //去掉“\n”
-	}
-	id = atoi(name);
-	if (id > 0)
-	{
-		*robotname = id;
-		return 0;
-	}
+    if ((retLen = busQuery(vi, args, strlen(args), name,8)) == 0) {
 	return -1;
+    }
+    else {
+	name[retLen-1] = '\0'; //去掉“\n”
+    }
+    id = atoi(name);
+    if (id > 0)
+    {
+	*robotname = id;
+	return 0;
+    }
+    return -1;
 }
 /*
  * 构建一个机器人,机器人的名子由用户指定
@@ -55,32 +56,32 @@ int mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotnam
  */
 int mrgBuildRobotNamed(ViSession vi, char * robotType, char * devList,int robotid, int * robotname)
 {
-	char args[SEND_BUF];
-	char name[8];
-	int  id = 0;
-	int retLen = 0;
-	if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,,%d\n", robotType, robotid);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s),%d\n", robotType, devList, robotid);
-	}
+    char args[SEND_BUF];
+    char name[8];
+    int  id = 0;
+    int retLen = 0;
+    if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,,%d\n", robotType, robotid);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s),%d\n", robotType, devList, robotid);
+    }
 
-	if ((retLen = busQuery(vi, args, strlen(args), name, 8)) == 0) {
-		return -1;
-	}
-	else {
-		name[retLen - 1] = '\0'; //去掉“\n”
-	}
-	id = atoi(name);
-	if (id > 0)
-	{
-		*robotname = id;
-		return 0;
-	}
+    if ((retLen = busQuery(vi, args, strlen(args), name, 8)) == 0) {
 	return -1;
+    }
+    else {
+	name[retLen - 1] = '\0'; //去掉“\n”
+    }
+    id = atoi(name);
+    if (id > 0)
+    {
+	*robotname = id;
+	return 0;
+    }
+    return -1;
 }
 /*
  * 删除当前机器人
@@ -91,13 +92,13 @@ int mrgBuildRobotNamed(ViSession vi, char * robotType, char * devList,int roboti
  */
 int mrgDeleteRobot(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:DELETE %d\n",name);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:DELETE %d\n",name);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 设置当前机器人的构形的连秆长度  单位:mm
@@ -109,24 +110,24 @@ int mrgDeleteRobot(ViSession vi, int name)
  */
 int mrgSetRobotLinks(ViSession vi, int name,float * links,int link_count)
 {
-	char args[SEND_BUF];
-	char as8Links[SEND_BUF] = { 0 }, tmp[20] = {0};
-	int i;
-	for (i = 0; i < link_count; i++)
+    char args[SEND_BUF];
+    char as8Links[SEND_BUF] = { 0 }, tmp[20] = {0};
+    int i;
+    for (i = 0; i < link_count; i++)
+    {
+	if (i != 0)
 	{
-		if (i != 0)
-		{
-			strcat(as8Links, ",");
-		}
-		snprintf(tmp, 20, "%f", links[i]);
-		strcat(as8Links, tmp);
+	    strcat(as8Links, ",");
 	}
-	snprintf(args, SEND_BUF, "ROBOT:LINK %d,(%s)\n", name, as8Links);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+	snprintf(tmp, 20, "%f", links[i]);
+	strcat(as8Links, tmp);
+    }
+    snprintf(args, SEND_BUF, "ROBOT:LINK %d,(%s)\n", name, as8Links);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 获取当前机器人的构形的连秆长度  单位:mm
@@ -138,27 +139,27 @@ int mrgSetRobotLinks(ViSession vi, int name,float * links,int link_count)
  */
 int mrgGetRobotLinks(ViSession vi, int name, float * links, int *link_count)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	char *pNext,*p;
-	int retlen = 0;
-	*link_count = 0;
-	snprintf(args, SEND_BUF, "ROBOT:LINK? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-		return -1;
-	}
-	else
+    char args[SEND_BUF];
+    char ret[100];
+    char *pNext,*p;
+    int retlen = 0;
+    *link_count = 0;
+    snprintf(args, SEND_BUF, "ROBOT:LINK? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	return -1;
+    }
+    else
+    {
+	ret[retlen - 1] = 0;
+	p = STRTOK_S(ret, ",", &pNext);
+	while (p)
 	{
-		ret[retlen - 1] = 0;
-		p = STRTOK_S(ret, ",", &pNext);
-		while (p)
-		{
-			*links++ = atof(p);
-			p = STRTOK_S(NULL, ",", &pNext);
-			(*link_count)++;
-		}
+	    *links++ = atof(p);
+	    p = STRTOK_S(NULL, ",", &pNext);
+	    (*link_count)++;
 	}
-	return 0;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人的构形
@@ -169,38 +170,38 @@ int mrgGetRobotLinks(ViSession vi, int name, float * links, int *link_count)
  */
 int mrgGetRobotType(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-		return -1;
-	}
-	else 
+    char args[SEND_BUF];
+    char ret[100];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	return -1;
+    }
+    else 
+    {
+	ret[retlen - 1] = 0;
+	if (STRCASECMP(ret, "MRX-T4") == 0)
 	{
-		ret[retlen - 1] = 0;
-		if (STRCASECMP(ret, "MRX-T4") == 0)
-		{
-			return MRX_TYPE_T4;
-		}
-		else if (STRCASECMP(ret, "MRX-AS") == 0)
-		{
-			return MRX_TYPE_AS;
-		}
-		else if (STRCASECMP(ret, "MRX-H2") == 0)
-		{
-			return MRX_TYPE_H2;
-		}
-		else if (STRCASECMP(ret, "MRX-DELTA") == 0)
-		{
-			return MRX_TYPE_DELTA;
-		}
-		else if (STRCASECMP(ret, "MRX-RAW") == 0)
-		{
-			return MRX_TYPE_RAW;
-		}
+	    return MRX_TYPE_T4;
 	}
-	return MRX_TYPE_UNKOWN;
+	else if (STRCASECMP(ret, "MRX-AS") == 0)
+	{
+	    return MRX_TYPE_AS;
+	}
+	else if (STRCASECMP(ret, "MRX-H2") == 0)
+	{
+	    return MRX_TYPE_H2;
+	}
+	else if (STRCASECMP(ret, "MRX-DELTA") == 0)
+	{
+	    return MRX_TYPE_DELTA;
+	}
+	else if (STRCASECMP(ret, "MRX-RAW") == 0)
+	{
+	    return MRX_TYPE_RAW;
+	}
+    }
+    return MRX_TYPE_UNKOWN;
 }
 /*
  * 保存当前系统中所有机器人构形
@@ -210,13 +211,13 @@ int mrgGetRobotType(ViSession vi, int name)
  */
 int mrgExportRobotConfig(ViSession vi)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 保存当前系统中所有机器人构形为默认配置文件
@@ -226,13 +227,13 @@ int mrgExportRobotConfig(ViSession vi)
  */
 int mrgExportRobotConfig_default(ViSession vi)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort::DEFault\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort::DEFault\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 恢复上次保存的配置
@@ -242,13 +243,13 @@ int mrgExportRobotConfig_default(ViSession vi)
  */
 int mrgRestoreRobotConfig(ViSession vi)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:IMPort\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:IMPort\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询导入或导出配置文件的状态
@@ -258,34 +259,34 @@ int mrgRestoreRobotConfig(ViSession vi)
  */
 int mrgGetRobotConfigState(ViSession vi)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	int retlen = 0,try_times = 0;
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:STATE?\n");
-	while (try_times < 10)
-	{
-		if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-			try_times++;
-			continue;
-		}
-		else
-		{
-			ret[retlen - 1] = '\0';
-			if (STRCASECMP(ret, "BUSY") == 0)
-			{
-				return 1;
-			}
-			else if (STRCASECMP(ret, "IDLE") == 0)
-			{
-				return 0;
-			}
-			else if (STRCASECMP(ret, "ERROR") == 0)
-			{
-				return 2;
-			}
-		}
+    char args[SEND_BUF];
+    char ret[100];
+    int retlen = 0,try_times = 0;
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:STATE?\n");
+    while (try_times < 10)
+    {
+	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	    try_times++;
+	    continue;
 	}
-	return -1;
+	else
+	{
+	    ret[retlen - 1] = '\0';
+	    if (STRCASECMP(ret, "BUSY") == 0)
+	    {
+		return 1;
+	    }
+	    else if (STRCASECMP(ret, "IDLE") == 0)
+	    {
+		return 0;
+	    }
+	    else if (STRCASECMP(ret, "ERROR") == 0)
+	    {
+		return 2;
+	    }
+	}
+    }
+    return -1;
 }
 /*
  * 设置当前机器人所使用的机械结构的序列号
@@ -297,13 +298,13 @@ int mrgGetRobotConfigState(ViSession vi)
  */
 int mrgSetRobotMachineSerialNum(ViSession vi, int name, char * sn)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s\n", name, sn);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s\n", name, sn);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人所使用的机械结构的序列号
@@ -315,14 +316,14 @@ int mrgSetRobotMachineSerialNum(ViSession vi, int name, char * sn)
  */
 int mrgGetRobotMachineSerialNum(ViSession vi, int name,char*serial)
 {
-	char args[SEND_BUF];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), serial, 100)) == 0) {
-		return -1;
-	}
-	serial[retlen - 1] = 0;
-	return 0;
+    char args[SEND_BUF];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), serial, 100)) == 0) {
+	return -1;
+    }
+    serial[retlen - 1] = 0;
+    return 0;
 }
 /*
  * 设置当前机器人构形下的子类型
@@ -334,13 +335,13 @@ int mrgGetRobotMachineSerialNum(ViSession vi, int name,char*serial)
  */
 int mrgSetRobotSubType(ViSession vi,int name,int subtype)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d\n", name,subtype);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d\n", name,subtype);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人构形下的子类型
@@ -351,17 +352,17 @@ int mrgSetRobotSubType(ViSession vi,int name,int subtype)
  */
 int mrgGetRobotSubType(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char ret[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 4)) == 0) {
-		return -1;
-	}
-	else {
-		ret[retlen] = '\0';
-		return atoi(ret);
-	}
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 4)) == 0) {
+	return -1;
+    }
+    else {
+	ret[retlen] = '\0';
+	return atoi(ret);
+    }
 }
 /*
  * 设置当前机器人的坐标系
@@ -373,13 +374,13 @@ int mrgGetRobotSubType(ViSession vi, int name)
  */
 int mrgSetRobotCoordinateSystem(ViSession vi, int name, int coord)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d\n", name, coord);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d\n", name, coord);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人的坐标系
@@ -390,17 +391,17 @@ int mrgSetRobotCoordinateSystem(ViSession vi, int name, int coord)
  */
 int mrgGetRobotCoordinateSystem(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char ret[12];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
-		return -1;
-	}
-	else {
-		ret[retlen] = '\0';
-		return atoi(ret);
-	}
+    char args[SEND_BUF];
+    char ret[12];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
+	return -1;
+    }
+    else {
+	ret[retlen] = '\0';
+	return atoi(ret);
+    }
 }
 /*
  * 查询CAN网络中机器人的个数
@@ -409,17 +410,17 @@ int mrgGetRobotCoordinateSystem(ViSession vi, int name)
  */
 int mrgGetRobotCount(ViSession vi)
 {
-	char args[SEND_BUF];
-	char ret[12];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:COUNT?\n");
-	if ((retlen = busQuery(vi, args, strlen(args),ret,12)) == 0) {
-		return -1;
-	}
-	else {
-		ret[retlen - 1] = '\0';
-		return atoi(ret);
-	}
+    char args[SEND_BUF];
+    char ret[12];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:COUNT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),ret,12)) == 0) {
+	return -1;
+    }
+    else {
+	ret[retlen - 1] = '\0';
+	return atoi(ret);
+    }
 }
 /*
  * 查询CAN网络中所有机器人的名子
@@ -429,25 +430,69 @@ int mrgGetRobotCount(ViSession vi)
  */
 int mrgGetRobotName(ViSession vi,int *robotnames)
 {
-	char args[SEND_BUF];
-	char names[100];
-	char *p, *pNext;
-	int retlen = 0,count = 0;
-	snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
-	if ((retlen = busQuery(vi, args, strlen(args), names, 100)) == 0) {
-		return -1;
-	}
-	else {
-		names[retlen - 1] = '\0';
-	}
-	p = STRTOK_S(names, ",", &pNext);
-	while (p)
-	{
-		*robotnames++ = atoi(p);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    char args[SEND_BUF];
+    char names[100];
+    char *p, *pNext;
+    int retlen = 0,count = 0;
+    snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), names, 100)) > 0) {
+	names[retlen - 1] = '\0';
+        p = STRTOK_S(names, ",", &pNext);
+        while (p)
+        {
+            *robotnames++ = atoi(p);
+            p = STRTOK_S(NULL, ",", &pNext);
+            count++;
+        }
+    }
+    else{
+        return -1;
+    }
+
+    if(count <= 0 || robotnames[0] == 0)
+    {
+        char buff[128] = "";
+        int i,j;
+        int deviceList[32] = {0};
+        int deviceName = 0;
+        int channelCount =0;
+        int robotName = 0;
+
+        count = mrgFindDevice(vi, 800);
+        if(count <= 0){
+            return -2;
+        }
+
+        mrgGetDeviceName(vi, deviceList);
+        for(i=0,j=0; i<count, j<count; i++)
+        {
+            deviceName = deviceList[i];
+            channelCount = mrgGetDeviceChannelCount(vi, deviceName);
+            memset(buff, 0, sizeof(buff));
+            if(channelCount >=2 && channelCount <= 4)
+            {
+                //! 构建一个H2
+                sprintf(buff,"0@%d,1@%d", deviceName, deviceName);
+                if(0 == mrgBuildRobot(vi, "MRX-H2", buff, &robotName ) )
+                {
+                    robotnames[j++] = robotName;
+                }
+            }
+            else if(channelCount > 4)
+            {
+                //! 构建一个T4
+                sprintf(buff,"0@%d,1@%d,2@%d,3@%d",
+                        deviceName, deviceName, deviceName, deviceName);
+                if(0 == mrgBuildRobot(vi, "MRX-T4", buff, &robotName ) )
+                {
+                    robotnames[j++] = robotName;
+                }
+            }
+        }
+        count = j;
+    }
+
+    return count;
 }
 /*
  * 查询当前机器人的所使用的设备
@@ -458,23 +503,23 @@ int mrgGetRobotName(ViSession vi,int *robotnames)
  */
 int mrgGetRobotDevice(ViSession vi,int robotname,int * device)
 {
-	char args[SEND_BUF];
-	char devlist[100];
-	char *p, *pNext;
-	int count = 0, retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:DEVICE:NAME? %d\n", robotname);
-	if ((retlen = busQuery(vi, args, strlen(args), devlist, 100)) == 0) {
-		return -1;
-	}
-	devlist[retlen] = '\0';
-	p = STRTOK_S(devlist, ",", &pNext);
-	while (p)
-	{
-		*device++ = atoi(p);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    char args[SEND_BUF];
+    char devlist[100];
+    char *p, *pNext;
+    int count = 0, retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:DEVICE:NAME? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), devlist, 100)) == 0) {
+	return -1;
+    }
+    devlist[retlen] = '\0';
+    p = STRTOK_S(devlist, ",", &pNext);
+    while (p)
+    {
+	*device++ = atoi(p);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    return count;
 }
 
 /*
@@ -487,13 +532,13 @@ int mrgGetRobotDevice(ViSession vi,int robotname,int * device)
  */
 int mrgSetRobotProjectZero(ViSession vi, int name, float x,float y,float z)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f\n", name, x,y,z);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f\n", name, x,y,z);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人的项目零点
@@ -505,26 +550,26 @@ int mrgSetRobotProjectZero(ViSession vi, int name, float x,float y,float z)
  */
 int mrgGetRobotProjectZero(ViSession vi, int name,float * x,float *y,float *z)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	char *p, *pNext;
-	int retlen = 0,count = 0;
-	float values[10] = {0.0};
-	snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-		return -1;
-	}
-	ret[retlen - 1] = '\0';
-	p = STRTOK_S(ret, ",", &pNext);
-	while (p)
-	{
-		values[count++] = strtod(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-	}
-	*x = values[0];
-	*y = values[1];
-	*z = values[2];
-	return 0;
+    char args[SEND_BUF];
+    char ret[100];
+    char *p, *pNext;
+    int retlen = 0,count = 0;
+    float values[10] = {0.0};
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	return -1;
+    }
+    ret[retlen - 1] = '\0';
+    p = STRTOK_S(ret, ",", &pNext);
+    while (p)
+    {
+        values[count++] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+    }
+    *x = values[0];
+    *y = values[1];
+    *z = values[2];
+    return 0;
 }
 /*
  * 设置当前机器人的校准零点
@@ -536,13 +581,13 @@ int mrgGetRobotProjectZero(ViSession vi, int name,float * x,float *y,float *z)
  */
 int mrgSetRobotAxisZero(ViSession vi, int name, float x, float y, float z)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f\n", name, x, y, z);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f\n", name, x, y, z);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人的校准零点
@@ -554,26 +599,26 @@ int mrgSetRobotAxisZero(ViSession vi, int name, float x, float y, float z)
  */
 int mrgGetRobotAxisZero(ViSession vi, int name, float * x, float *y, float *z)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	char *p, *pNext;
-	int retlen = 0, count = 0;
-	float values[10] = { 0.0 };
-	snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-		return -1;
-	}
-	ret[retlen - 1] = '\0';
-	p = STRTOK_S(ret, ",", &pNext);
-	while (p)
-	{
-		values[count++] = strtod(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-	}
-	*x = values[0];
-	*y = values[1];
-	*z = values[2];
-	return 0;
+    char args[SEND_BUF];
+    char ret[100];
+    char *p, *pNext;
+    int retlen = 0, count = 0;
+    float values[10] = { 0.0 };
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	return -1;
+    }
+    ret[retlen - 1] = '\0';
+    p = STRTOK_S(ret, ",", &pNext);
+    while (p)
+    {
+        values[count++] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+    }
+    *x = values[0];
+    *y = values[1];
+    *z = values[2];
+    return 0;
 }
 /*
  * 设置当前机器人的软件限位
@@ -586,13 +631,13 @@ int mrgGetRobotAxisZero(ViSession vi, int name, float * x, float *y, float *z)
  */
 int mrgSetRobotSoftWareLimit(ViSession vi, int name,int type,float x, float y, float z)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f\n",type == 0?"POSITive":"NEGATive", name, x, y, z);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f\n",type == 0?"POSITive":"NEGATive", name, x, y, z);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询当前机器人的软件限位
@@ -605,26 +650,26 @@ int mrgSetRobotSoftWareLimit(ViSession vi, int name,int type,float x, float y, f
  */
 int mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, float * x, float *y, float *z)
 {
-	char args[SEND_BUF];
-	char ret[100];
-	char *p, *pNext;
-	int retlen = 0, count = 0;
-	float values[10] = { 0.0 };
-	snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s? %d\n", type == 0 ? "POSITive" : "NEGATive", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-		return -1;
-	}
-	ret[retlen - 1] = '\0';
-	p = STRTOK_S(ret, ",", &pNext);
-	while (p)
-	{
-		values[count++] = strtod(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-	}
-	*x = values[0];
-	*y = values[1];
-	*z = values[2];
-	return 0;
+    char args[SEND_BUF];
+    char ret[100];
+    char *p, *pNext;
+    int retlen = 0, count = 0;
+    float values[10] = { 0.0 };
+    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s? %d\n", type == 0 ? "POSITive" : "NEGATive", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+	return -1;
+    }
+    ret[retlen - 1] = '\0';
+    p = STRTOK_S(ret, ",", &pNext);
+    while (p)
+    {
+        values[count++] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+    }
+    *x = values[0];
+    *y = values[1];
+    *z = values[2];
+    return 0;
 }
 /*
  * 设置指定机器人的波表
@@ -635,16 +680,16 @@ int mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, float * x, float *
  */
 int mrgSetRobotWavetable(ViSession vi, int name,int wavetable)
 {
-	char args[SEND_BUF];
-	if (wavetable < 0 || wavetable >= 10)
-	{
-		return -2;
-	}
-	snprintf(args, SEND_BUF,"ROBOT::WAVETABLE %d,%d\n", name,wavetable);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable < 0 || wavetable >= 10)
+    {
+	return -2;
+    }
+    snprintf(args, SEND_BUF,"ROBOT::WAVETABLE %d,%d\n", name,wavetable);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询指定机器人的波表
@@ -655,37 +700,37 @@ int mrgSetRobotWavetable(ViSession vi, int name,int wavetable)
  */
 int mrgRobotWavetableQuery(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char wavetable[4];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT::WAVETABLE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), wavetable,4)) == 0) {
-		return -1;
-	}
-	wavetable[retlen-1] = '\0'; //去掉回车符
-	if (STRCASECMP(wavetable, "MAIN") == 0 || STRCASECMP(wavetable, "0") == 0){
-		return 0;
-	}else if (STRCASECMP(wavetable, "SMALL") == 0){
-		return 1;
-	}else if (STRCASECMP(wavetable, "P1") == 0){
-		return 2;
-	}else if (STRCASECMP(wavetable, "P2") == 0){
-		return 3;
-	}else if (STRCASECMP(wavetable, "P3") == 0){
-		return 4;
-	}else if (STRCASECMP(wavetable, "P4") == 0){
-		return 5;
-	}else if (STRCASECMP(wavetable, "P5") == 0){
-		return 6;
-	}else if (STRCASECMP(wavetable, "P6") == 0){
-		return 7;
-	}else if (STRCASECMP(wavetable, "P7") == 0){
-		return 8;
-	}else if (STRCASECMP(wavetable, "P8") == 0){
-		return 9;
-	}else {
-		return -2;
-	}
+    char args[SEND_BUF];
+    char wavetable[4];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT::WAVETABLE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), wavetable,4)) == 0) {
+	return -1;
+    }
+    wavetable[retlen-1] = '\0'; //去掉回车符
+    if (STRCASECMP(wavetable, "MAIN") == 0 || STRCASECMP(wavetable, "0") == 0){
+	return 0;
+    }else if (STRCASECMP(wavetable, "SMALL") == 0){
+	return 1;
+    }else if (STRCASECMP(wavetable, "P1") == 0){
+	return 2;
+    }else if (STRCASECMP(wavetable, "P2") == 0){
+	return 3;
+    }else if (STRCASECMP(wavetable, "P3") == 0){
+	return 4;
+    }else if (STRCASECMP(wavetable, "P4") == 0){
+	return 5;
+    }else if (STRCASECMP(wavetable, "P5") == 0){
+	return 6;
+    }else if (STRCASECMP(wavetable, "P6") == 0){
+	return 7;
+    }else if (STRCASECMP(wavetable, "P7") == 0){
+	return 8;
+    }else if (STRCASECMP(wavetable, "P8") == 0){
+	return 9;
+    }else {
+	return -2;
+    }
 }
 /*
  * 启动机器人的运行
@@ -696,22 +741,22 @@ int mrgRobotWavetableQuery(ViSession vi, int name)
  */
 int mrgRobotRun(ViSession vi,int name,int wavetable)
 {
-	char args[SEND_BUF];
-	if (wavetable == -1)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", name);
-	}
-	else if(wavetable >=0 && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:RUN %d,%d\n", name,wavetable);
-	}
-	else {
-		return -2;
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable == -1)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", name);
+    }
+    else if(wavetable >=0 && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:RUN %d,%d\n", name,wavetable);
+    }
+    else {
+	return -2;
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 停止机器人的运行
@@ -722,18 +767,18 @@ int mrgRobotRun(ViSession vi,int name,int wavetable)
  */
 int mrgRobotStop(ViSession vi, int name, int wavetable)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:STOP %d,%d\n", name, wavetable);
-	}
-	else {
-		snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:STOP %d,%d\n", name, wavetable);
+    }
+    else {
+	snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 
 /*
@@ -746,47 +791,47 @@ int mrgRobotStop(ViSession vi, int name, int wavetable)
  */
 int mrgRobotWaitReady(ViSession vi, int name,int wavetable, int timeout_ms)
 {
-	int ret = -3, error_count = 0;
-	char args[SEND_BUF];
-	char state[12];
-	int time = 0, retlen = 0;
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
+    int ret = -3, error_count = 0;
+    char args[SEND_BUF];
+    char state[12];
+    int time = 0, retlen = 0;
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
+    }
+    while (1)
+    {
+	Sleep(DELAYTIME);
+	if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+	    if (++error_count > 3)
+	    {
+		return -1;
+	    }
+	    Sleep(DELAYTIME);
+	    time += DELAYTIME;
+	    continue;
 	}
-	else
+	state[retlen - 1] = '\0';//去掉回车符
+	if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
 	{
-		snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
+	    ret = 0; break;
 	}
-	while (1)
-	{
-		Sleep(DELAYTIME);
-		if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-			if (++error_count > 3)
-			{
-				return -1;
-			}
-			Sleep(DELAYTIME);
-			time += DELAYTIME;
-			continue;
-		}
-		state[retlen - 1] = '\0';//去掉回车符
-		if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
-		{
-			ret = 0; break;
-		}
-		else if (STRCASECMP(state, "ERROR") == 0) {
-			ret = -2; break;
-		}
-		Sleep(DELAYTIME);
-		time += DELAYTIME;
-		if (timeout_ms > 0) {
-			if (time > timeout_ms) {
-				ret = -3; break;
-			}
-		}
+	else if (STRCASECMP(state, "ERROR") == 0) {
+	    ret = -2; break;
 	}
-	return ret;
+	Sleep(DELAYTIME);
+	time += DELAYTIME;
+	if (timeout_ms > 0) {
+	    if (time > timeout_ms) {
+		ret = -3; break;
+	    }
+	}
+    }
+    return ret;
 }
 
 /*
@@ -799,47 +844,47 @@ int mrgRobotWaitReady(ViSession vi, int name,int wavetable, int timeout_ms)
  */
 int mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int timeout_ms)
 {
-	int ret = -3,error_count = 0;
-	char args[SEND_BUF];
-	char state[100];
-	int time = 0, retlen = 0;
+    int ret = -3,error_count = 0;
+    char args[SEND_BUF];
+    char state[100];
+    int time = 0, retlen = 0;
 
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
+    }
+    while (1)
+    {
+	if ((retlen = busQuery(vi, args, strlen(args), state, 100)) == 0) 
 	{
-		snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", name, wavetable);
+	    if (++error_count > 30)
+	    {
+		return -1;
+	    }
+	    Sleep(DELAYTIME);
+	    time += DELAYTIME;
+	    continue;
 	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", name);
+	state[retlen - 1] = '\0';//去掉回车符
+	if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
+	    ret = 0; break;
 	}
-	while (1)
-	{
-		if ((retlen = busQuery(vi, args, strlen(args), state, 100)) == 0) 
-		{
-			if (++error_count > 30)
-			{
-				return -1;
-			}
-			Sleep(DELAYTIME);
-			time += DELAYTIME;
-			continue;
-		}
-		state[retlen - 1] = '\0';//去掉回车符
-		if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
-			ret = 0; break;
-		}
-		else if (STRCASECMP(state, "ERROR") == 0) {
-			ret = -2; break;
-		}
-		Sleep(DELAYTIME);
-		time += DELAYTIME;
-		if (timeout_ms > 0) {
-			if (time > timeout_ms) {
-				ret = -3; break;
-			}
-		}
+	else if (STRCASECMP(state, "ERROR") == 0) {
+	    ret = -2; break;
 	}
-	return ret;
+	Sleep(DELAYTIME);
+	time += DELAYTIME;
+	if (timeout_ms > 0) {
+	    if (time > timeout_ms) {
+		ret = -3; break;
+	    }
+	}
+    }
+    return ret;
 }
 /*
  * 机器人从当前位置移动到指定位置（随机移动）
@@ -854,25 +899,25 @@ int mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int timeout_ms)
  */
 int mrgRobotMove(ViSession vi, int name,int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-	char args[SEND_BUF];
+    char args[SEND_BUF];
 
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f,%d\n", name, x, y, z, time,wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f\n", name, x, y, z, time);
-	}
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f,%d\n", name, x, y, z, time,wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f\n", name, x, y, z, time);
+    }
     
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms < 0)
-	{
-		return 0;
-	}
-	return mrgRobotWaitEnd(vi, name, wavetable, timeout_ms);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms < 0)
+    {
+	return 0;
+    }
+    return mrgRobotWaitEnd(vi, name, wavetable, timeout_ms);
 }
 /*
  * 机器人末端沿指定的坐标轴持续运动
@@ -886,19 +931,19 @@ int mrgRobotMove(ViSession vi, int name,int wavetable, float x, float y, float z
  */
 int mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%d\n", name, ax, speed,wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f\n", name, ax, speed);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%d\n", name, ax, speed,wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f\n", name, ax, speed);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 机器人末端沿指定的坐标轴持续运动(阶跃运行）
@@ -914,19 +959,19 @@ int mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
  */
 int mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%f,%f,%d\n", name, ax, cr_time, cr_speed, speed, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", name, ax, cr_time, cr_speed, speed);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%f,%f,%d\n", name, ax, cr_time, cr_speed, speed, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", name, ax, cr_time, cr_speed, speed);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 机器人从当前位置移动给定的距离（随机移动）
@@ -941,23 +986,23 @@ int mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,
  */
 int mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitEnd(vi, name,wavetable, timeout_ms);
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitEnd(vi, name,wavetable, timeout_ms);
 }
 /*
  * 机器人从当前位置移动到指定位置（直线移动）
@@ -972,24 +1017,24 @@ int mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, flo
  */
 int mrgRobotMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", name, x, y, z, time);
-	}
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", name, x, y, z, time);
+    }
 
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitEnd(vi, name,wavetable, timeout_ms);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitEnd(vi, name,wavetable, timeout_ms);
 }
 /*
  * 机器人从当前位置移动给定的距离（直线移动）
@@ -1004,23 +1049,23 @@ int mrgRobotMoveL(ViSession vi, int name, int wavetable, float x, float y, float
  */
 int mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if(timeout_ms < 0)
-	{
-		return 0;
-	}
-	return mrgRobotWaitEnd(vi, name, wavetable,timeout_ms);
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f,%d\n", name, x, y, z, time, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", name, x, y, z, time);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if(timeout_ms < 0)
+    {
+	return 0;
+    }
+    return mrgRobotWaitEnd(vi, name, wavetable,timeout_ms);
 }
 /*
  * 设置机器人当前插值模式
@@ -1031,12 +1076,12 @@ int mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, fl
  */
 int mrgSetRobotInterPolateMode(ViSession vi, int name,int mode)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE %d,%d\n", name, mode);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE %d,%d\n", name, mode);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询机器人当前插值模式
@@ -1047,16 +1092,16 @@ int mrgSetRobotInterPolateMode(ViSession vi, int name,int mode)
  */
 int mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode)
 {
-	char args[SEND_BUF];
-	char ret[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args),ret,8)) == 0) {
-		return -1;
-	}
-	ret[retlen] = '\0';
-	*mode = atoi(ret);
-	return 0;
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args),ret,8)) == 0) {
+	return -1;
+    }
+    ret[retlen] = '\0';
+    *mode = atoi(ret);
+    return 0;
 }
 /*
  * 设置机器人当前插值步长
@@ -1067,12 +1112,12 @@ int mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode)
  */
 int mrgSetRobotInterPolateStep(ViSession vi, int name, float step)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP %d,%f\n", name, step);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP %d,%f\n", name, step);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询机器人当前插值步长
@@ -1083,16 +1128,16 @@ int mrgSetRobotInterPolateStep(ViSession vi, int name, float step)
  */
 int mrgGetRobotInterPolateStep(ViSession vi, int name, float* step)
 {
-	char args[SEND_BUF];
-	char ret[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
-		return -1;
-	}
-	ret[retlen] = '\0';
-	*step = strtod(ret,NULL);
-	return 0;
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+	return -1;
+    }
+    ret[retlen] = '\0';
+    *step = strtod(ret,NULL);
+    return 0;
 }
 /*
  * 设置机器人回零位时使用的波表
@@ -1103,16 +1148,16 @@ int mrgGetRobotInterPolateStep(ViSession vi, int name, float* step)
  */
 int mrgSetRobotHomeWavetable(ViSession vi, int name, int wavetable)
 {
-	char args[SEND_BUF];
-	if (wavetable < 0 || wavetable > 9)
-	{
-		return -2;
-	}
-	snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE %d,%d\n", name, wavetable);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    if (wavetable < 0 || wavetable > 9)
+    {
+	return -2;
+    }
+    snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE %d,%d\n", name, wavetable);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询机器人回零位时使用的波表
@@ -1123,47 +1168,47 @@ int mrgSetRobotHomeWavetable(ViSession vi, int name, int wavetable)
  */
 int mrgGetRobotHomeWavetable(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char wavetable[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), wavetable,8)) == 0) {
-		return -1;
-	}
-	wavetable[retlen - 1] = 0; //去掉回车符
-	if (STRCASECMP(wavetable, "MAIN") == 0) {
-		return 0;
-	}
-	else if (STRCASECMP(wavetable, "SMALL") == 0) {
-		return 1;
-	}
-	else if (STRCASECMP(wavetable, "P1") == 0) {
-		return 2;
-	}
-	else if (STRCASECMP(wavetable, "P2") == 0) {
-		return 3;
-	}
-	else if (STRCASECMP(wavetable, "P3") == 0) {
-		return 4;
-	}
-	else if (STRCASECMP(wavetable, "P4") == 0) {
-		return 5;
-	}
-	else if (STRCASECMP(wavetable, "P5") == 0) {
-		return 6;
-	}
-	else if (STRCASECMP(wavetable, "P6") == 0) {
-		return 7;
-	}
-	else if (STRCASECMP(wavetable, "P7") == 0) {
-		return 8;
-	}
-	else if (STRCASECMP(wavetable, "P8") == 0) {
-		return 9;
-	}
-	else {
-		return -2;
-	}
+    char args[SEND_BUF];
+    char wavetable[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), wavetable,8)) == 0) {
+	return -1;
+    }
+    wavetable[retlen - 1] = 0; //去掉回车符
+    if (STRCASECMP(wavetable, "MAIN") == 0) {
+	return 0;
+    }
+    else if (STRCASECMP(wavetable, "SMALL") == 0) {
+	return 1;
+    }
+    else if (STRCASECMP(wavetable, "P1") == 0) {
+	return 2;
+    }
+    else if (STRCASECMP(wavetable, "P2") == 0) {
+	return 3;
+    }
+    else if (STRCASECMP(wavetable, "P3") == 0) {
+	return 4;
+    }
+    else if (STRCASECMP(wavetable, "P4") == 0) {
+	return 5;
+    }
+    else if (STRCASECMP(wavetable, "P5") == 0) {
+	return 6;
+    }
+    else if (STRCASECMP(wavetable, "P6") == 0) {
+	return 7;
+    }
+    else if (STRCASECMP(wavetable, "P7") == 0) {
+	return 8;
+    }
+    else if (STRCASECMP(wavetable, "P8") == 0) {
+	return 9;
+    }
+    else {
+	return -2;
+    }
 }
 /*
  * 机器人回零位操作
@@ -1175,16 +1220,16 @@ int mrgGetRobotHomeWavetable(ViSession vi, int name)
  */
 int mrgRobotGoHome(ViSession vi, int name,int timeout_ms)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms < 0)
-	{
-		return 0;
-	}
-	return mrgRobotWaitHomeEnd(vi, name, timeout_ms); //等待波表 SMALL
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms < 0)
+    {
+	return 0;
+    }
+    return mrgRobotWaitHomeEnd(vi, name, timeout_ms); //等待波表 SMALL
 }
 /*
  * 机器人回零位操作
@@ -1197,16 +1242,16 @@ int mrgRobotGoHome(ViSession vi, int name,int timeout_ms)
  */
 int mrgRobotGoHomeWithParam(ViSession vi, int name,float param, int timeout_ms)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d,%f\n", name, param);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms < 0)
-	{
-		return 0;
-	}
-	return mrgRobotWaitHomeEnd(vi, name, timeout_ms); //等待波表 SMALL
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d,%f\n", name, param);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms < 0)
+    {
+	return 0;
+    }
+    return mrgRobotWaitHomeEnd(vi, name, timeout_ms); //等待波表 SMALL
 }
 /*
  * 停止机器人回零位操作
@@ -1216,12 +1261,12 @@ int mrgRobotGoHomeWithParam(ViSession vi, int name,float param, int timeout_ms)
  */
 int mrgRobotGoHomeStop(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:HOME:STOP %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:HOME:STOP %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 等待机器人回零位结束状态（等待运行完成）
@@ -1232,40 +1277,40 @@ int mrgRobotGoHomeStop(ViSession vi, int name)
  */
 int mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
 {
-	int ret = 0,error_count = 0;
-	char args[SEND_BUF];
-	char state[12];
-	int time = 0,retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:STATe? %d\n", name);
-	if (timeout_ms < 0)
-	{
-		return -4;
+    int ret = 0,error_count = 0;
+    char args[SEND_BUF];
+    char state[12];
+    int time = 0,retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:STATe? %d\n", name);
+    if (timeout_ms < 0)
+    {
+	return -4;
+    }
+    while (1)
+    {
+	if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+	    if (++error_count > 3)
+	    {
+		return -1;
+	    }
+	    continue;
 	}
-	while (1)
-	{
-		if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-			if (++error_count > 3)
-			{
-				return -1;
-			}
-			continue;
-		}
-		state[retlen - 1] = '\0';//去掉回车符
-		if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
-			ret = 0; break;
-		}
-		else if (STRCASECMP(state, "ERROR") == 0) {
-			ret = -2; break;
-		}
-		Sleep(DELAYTIME);
-		time += DELAYTIME;
-		if (timeout_ms != 0) {
-			if (time > timeout_ms) {
-				ret = -3; break;
-			}
-		}
+	state[retlen - 1] = '\0';//去掉回车符
+	if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
+	    ret = 0; break;
 	}
-	return ret;
+	else if (STRCASECMP(state, "ERROR") == 0) {
+	    ret = -2; break;
+	}
+	Sleep(DELAYTIME);
+	time += DELAYTIME;
+	if (timeout_ms != 0) {
+	    if (time > timeout_ms) {
+		ret = -3; break;
+	    }
+	}
+    }
+    return ret;
 }
 /*
  * 获取机器人在原点时的各关节的角度
@@ -1276,24 +1321,24 @@ int mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
  */
 int mrgGetRobotHomeAngle(ViSession vi, int name,float * angles)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:ANGLE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		*angles++ = strtof(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:ANGLE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	*angles++ = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    return count;
 }
 /*
  * 获取机器人在零位时，末端的坐标点值
@@ -1303,28 +1348,28 @@ int mrgGetRobotHomeAngle(ViSession vi, int name,float * angles)
  */
 int mrgGetRobotHomePosition(ViSession vi, int name, float * x, float *y, float* z)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	float position[3];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:POSITION? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		position[count] = strtof(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	*x = position[0];
-	*y = position[1];
-	*z = position[2];
-	return 0;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    float position[3];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:POSITION? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	position[count] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    *x = position[0];
+    *y = position[1];
+    *z = position[2];
+    return 0;
 }
 /*
  * 设置机器人的回零方式
@@ -1336,12 +1381,12 @@ int mrgGetRobotHomePosition(ViSession vi, int name, float * x, float *y, float* 
  */
 int mrgSetRobotHomeMode(ViSession vi, int name, int mode)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:HOME:MODE %d,%d\n", name, mode);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:HOME:MODE %d,%d\n", name, mode);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 查询机器人的回零方式
@@ -1352,15 +1397,15 @@ int mrgSetRobotHomeMode(ViSession vi, int name, int mode)
  */
 int mrgGetRobotHomeMode(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char ret[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:MODE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
-		return -1;
-	}
-	ret[retlen] = '\0';
-	return atoi(ret);
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:MODE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+	return -1;
+    }
+    ret[retlen] = '\0';
+    return atoi(ret);
 }
 /*
  * 查询机器人的是否需要回零
@@ -1371,15 +1416,15 @@ int mrgGetRobotHomeMode(ViSession vi, int name)
  */
 int mrgGetRobotHomeRequire(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	char ret[8];
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:HOME:REQUIRE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
-		return -1;
-	}
-	ret[retlen] = '\0';
-	return atoi(ret);
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:REQUIRE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+	return -1;
+    }
+    ret[retlen] = '\0';
+    return atoi(ret);
 }
 
 /*
@@ -1391,12 +1436,12 @@ int mrgGetRobotHomeRequire(ViSession vi, int name)
  */
 int mrgRobotPointClear(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF,"ROBOT:POINT:CLEAR %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF,"ROBOT:POINT:CLEAR %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 给指定的机器人加载坐标点
@@ -1411,12 +1456,12 @@ int mrgRobotPointClear(ViSession vi, int name)
  */
 int mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float end, float time,int mod,float step)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:POINT:LOAD %d,%f,%f,%f,%f,%f,%d,%f\n", name,x,y,z,end,time,mod,step);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:POINT:LOAD %d,%f,%f,%f,%f,%f,%d,%f\n", name,x,y,z,end,time,mod,step);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 通知机器人开始解算其缓存中的坐标点，并下发给模块设备，直到模块设备解算完成
@@ -1428,23 +1473,23 @@ int mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float e
  */
 int mrgRobotPointResolve(ViSession vi, int name, int wavetable,int timeout_ms )
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d,%d\n", name, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", name);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitReady(vi, name,wavetable,0);
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d,%d\n", name, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", name);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitReady(vi, name,wavetable,0);
 }
 /*
  * 通知机器人清空PVT缓存
@@ -1455,12 +1500,12 @@ int mrgRobotPointResolve(ViSession vi, int name, int wavetable,int timeout_ms )
  */
 int mrgRobotPvtClear(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:PVT:CLEAR %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:PVT:CLEAR %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 给指定的机器人加载坐标点
@@ -1474,12 +1519,12 @@ int mrgRobotPvtClear(ViSession vi, int name)
  */
 int mrgRobotPvtLoad(ViSession vi, int name, float p, float v, float t, int axle)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:PVT:LOAD %d,%f,%f,%f,%d\n", name, p, v, t,axle);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:PVT:LOAD %d,%f,%f,%f,%d\n", name, p, v, t,axle);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 通知机器人开始下发其缓存中的PVT到模块设备，直到模块设备解算完成
@@ -1491,24 +1536,24 @@ int mrgRobotPvtLoad(ViSession vi, int name, float p, float v, float t, int axle)
  */
 int mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int timeout_ms)
 {
-	char args[SEND_BUF];
-	if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d,%d\n", name, wavetable);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", name);
-	}
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d,%d\n", name, wavetable);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", name);
+    }
 
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
 }
 
 /*
@@ -1521,12 +1566,12 @@ int mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int timeout_ms)
  */
 int mrgRobotMotionFileImport(ViSession vi,int name,char* filename)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %d,%s\n",name, filename);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %d,%s\n",name, filename);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 从本地存储器中，导入运动文件到机器人缓存中
@@ -1538,12 +1583,12 @@ int mrgRobotMotionFileImport(ViSession vi,int name,char* filename)
  */
 int mrgRobotMotionFileImportLocal(ViSession vi, int name, char* filename)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:LOCal %d,%s\n", name, filename);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:LOCal %d,%s\n", name, filename);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 从外部存储器中，导入运动文件到机器人缓存中
@@ -1555,12 +1600,12 @@ int mrgRobotMotionFileImportLocal(ViSession vi, int name, char* filename)
  */
 int mrgRobotMotionFileImportExternal(ViSession vi, int name, char* filename)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:EXTERnal %d,%s\n", name, filename);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:EXTERnal %d,%s\n", name, filename);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 解算当前运动文件内容到模块中
@@ -1575,23 +1620,23 @@ int mrgRobotMotionFileImportExternal(ViSession vi, int name, char* filename)
  */
 int mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable,int timeout_ms)
 {
-	char args[SEND_BUF];
-	if (line == 0 || line < 0)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d\n", name,section);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d,%d,%d\n", name, section,line,wavetable);
-	}
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
+    char args[SEND_BUF];
+    if (line == 0 || line < 0)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d\n", name,section);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d,%d,%d\n", name, section,line,wavetable);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
 }
 /*
  * 将系统中的运动数据，导出成文件
@@ -1603,12 +1648,12 @@ int mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavet
  */
 int mrgRobotMotionFileExport(ViSession vi, int name,int location, char* filename)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:FILE:EXPORT:%s %d,%s\n", location ? "LOCAL" : "EXTERNAL",name,filename);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:FILE:EXPORT:%s %d,%s\n", location ? "LOCAL" : "EXTERNAL",name,filename);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 设置末端执行器类型及相应的设备
@@ -1620,13 +1665,53 @@ int mrgRobotMotionFileExport(ViSession vi, int name,int location, char* filename
  */
 int mrgRobotToolSet(ViSession vi, int robotname, int type, char* dev)
 {
-	char args[SEND_BUF];
-	char *effector[] = {"CLAW"};
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:SET %d,%s,(%s)\n",robotname, effector[type],dev);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    char *effector[] = {"CLAW"};
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:SET %d,%s,(%s)\n",robotname, effector[type],dev);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
+}
+/*
+ * 查询末端执行器类型
+ * vi :visa设备句柄
+ * name: 机器人名称
+ * type: 末端执行器类型 0->爪子
+ * dev : 末端执行器对应的通道设备 (1@513), 哪个设备的哪个轴
+ * 返回值：0表示执行成功，－1：表示出错
+ */
+int  mrgRobotGetToolType(ViSession vi, int robotname, int * type)
+{
+    int ret = 0, error_count = 0;
+    char args[SEND_BUF];
+    char state[12];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:TYPe? %d\n", robotname);
+    while (1)
+    {
+        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+            if (++error_count > 3)
+            {
+                return -1;
+            }
+            continue;
+        }
+        state[retlen - 1] = '\0';//去掉回车符
+        if (STRCASECMP(state, "MR-F2") == 0) 
+        {
+            *type = 0;
+        }
+        else if (STRCASECMP(state, "MR-F3") == 0) 
+        {
+            *type = 1;
+        }
+        else if (STRCASECMP(state, "MR-TIP") == 0)
+        {
+            *type = 2;
+        }
+    }
+    return ret;
 }
 /*
  * 等待末端执行器执行完成
@@ -1637,37 +1722,37 @@ int mrgRobotToolSet(ViSession vi, int robotname, int type, char* dev)
  */
 int mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms)
 {
-	int ret = 0,error_count = 0;
-	char args[SEND_BUF];
-	char state[12];
-	int time = 0,retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:STATe? %d\n", name);
-	while (1)
-	{
-		if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-			if (++error_count > 3)
-			{
-				return -1;
-			}
-			continue;
-		}
-		state[retlen - 1] = '\0';//去掉回车符
-		if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
-			ret = 0; break;
-		}
-		else if (STRCASECMP(state, "ERROR") == 0) {
-			ret = -2; break;
-		}
-		Sleep(DELAYTIME);
-		time += DELAYTIME;
-		if (timeout_ms > 0) {
-			if (time > timeout_ms) {
-				mrgRobotToolStop(vi, name);
-				ret = -3; break;
-			}
-		}
+    int ret = 0,error_count = 0;
+    char args[SEND_BUF];
+    char state[12];
+    int time = 0,retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:STATe? %d\n", name);
+    while (1)
+    {
+	if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+	    if (++error_count > 3)
+	    {
+		return -1;
+	    }
+	    continue;
 	}
-	return ret;
+	state[retlen - 1] = '\0';//去掉回车符
+	if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
+	    ret = 0; break;
+	}
+	else if (STRCASECMP(state, "ERROR") == 0) {
+	    ret = -2; break;
+	}
+	Sleep(DELAYTIME);
+	time += DELAYTIME;
+	if (timeout_ms > 0) {
+	    if (time > timeout_ms) {
+		mrgRobotToolStop(vi, name);
+		ret = -3; break;
+	    }
+	}
+    }
+    return ret;
 }
 /*
  * 执行末端执行器
@@ -1680,16 +1765,16 @@ int mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms)
  */
 int mrgRobotToolExe(ViSession vi, int name, float position,float time,int timeout_ms)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC %d,%f,%f\n",name,position,time);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitToolExeEnd(vi,name,timeout_ms);
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC %d,%f,%f\n",name,position,time);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitToolExeEnd(vi,name,timeout_ms);
 }
 /*
  * 停止末端执行器
@@ -1699,12 +1784,59 @@ int mrgRobotToolExe(ViSession vi, int name, float position,float time,int timeou
  */
 int mrgRobotToolStop(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:STOP %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:STOP %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
+}
+/*
+ * 末端执行器执行模式
+ * vi :visa设备句柄
+ * name: 机器人名称
+ * mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+ * 返回值：0表示执行成功，－1：表示出错，
+ */
+int  mrgRobotToolExeMode(ViSession vi, int name, int mode)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:MODe %d,%s\n", name,mode == 1? "OPEN":"NORMAL");
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+ * 查询末端执行器执行模式
+ * vi :visa设备句柄
+ * name: 机器人名称
+ * mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+ * 返回值：0表示执行成功，－1：表示出错，
+ */
+int  mrgRobotToolExeMode_Query(ViSession vi, int name, int* mode)
+{
+    char args[SEND_BUF];
+    char state[12];
+    int  retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:MODe? %d\n", name);
+    
+    if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) 
+    {
+	return -1;
+    }
+    state[retlen - 1] = '\0';//去掉回车符
+    if (STRCASECMP(state, "NORMAL") == 0 ) {
+        *mode = 0;
+    }
+    else if (STRCASECMP(state, "open") == 0) {
+        *mode = 1;
+    }
+    else
+    {
+        return -2;
+    }
+    return 0;
 }
 /*
  * 中止末端执行器回初始位
@@ -1714,12 +1846,12 @@ int mrgRobotToolStop(ViSession vi, int name)
  */
 int mrgRobotToolStopGoHome(ViSession vi, int name)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STOP %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STOP %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    return 0;
 }
 /*
  * 等待末端执行器回零位完成
@@ -1730,36 +1862,36 @@ int mrgRobotToolStopGoHome(ViSession vi, int name)
  */
 int mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_ms)
 {
-	int ret = 0,error_count = 0;
-	char args[SEND_BUF];
-	char state[12];
-	int time = 0, retlen = 0;
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STATe? %d\n", name);
-	while (1)
-	{
-		if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-			if (++error_count > 3)
-			{
-				return -1;
-			}
-			continue;
-		}
-		state[retlen - 1] = '\0';//去掉回车符
-		if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
-			ret = 0; break;
-		}
-		else if (STRCASECMP(state, "ERROR") == 0) {
-			ret = -2; break;
-		}
-		Sleep(DELAYTIME);
-		time += DELAYTIME;
-		if (timeout_ms > 0) {
-			if (time > timeout_ms) {
-				ret = -3; break;
-			}
-		}
+    int ret = 0,error_count = 0;
+    char args[SEND_BUF];
+    char state[12];
+    int time = 0, retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STATe? %d\n", name);
+    while (1)
+    {
+	if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+	    if (++error_count > 3)
+	    {
+		return -1;
+	    }
+	    continue;
 	}
-	return ret;
+	state[retlen - 1] = '\0';//去掉回车符
+	if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
+	    ret = 0; break;
+	}
+	else if (STRCASECMP(state, "ERROR") == 0) {
+	    ret = -2; break;
+	}
+	Sleep(DELAYTIME);
+	time += DELAYTIME;
+	if (timeout_ms > 0) {
+	    if (time > timeout_ms) {
+		ret = -3; break;
+	    }
+	}
+    }
+    return ret;
 }
 /*
  * 末端执行器回初始位
@@ -1770,18 +1902,18 @@ int mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_ms)
  */
 int mrgRobotToolGoHome(ViSession vi, int name,int timeout_ms)
 {
-	char args[SEND_BUF];
-	int ret = 0;
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME %d\n", name);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	ret = mrgRobotWaitToolHomeEnd(vi, name, timeout_ms);
-	return ret;
+    char args[SEND_BUF];
+    int ret = 0;
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME %d\n", name);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    ret = mrgRobotWaitToolHomeEnd(vi, name, timeout_ms);
+    return ret;
 }
 /*
  * 获取机器人末端执行器的位置
@@ -1792,17 +1924,17 @@ int mrgRobotToolGoHome(ViSession vi, int name,int timeout_ms)
  */
 int mrgGetRobotToolPosition(ViSession vi, int name, float * position)
 {
-	int  retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	snprintf(args, SEND_BUF, "ROBOT:EFFECTor:POSITion:CURRent? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen-1] = 0;
-	*position = atof(tmp);
-	return 0;
+    int  retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:POSITion:CURRent? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen-1] = 0;
+    *position = atof(tmp);
+    return 0;
 }
 
 /*
@@ -1814,24 +1946,24 @@ int mrgGetRobotToolPosition(ViSession vi, int name, float * position)
  */
 int mrgGetRobotCurrentAngle(ViSession vi, int name,float * angles)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:CURRENT:ANGLE? %d\n",name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		*angles++ = strtof(p,NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:CURRENT:ANGLE? %d\n",name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	*angles++ = strtof(p,NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    return count;
 }
 /*
  * 获取机器人末端的位置坐标
@@ -1841,28 +1973,28 @@ int mrgGetRobotCurrentAngle(ViSession vi, int name,float * angles)
  */
 int mrgGetRobotCurrentPosition(ViSession vi, int name, float * x,float *y ,float* z)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	float position[3];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:CURRENT:POSITION? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		position[count] = strtof(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	*x = position[0];
-	*y = position[1];
-	*z = position[2];
-	return 0;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    float position[3];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:CURRENT:POSITION? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	position[count] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    *x = position[0];
+    *y = position[1];
+    *z = position[2];
+    return 0;
 }
 /*
  * 机器人某一个轴回零
@@ -1875,19 +2007,19 @@ int mrgGetRobotCurrentPosition(ViSession vi, int name, float * x,float *y ,float
  */
 int mrgRobotJointHome(ViSession vi, int name, int axi, float speed,int timeout_ms)
 {
-	int retlen = 0;
-	char args[SEND_BUF];
+    int retlen = 0;
+    char args[SEND_BUF];
 
-	snprintf(args, SEND_BUF, "ROBOT:JOINT:HOMe %d,%d,%f\n", name, axi, speed);
-	if ((retlen = busWrite(vi, args, strlen(args))) == 0)
-	{
-		return -1;
-	}
-	if (timeout_ms == -1)
-	{
-		return 0;
-	}
-	return mrgRobotWaitHomeEnd(vi,name,timeout_ms);
+    snprintf(args, SEND_BUF, "ROBOT:JOINT:HOMe %d,%d,%f\n", name, axi, speed);
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
+    {
+	return -1;
+    }
+    if (timeout_ms == -1)
+    {
+	return 0;
+    }
+    return mrgRobotWaitHomeEnd(vi,name,timeout_ms);
 }
 /*
  * 控制机器人某一个轴运动
@@ -1901,18 +2033,39 @@ int mrgRobotJointHome(ViSession vi, int name, int axi, float speed,int timeout_m
  */
 int mrgRobotJointMove(ViSession vi, int name, int axi, float position,float time, int timeout_ms)
 {
-	int retlen = 0;
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", name, axi, position, time);
-	if ((retlen = busWrite(vi, args, strlen(args))) == 0)
-	{
-		return -1;
-	}
-	if (timeout_ms < 0)
-	{
-		return 0;
-	}
-	return mrgRobotWaitEnd(vi, name, DEFAULT_WAVETABLE,timeout_ms);
+    int retlen = 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", name, axi, position, time);
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
+    {
+	return -1;
+    }
+    if (timeout_ms < 0)
+    {
+	return 0;
+    }
+    return mrgRobotWaitEnd(vi, name, DEFAULT_WAVETABLE,timeout_ms);
+}
+/*
+ * 控制机器人某一个轴持续运动
+ * vi :visa设备句柄
+ * name: 机器人名称
+ * axi :轴索引
+ * speed: 轴运行的速度,单位: 度/秒
+ * wavetable : 波表
+ * 返回值：0表示执行成功， －1：表示执行失败
+ */
+int  mrgRobotJointMoveOn(ViSession vi, int name, int axi, float speed)
+{
+    int retlen = 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE:HOLD %d,%d,%f\n", name, axi, speed);
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
 }
 /*
  * 获取机器人各关节的当前角度
@@ -1924,31 +2077,31 @@ int mrgRobotJointMove(ViSession vi, int name, int axi, float position,float time
  */
 int mrgGetRobotJointAngle(ViSession vi, int name, int joint, float *angle)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	char * p, *pNext = NULL;
-	if (joint < 0)
-	{
-		snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d\n", name);
-	}
-	else
-	{
-		snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d,%d\n", name, joint);
-	}
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return 0;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		angle[count] = strtof(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    char * p, *pNext = NULL;
+    if (joint < 0)
+    {
+	snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d\n", name);
+    }
+    else
+    {
+	snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d,%d\n", name, joint);
+    }
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return 0;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	angle[count] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    return count;
 }
 /*
  * 机器人当前的里程数，单位 ：米
@@ -1959,28 +2112,28 @@ int mrgGetRobotJointAngle(ViSession vi, int name, int joint, float *angle)
  */
 int mrgGetRobotCurrentMileage(ViSession vi, int name, float * x, float *y, float* z)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	float position[3];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:CURRENT:MILEAGE? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		position[count] = strtof(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	*x = position[0];
-	*y = position[1];
-	*z = position[2];
-	return 0;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    float position[3];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:CURRENT:MILEAGE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	position[count] = strtof(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    *x = position[0];
+    *y = position[1];
+    *z = position[2];
+    return 0;
 }
 /*
  * 获取机器人的目标位置
@@ -1991,28 +2144,28 @@ int mrgGetRobotCurrentMileage(ViSession vi, int name, float * x, float *y, float
  */
 int mrgGetRobotTargetPosition(ViSession vi, int name, float * x, float *y, float* z)
 {
-	int count = 0, retlen = 0;
-	char args[SEND_BUF];
-	char tmp[100];
-	float position[3];
-	char * p, *pNext = NULL;
-	snprintf(args, SEND_BUF, "ROBOT:TARGET? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-	{
-		return -1;
-	}
-	tmp[retlen] = 0;
-	p = STRTOK_S(tmp, ",", &pNext);
-	while (p)
-	{
-		position[count] = strtod(p, NULL);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	*x = position[0];
-	*y = position[1];
-	*z = position[2];
-	return 0;
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char tmp[100];
+    float position[3];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:TARGET? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    {
+	return -1;
+    }
+    tmp[retlen] = 0;
+    p = STRTOK_S(tmp, ",", &pNext);
+    while (p)
+    {
+	position[count] = strtod(p, NULL);
+	p = STRTOK_S(NULL, ",", &pNext);
+	count++;
+    }
+    *x = position[0];
+    *y = position[1];
+    *z = position[2];
+    return 0;
 }
 /*
  * 获取机器人的当前执行的指令索引
@@ -2023,16 +2176,16 @@ int mrgGetRobotTargetPosition(ViSession vi, int name, float * x, float *y, float
  */
 int mrgGetRobotCurrentRecord(ViSession vi, int name, int *record)
 {
-	int retlen = 0;
-	char args[SEND_BUF];
-	char as8Ret[100];
-	snprintf(args, SEND_BUF, "ROBOT:CURRENT:RECORD? %d\n", name);
-	if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
-	{
-		return -1;
-	}
-	*record = atoi(as8Ret);
-	return 0;
+    int retlen = 0;
+    char args[SEND_BUF];
+    char as8Ret[100];
+    snprintf(args, SEND_BUF, "ROBOT:CURRENT:RECORD? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
+    {
+	return -1;
+    }
+    *record = atoi(as8Ret);
+    return 0;
 }
 /*
  * 机器人的折叠功能(包装位)
@@ -2044,33 +2197,33 @@ int mrgGetRobotCurrentRecord(ViSession vi, int name, int *record)
  */
 int mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3)
 {
-	int device = 0;
-	//如果不是T4,则返回错误
-	if (mrgGetRobotType(vi,name) != MRX_TYPE_T4)
-	{
-		return -1;
-	}
-	if (mrgGetRobotDevice(vi, name, &device) == 0)
-	{
-		return -2; //获取设备失败
-	}
-	//0. 机器人本体回零位
-	mrgRobotGoHome(vi,name, 0);
-	//1. 先动末端执行器
-	mrgMRQAdjust(vi, device, 4, wavetable, 10.0f,1.0f, 2000);
-	mrgRobotToolGoHome(vi, name, 10000); //末端回零
+    int device = 0;
+    //如果不是T4,则返回错误
+    if (mrgGetRobotType(vi,name) != MRX_TYPE_T4)
+    {
+	return -1;
+    }
+    if (mrgGetRobotDevice(vi, name, &device) == 0)
+    {
+	return -2; //获取设备失败
+    }
+    //0. 机器人本体回零位
+    mrgRobotGoHome(vi,name, 0);
+    //1. 先动末端执行器
+    mrgMRQAdjust(vi, device, 4, wavetable, 10.0f,1.0f, 2000);
+    mrgRobotToolGoHome(vi, name, 10000); //末端回零
 
-	//2.腕
-	mrgMRQAdjust(vi, device, 3, wavetable, axi3, 3.0f, 10000);
-	//3. 大臂向后
-	mrgMRQAdjust(vi, device, 1, wavetable, axi1, 2.0f, 10000);
+    //2.腕
+    mrgMRQAdjust(vi, device, 3, wavetable, axi3, 3.0f, 10000);
+    //3. 大臂向后
+    mrgMRQAdjust(vi, device, 1, wavetable, axi1, 2.0f, 10000);
 
-	//4.小臂向下
-	mrgMRQAdjust(vi, device, 2, wavetable, axi2, 3.0f, 10000);
+    //4.小臂向下
+    mrgMRQAdjust(vi, device, 2, wavetable, axi2, 3.0f, 10000);
 
-	//5. 基座
-	mrgMRQAdjust(vi, device, 2, wavetable, axi0, 1.0f, 10000);
-	return 0;
+    //5. 基座
+    mrgMRQAdjust(vi, device, 2, wavetable, axi0, 1.0f, 10000);
+    return 0;
 }
 
 

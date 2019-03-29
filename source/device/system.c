@@ -2,11 +2,101 @@
 
 #define SEND_BUF  (100)
 /*
- *启动MRH的CAN口
- *vi :visa设备句柄
- *返回值：0表示执行成功，－1表示失败
+ * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
+ * vi :visa设备句柄
+ * name：机器人
+ * state：识别状态
+ * 返回值：0表示执行成功，－1表示失败
  */
-int mrgSysStartCan(ViSession vi)
+int  mrgIdentify(ViSession vi, int state)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+ *切换 MRH - T 的模式
+ *vi :visa设备句柄
+ *mode : MRH - T 的模式，取值范围： [0,1]
+ * 返回值：0表示执行成功，－1表示失败
+ */
+int mrgModeSwitch(ViSession vi, int mode)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+*查询 MRH-T 软件版本号
+*vi :visa设备句柄
+*返回值：0回读正确;否则回读失败
+*/
+ int  mrgSysGetSoftVersion(ViSession vi, char * version)
+{
+    char args[SEND_BUF];
+    char ret[20] = { 0 };
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:SOFT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    memcpy(version, ret, retlen - 1);
+    return 0;
+}
+/*
+*查询 MRH-T 背板的软件版本号
+*vi :visa设备句柄
+*返回值：0回读正确;否则回读失败
+*/
+ int  mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
+{
+    char args[SEND_BUF];
+    char ret[20] = { 0 };
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:BACKBOARD:SOFT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    memcpy(version, ret, retlen - 1);
+    return 0;
+}
+/*
+*查询 MRH-T 背板的硬件版本号
+*vi :visa设备句柄
+*返回值：0回读正确;否则回读失败
+*/
+ int  mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
+{
+    char args[SEND_BUF];
+    char ret[20] = { 0 };
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:BACKBOARD:HARD?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    memcpy(version, ret, retlen - 1);
+    return 0;
+}
+/*
+*启动MRH的CAN口
+*vi :visa设备句柄
+*返回值：0表示执行成功，－1表示失败
+*/
+ int  mrgSysStartCan(ViSession vi)
 {
 	char args[SEND_BUF];
 	snprintf(args, SEND_BUF, "CAN:STARt\n");
@@ -48,12 +138,32 @@ int mrgSysConfCan(ViSession vi,int baud)
 	return 0;
 }
 /*
- *切换 MRH-T 的模式
- *vi :visa设备句柄
- *mode:MRH-T 的模式，取值范围： [0, 1]. 0表示直通模式,1表示MRH模式
- *返回值：0表示执行成功，－1表示失败
- */
-int mrgSysModeSwitch(ViSession vi, int mode)
+*获取MRH的CAN口波特率
+*vi :visa设备句柄
+*baud:波特率 1000000,800000,500000,250000,125000,100000
+*返回值：0表示执行成功，－1表示失败
+*/
+ int  mrgSysConfCan_Query(ViSession vi, int* baud)
+{
+    char args[SEND_BUF];
+    char ret[20] = { 0 };
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "CAN:CONFig?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    *baud = atoi(ret);
+    return 0;
+}
+/*
+*切换 MRH-T 的模式
+*vi :visa设备句柄
+*mode:MRH-T 的模式，取值范围： [0, 1]. 0表示直通模式,1表示MRH模式
+*返回值：0表示执行成功，－1表示失败
+*/
+ int  mrgSysModeSwitch(ViSession vi, int mode)
 {
 	char args[SEND_BUF];
 	snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
@@ -81,44 +191,137 @@ int mrgGetSysMode(ViSession vi)
 	ret[retlen - 1] = 0;
 	return atoi(ret);
 }
-
 /*
- *扫描可用的WIFI
- *vi :visa设备句柄
- *result：可用的WIFI命令，以逗号分隔
- *返回值：返回实际接收到的数据长度
- */
-int mrgSysWifiScan(ViSession vi, char* result,int len)
+*设置指令表的模式 按行执行或者按段执行
+*vi :visa设备句柄
+*mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+*返回值：0表示执行成功，－1表示失败
+*/
+ int  mrgSysInstructionMode(ViSession vi, int mode)
 {
-	char args[SEND_BUF];
-	char as8Ret[1024];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:WIFI:SEARCH?\n");
-	if ((retLen = busQuery(vi, args, strlen(args),as8Ret,1024)) <= 0)
-	{
-		return 0;
-	}
-	as8Ret[retLen - 1] = 0;
-	retLen = (len > retLen) ? retLen : len;
-	memcpy(result, as8Ret,retLen);
-	return retLen;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:INSTRUCTion:MODe %s\n", mode? "SECTION":"LINE");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
- *配置WIFI
- *vi :visa设备句柄
- *name：WIFi名称
- * passwd：密码
- *返回值：返回实际接收到的数据长度
- */
-int mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
+*查询指令表的模式
+*vi :visa设备句柄
+*mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+*返回值：0表示执行成功,否则表示执行失败
+*/
+ int  mrgSysInstructionMode_Query(ViSession vi, int* mode)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:WIFI:CONFig %s,%s\n", name, passwd);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    char ret[8] = { 0 };
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:INSTRUCTion:MODe?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    if (STRCASECMP(ret, "LINE") == 0)
+    {
+        *mode = 0;
+    }
+    else if (STRCASECMP(ret, "SECTION") == 0)
+    {
+        *mode = 1;
+    }
+    else
+    {
+        return -2;
+    }
+    return 0;
+}
+/*
+* 设置网络的IP模式 
+* vi :visa设备句柄
+* mode : IP 模式 0->静态IP; 1->DHCP
+* 返回值：0设置成功,-1设置失败
+*/
+ int  mrgSysSetNetworkIPMode(ViSession vi,int mode)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:IPMODe %s\n", mode==1?"DHCP":"STATIC");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 获取网络的IP模式
+* vi :visa设备句柄
+* mode : IP 模式 0->静态IP; 1->DHCP
+* 返回值：0执行成功,否则执行失败
+*/
+ int  mrgSysGetNetworkIPMode(ViSession vi, int* mode)
+{
+    char args[SEND_BUF];
+    char as8Ret[20];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:IPMODe?\n");
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 20)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    if (STRCASECMP(as8Ret, "DHCP") == 0)
+    {
+        *mode = 1;
+    }
+    else if (STRCASECMP(as8Ret, "DHCP") == 0)
+    {
+        *mode = 0;
+    }
+    else
+    {
+        return -2;
+    }
+    return 0;
+}
+/*
+*扫描可用的WIFI
+*vi :visa设备句柄
+*result：可用的WIFI命令，以逗号分隔
+*返回值：返回实际接收到的数据长度
+*/
+ int  mrgSysWifiScan(ViSession vi, char* result,int len)
+{
+    char args[SEND_BUF];
+    char as8Ret[1024];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:SEARCH?\n");
+    if ((retLen = busQuery(vi, args, strlen(args),as8Ret,1024)) <= 0)
+    {
+        return 0;
+    }
+    as8Ret[retLen - 1] = 0;
+    retLen = (len > retLen) ? retLen : len;
+    memcpy(result, as8Ret,retLen);
+    return retLen;
+}
+/*
+*配置WIFI
+*vi :visa设备句柄
+*name：WIFi名称
+* passwd：密码
+*返回值：返回实际接收到的数据长度
+*/
+ int  mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:CONFig %s,%s\n", name, passwd);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *停止或启动无线网卡
@@ -128,13 +331,13 @@ int mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
  */
 int mrgSysWifiUpDown(ViSession vi, int state)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:WIFI:%s\n", state?"UP":"DOWN");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:%s\n", state?"UP":"DOWN");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *检查WIFI的连接状态
@@ -144,25 +347,25 @@ int mrgSysWifiUpDown(ViSession vi, int state)
  */
 int mrgSysWifiCheckState(ViSession vi, int timeout_ms)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
-	int retLen = 0,time = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:WIFI:STATe?\n");
-	while (time < timeout_ms)
-	{
-		Sleep(200);
-		if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
-		{
-			continue;
-		}
-		as8Ret[retLen - 1] = 0;
-		if (STRCASECMP(as8Ret, "ON") == 0)
-		{
-			return 1;
-		}
-		time += 200;
-	}
-	return 0;
+    char args[SEND_BUF];
+    char as8Ret[100];
+    int retLen = 0,time = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:STATe?\n");
+    while (time < timeout_ms)
+    {
+        Sleep(200);
+        if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
+        {
+            continue;
+        }
+        as8Ret[retLen - 1] = 0;
+        if (STRCASECMP(as8Ret, "ON") == 0)
+        {
+            return 1;
+        }
+        time += 200;
+    }
+    return 0;
 }
 /*
  *查询当前已连接上的WIFI名称
@@ -172,10 +375,10 @@ int mrgSysWifiCheckState(ViSession vi, int timeout_ms)
  */
 int mrgSysGetWifiConnected(ViSession vi, char* name)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
+    char args[SEND_BUF];
+    char as8Ret[100];
     int retLen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:WIFI:NAMe?\n");
+    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:NAMe?\n");
    
 	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
 	{
@@ -186,12 +389,12 @@ int mrgSysGetWifiConnected(ViSession vi, char* name)
 	return 0;
 }
 /*
- *设置系统的心跳时间,单位:秒
- *vi :visa设备句柄
- *value: 心跳时间,单位:秒
- *返回值：0表示执行成功；－1表示执行失败
- */
-int mrgSysSetHeartPeriod(ViSession vi, int value)
+*设置系统的心跳时间,单位:秒
+*vi :visa设备句柄
+*value: 心跳时间,单位:秒
+*返回值：0表示执行成功；－1表示执行失败
+*/
+ int  mrgSysSetHeartPeriod(ViSession vi, int value)
 {
 	char args[SEND_BUF];
 	snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE %d\n", value);

@@ -1,4 +1,3 @@
-
 #ifndef _MR_GATEWAY_
 #define _MR_GATEWAY_
 

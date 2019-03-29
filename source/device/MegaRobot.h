@@ -624,6 +624,22 @@ int mrgRobotToolStop(ViSession vi, int name);
 */
 int mrgRobotToolStopGoHome(ViSession vi, int name);
 /*
+* 末端执行器执行模式
+* vi :visa设备句柄
+* name: 机器人名称
+* mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+int mrgRobotToolExeMode(ViSession vi, int name, int mode);
+/*
+* 查询末端执行器执行模式
+* vi :visa设备句柄
+* name: 机器人名称
+* mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+int mrgRobotToolExeMode_Query(ViSession vi, int name, int* mode);
+/*
 * 末端执行器回初始位
 * vi :visa设备句柄
 * name: 机器人名称
@@ -675,6 +691,16 @@ int mrgRobotJointHome(ViSession vi, int name, int axi, float speed, int timeout_
 * 返回值：0表示执行成功， －1：表示执行失败
 */
 int mrgRobotJointMove(ViSession vi, int name, int axi, float position, float time, int timeout_ms);
+/*
+* 控制机器人某一个轴持续运动
+* vi :visa设备句柄
+* name: 机器人名称
+* axi :轴索引
+* speed: 轴运行的速度,单位: 度/秒
+* wavetable : 波表
+* 返回值：0表示执行成功， －1：表示执行失败
+*/
+int mrgRobotJointMoveOn(ViSession vi, int name, int axi, float speed);
 /*
 * 获取机器人各关节的当前角度
 * vi :visa设备句柄
