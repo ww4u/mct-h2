@@ -16,7 +16,7 @@ diagnose: 输出诊断器是否配置 必配/选配 -> 0,1
 response: 输出错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
 enable: 输出是否使能 Y/N ->0,1
 */
-int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *response, int *diagnose, int *enable);
+EXPORT_API int CALL  mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *response, int *diagnose, int *enable);
 
 /*
 下载错误代码配置
@@ -27,7 +27,7 @@ diagnose: 诊断器是否配置 必配/选配 -> 0,1
 response: 错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
 enable: 是否使能 Y/N ->0,1
 */
-int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable);
+EXPORT_API int CALL  mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable);
 
 
 /**
@@ -38,13 +38,13 @@ int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, i
  * @param len 长度
  * @return 获取数据长度
  */
-int mrgErrorLogUpload(ViSession vi, int format, char* errorLog);
+EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog);
 
 /*
 清除错误日志
 vi :visa设备句柄
 */
-int mrgErrorLogClear(ViSession vi);
+EXPORT_API int CALL mrgErrorLogClear(ViSession vi);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

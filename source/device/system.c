@@ -8,7 +8,7 @@
  * state：识别状态
  * 返回值：0表示执行成功，－1表示失败
  */
-int  mrgIdentify(ViSession vi, int state)
+EXPORT_API int CALL mrgIdentify(ViSession vi, int state)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
@@ -24,7 +24,7 @@ int  mrgIdentify(ViSession vi, int state)
  *mode : MRH - T 的模式，取值范围： [0,1]
  * 返回值：0表示执行成功，－1表示失败
  */
-int mrgModeSwitch(ViSession vi, int mode)
+EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
@@ -39,7 +39,7 @@ int mrgModeSwitch(ViSession vi, int mode)
 *vi :visa设备句柄
 *返回值：0回读正确;否则回读失败
 */
- int  mrgSysGetSoftVersion(ViSession vi, char * version)
+EXPORT_API int CALL mrgSysGetSoftVersion(ViSession vi, char * version)
 {
     char args[SEND_BUF];
     char ret[20] = { 0 };
@@ -58,7 +58,7 @@ int mrgModeSwitch(ViSession vi, int mode)
 *vi :visa设备句柄
 *返回值：0回读正确;否则回读失败
 */
- int  mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
+EXPORT_API int CALL mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
 {
     char args[SEND_BUF];
     char ret[20] = { 0 };
@@ -77,7 +77,7 @@ int mrgModeSwitch(ViSession vi, int mode)
 *vi :visa设备句柄
 *返回值：0回读正确;否则回读失败
 */
- int  mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
+EXPORT_API int CALL mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
 {
     char args[SEND_BUF];
     char ret[20] = { 0 };
@@ -96,30 +96,30 @@ int mrgModeSwitch(ViSession vi, int mode)
 *vi :visa设备句柄
 *返回值：0表示执行成功，－1表示失败
 */
- int  mrgSysStartCan(ViSession vi)
+EXPORT_API int CALL mrgSysStartCan(ViSession vi)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "CAN:STARt\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "CAN:STARt\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *复位MRH的CAN口
  *vi :visa设备句柄
  *返回值：0表示执行成功，－1表示失败
  */
-int mrgSysResetCan(ViSession vi)
+EXPORT_API int CALL mrgSysResetCan(ViSession vi)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "CAN:RESET\n");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "CAN:RESET\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *配置MRH的CAN口波特率
@@ -127,15 +127,15 @@ int mrgSysResetCan(ViSession vi)
  *baud:波特率 1000000,800000,500000,250000,125000,100000
  *返回值：0表示执行成功，－1表示失败
  */
-int mrgSysConfCan(ViSession vi,int baud)
+EXPORT_API int CALL mrgSysConfCan(ViSession vi,int baud)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "CAN:CONFig %d\n", baud);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "CAN:CONFig %d\n", baud);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
 *获取MRH的CAN口波特率
@@ -143,7 +143,7 @@ int mrgSysConfCan(ViSession vi,int baud)
 *baud:波特率 1000000,800000,500000,250000,125000,100000
 *返回值：0表示执行成功，－1表示失败
 */
- int  mrgSysConfCan_Query(ViSession vi, int* baud)
+EXPORT_API int CALL mrgSysConfCan_Query(ViSession vi, int* baud)
 {
     char args[SEND_BUF];
     char ret[20] = { 0 };
@@ -163,33 +163,33 @@ int mrgSysConfCan(ViSession vi,int baud)
 *mode:MRH-T 的模式，取值范围： [0, 1]. 0表示直通模式,1表示MRH模式
 *返回值：0表示执行成功，－1表示失败
 */
- int  mrgSysModeSwitch(ViSession vi, int mode)
+EXPORT_API int CALL mrgSysModeSwitch(ViSession vi, int mode)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *查询 MRH-T 的模式
  *vi :visa设备句柄
  *返回值：MRH-T 的模式. 0表示直通模式,1表示MRH模式
  */
-int mrgGetSysMode(ViSession vi)
+EXPORT_API int CALL mrgGetSysMode(ViSession vi)
 {
-	char args[SEND_BUF];
-	char ret[8] = {0};
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch?\n");
-	if ((retlen = busQuery(vi, args, strlen(args),ret,8)) <= 0)
-	{
-		return -1;
-	}
-	ret[retlen - 1] = 0;
-	return atoi(ret);
+    char args[SEND_BUF];
+    char ret[8] = {0};
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),ret,8)) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    return atoi(ret);
 }
 /*
 *设置指令表的模式 按行执行或者按段执行
@@ -197,7 +197,7 @@ int mrgGetSysMode(ViSession vi)
 *mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
 *返回值：0表示执行成功，－1表示失败
 */
- int  mrgSysInstructionMode(ViSession vi, int mode)
+EXPORT_API int CALL mrgSysInstructionMode(ViSession vi, int mode)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:INSTRUCTion:MODe %s\n", mode? "SECTION":"LINE");
@@ -213,7 +213,7 @@ int mrgGetSysMode(ViSession vi)
 *mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
 *返回值：0表示执行成功,否则表示执行失败
 */
- int  mrgSysInstructionMode_Query(ViSession vi, int* mode)
+EXPORT_API int CALL mrgSysInstructionMode_Query(ViSession vi, int* mode)
 {
     char args[SEND_BUF];
     char ret[8] = { 0 };
@@ -244,7 +244,7 @@ int mrgGetSysMode(ViSession vi)
 * mode : IP 模式 0->静态IP; 1->DHCP
 * 返回值：0设置成功,-1设置失败
 */
- int  mrgSysSetNetworkIPMode(ViSession vi,int mode)
+EXPORT_API int CALL mrgSysSetNetworkIPMode(ViSession vi,int mode)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:IPMODe %s\n", mode==1?"DHCP":"STATIC");
@@ -260,7 +260,7 @@ int mrgGetSysMode(ViSession vi)
 * mode : IP 模式 0->静态IP; 1->DHCP
 * 返回值：0执行成功,否则执行失败
 */
- int  mrgSysGetNetworkIPMode(ViSession vi, int* mode)
+EXPORT_API int CALL  mrgSysGetNetworkIPMode(ViSession vi, int* mode)
 {
     char args[SEND_BUF];
     char as8Ret[20];
@@ -291,7 +291,7 @@ int mrgGetSysMode(ViSession vi)
 *result：可用的WIFI命令，以逗号分隔
 *返回值：返回实际接收到的数据长度
 */
- int  mrgSysWifiScan(ViSession vi, char* result,int len)
+EXPORT_API int CALL mrgSysWifiScan(ViSession vi, char* result,int len)
 {
     char args[SEND_BUF];
     char as8Ret[1024];
@@ -313,7 +313,7 @@ int mrgGetSysMode(ViSession vi)
 * passwd：密码
 *返回值：返回实际接收到的数据长度
 */
- int  mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
+EXPORT_API int CALL mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:CONFig %s,%s\n", name, passwd);
@@ -329,7 +329,7 @@ int mrgGetSysMode(ViSession vi)
  *state：0表示停止， 1表示启用
  *返回值：0:执行成功； 否则执行失败
  */
-int mrgSysWifiUpDown(ViSession vi, int state)
+EXPORT_API int CALL mrgSysWifiUpDown(ViSession vi, int state)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:%s\n", state?"UP":"DOWN");
@@ -345,11 +345,12 @@ int mrgSysWifiUpDown(ViSession vi, int state)
  *timeout_ms：等待超时时间，单位：ms
  *返回值：0:连接超时或未连接； 1：连接成功
  */
-int mrgSysWifiCheckState(ViSession vi, int timeout_ms)
+EXPORT_API int CALL mrgSysWifiCheckState(ViSession vi, int timeout_ms)
 {
     char args[SEND_BUF];
     char as8Ret[100];
-    int retLen = 0,time = 0;
+    int retLen = 0;
+    int time = 0;
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:STATe?\n");
     while (time < timeout_ms)
     {
@@ -373,20 +374,20 @@ int mrgSysWifiCheckState(ViSession vi, int timeout_ms)
  *name：WIFI名
  *返回值：0:执行成功； 否则执行失败
  */
-int mrgSysGetWifiConnected(ViSession vi, char* name)
+EXPORT_API int CALL mrgSysGetWifiConnected(ViSession vi, char* name)
 {
     char args[SEND_BUF];
     char as8Ret[100];
     int retLen = 0;
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:NAMe?\n");
-   
-	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
-	{
-		return -1;
-	}
-	as8Ret[retLen - 1] = 0;
-	strcpy(name, as8Ret);
-	return 0;
+
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    strncpy(name, as8Ret,sizeof(as8Ret));
+    return 0;
 }
 /*
 *设置系统的心跳时间,单位:秒
@@ -394,15 +395,15 @@ int mrgSysGetWifiConnected(ViSession vi, char* name)
 *value: 心跳时间,单位:秒
 *返回值：0表示执行成功；－1表示执行失败
 */
- int  mrgSysSetHeartPeriod(ViSession vi, int value)
+EXPORT_API int CALL mrgSysSetHeartPeriod(ViSession vi, int value)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE %d\n", value);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE %d\n", value);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  * 查询系统的心跳时间,单位:秒
@@ -410,20 +411,20 @@ int mrgSysGetWifiConnected(ViSession vi, char* name)
  * value: 心跳时间,单位:秒
  * 返回值：0表示执行成功；－1表示执行失败
  */
-int mrgSysGetHeartPeriod(ViSession vi, int * value)
+EXPORT_API int CALL mrgSysGetHeartPeriod(ViSession vi, int * value)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
+    char args[SEND_BUF];
+    char as8Ret[100];
     int retLen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE?\n");
+    snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE?\n");
 
-	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
-	{
-		return -1;
-	}
-	as8Ret[retLen - 1] = 0;
-	*value = atoi(as8Ret);
-	return 0;
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    *value = atoi(as8Ret);
+    return 0;
 }
 /*
  *设置系统上电值
@@ -431,15 +432,15 @@ int mrgSysGetHeartPeriod(ViSession vi, int * value)
  *value: 上电值 DEFAULT|LAST
  *返回值：0表示执行成功；－1表示执行失败
  */
-int mrgSysSetPowerOn(ViSession vi, int value)
+EXPORT_API int CALL mrgSysSetPowerOn(ViSession vi, int value)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:POWERON %s\n", value == 0? "DEFAULT":"LAST");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYSTEM:POWERON %s\n", value == 0? "DEFAULT":"LAST");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *查询系统上电值
@@ -447,31 +448,31 @@ int mrgSysSetPowerOn(ViSession vi, int value)
  * value: 上电值 0:DEFAULT; 1:LAST
  *返回值：0表示执行成功；－1表示执行失败
  */
-int mrgSysGetPowerOn(ViSession vi, int * value)
+EXPORT_API int CALL mrgSysGetPowerOn(ViSession vi, int * value)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
+    char args[SEND_BUF];
+    char as8Ret[100];
     int retLen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:POWERON?\n");
+    snprintf(args, SEND_BUF, "SYSTEM:POWERON?\n");
 
-	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
-	{
-		return -1;
-	}
-	as8Ret[retLen - 1] = 0;
-	if (STRCASECMP(as8Ret, "DEFAULT") == 0 || STRCASECMP(as8Ret, "0") == 0)
-	{
-		*value = 0;
-	}
-	else if (STRCASECMP(as8Ret, "LAST") == 0 || STRCASECMP(as8Ret, "1") == 0)
-	{
-		*value = 1;
-	}
-	else
-	{
-		return -1;
-	}
-	return 0;
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    if (STRCASECMP(as8Ret, "DEFAULT") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *value = 0;
+    }
+    else if (STRCASECMP(as8Ret, "LAST") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *value = 1;
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *设置系统控制接口
@@ -479,16 +480,16 @@ int mrgSysGetPowerOn(ViSession vi, int * value)
  *interface: 上电值 LAN|USB|IO
  *返回值：0表示执行成功；－1表示执行失败
  */
-int mrgSysSetInterface(ViSession vi, int face)
+EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int face)
 {
-	char args[SEND_BUF];
-	char *ps8Interface[3] = { "LAN", "USB", "IO" };
-	snprintf(args, SEND_BUF, "SYSTEM:INTERFACE %s\n", ps8Interface[face]);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    char *ps8Interface[3] = { "LAN", "USB", "IO" };
+    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE %s\n", ps8Interface[face]);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  * 查询系统控制接口
@@ -496,35 +497,35 @@ int mrgSysSetInterface(ViSession vi, int face)
  * interface: 控制接口 LAN|USB|IO
  * 返回值：0表示执行成功；－1表示执行失败
  */
-int mrgSysGetInterface(ViSession vi, int * face)
+EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * face)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "SYSTEM:INTERFACE?\n");
+    char args[SEND_BUF];
+    char as8Ret[100];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE?\n");
 
-	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
-	{
-		return -1;
-	}
-	as8Ret[retLen - 1] = 0;
-	if (STRCASECMP(as8Ret, "LAN") == 0 || STRCASECMP(as8Ret, "0") == 0)
-	{
-		*face = 0;
-	}
-	else if (STRCASECMP(as8Ret, "USB") == 0 || STRCASECMP(as8Ret, "1") == 0)
-	{
-		*face = 1;
-	}
-	else if (STRCASECMP(as8Ret, "IO") == 0 || STRCASECMP(as8Ret, "2") == 0)
-	{
-		*face = 2;
-	}
-	else
-	{
-		return -1;
-	}
-	return 0;
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    if (STRCASECMP(as8Ret, "LAN") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *face = 0;
+    }
+    else if (STRCASECMP(as8Ret, "USB") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *face = 1;
+    }
+    else if (STRCASECMP(as8Ret, "IO") == 0 || STRCASECMP(as8Ret, "2") == 0)
+    {
+        *face = 2;
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  *设置紧急停止
@@ -534,15 +535,15 @@ int mrgSysGetInterface(ViSession vi, int * face)
  *紧急停止时,会停止当前系统CAN网络中的所有设备,并设置紧急停止标志位.在紧急标志位被清除前,不接受任何CAN帧.
  * 当state为OFF时,只是清除标志位
  */
-int mrgSysSetEmergencyStop(ViSession vi, int state)
+EXPORT_API int CALL mrgSysSetEmergencyStop(ViSession vi, int state)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SCRAM:STATE %s\n", state?"ON":"OFF");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SCRAM:STATE %s\n", state?"ON":"OFF");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }
 /*
  * 查询紧急停止状态
@@ -551,31 +552,31 @@ int mrgSysSetEmergencyStop(ViSession vi, int state)
  * 返回值：0表示执行成功；－1表示执行失败
  * 紧急停止时,会自动设置此标志位
  */
-int mrgSysGetEmergencyStopState(ViSession vi,int *state)
+EXPORT_API int CALL mrgSysGetEmergencyStopState(ViSession vi,int *state)
 {
-	char args[SEND_BUF];
-	char as8Ret[100];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "SCRAM:STATE?\n");
+    char args[SEND_BUF];
+    char as8Ret[100];
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "SCRAM:STATE?\n");
 
-	if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
-	{
-		return -1;
-	}
-	as8Ret[retLen - 1] = 0;
-	if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
-	{
-		*state = 0;
-	}
-	else if (STRCASECMP(as8Ret, "ON") == 0 || STRCASECMP(as8Ret, "1") == 0)
-	{
-		*state = 1;
-	}
-	else
-	{
-		return -1;
-	}
-	return 0;
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *state = 0;
+    }
+    else if (STRCASECMP(as8Ret, "ON") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *state = 1;
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
 }
 
 /**
@@ -584,23 +585,23 @@ int mrgSysGetEmergencyStopState(ViSession vi,int *state)
  * @param 查询可用的升级文件名字
  * @return 成功返回0,失败返回-1,返回1表示没有U盘
  */
-int mrgSysUpdateFileSearch(ViSession vi, char *fileList)
+EXPORT_API int CALL mrgSysUpdateFileSearch(ViSession vi, char *fileList)
 {
-	char args[SEND_BUF];
-	char ret[1024] = {0};
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "SYST:UPGR:SEAR?\n");
-	if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) <= 0)
-	{
-		return -1;
-	}
-	ret[retlen - 1] = 0;
-	strcpy(fileList,ret);
+    char args[SEND_BUF];
+    char ret[1024] = {0};
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYST:UPGR:SEAR?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) <= 0)
+    {
+        return -1;
+    }
+    ret[retlen - 1] = 0;
+    strncpy(fileList,ret, SEND_BUF);
 
-	if( STRCASECMP(ret, "NO_UDISK") == 0 )
-		return 1;
+    if( STRCASECMP(ret, "NO_UDISK") == 0 )
+        return 1;
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -609,63 +610,63 @@ int mrgSysUpdateFileSearch(ViSession vi, char *fileList)
  * @param filename 升级的文件名
  * @return 失败返回负数,成功返回0,超时返回1
  */
-int mrgSysUpdateFileStart(ViSession vi, char *filename)
+EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYST:UPGR:STAR %s\n", filename);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "SYST:UPGR:STAR %s\n", filename);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
 
-	int time = 0, intervalTime = 20;
-	while (1)
-	{
-		if (time > (20 * 1000) )
-		{
-			return 1;
-		}
-		int ret = mrgSysUpdateFirmwareStatusQuery(vi);
-		if(ret <= 0)
-		{
-			return ret;
-		}
-		if(ret == 1)
-		{
-			Sleep(intervalTime);
-			time += intervalTime;
-			continue;
-		}
-	}
+    int time = 0, intervalTime = 20;
+    while (1)
+    {
+        if (time > (20 * 1000) )
+        {
+            return 1;
+        }
+        int ret = mrgSysUpdateFirmwareStatusQuery(vi);
+        if(ret <= 0)
+        {
+            return ret;
+        }
+        if(ret == 1)
+        {
+            Sleep(intervalTime);
+            time += intervalTime;
+            continue;
+        }
+    }
 }
 /**
  * @brief mrgSysUpdateFirmwareStatusQuery 查询当前升级状态
  * @param vi
  * @return 成功返回0，失败返回负数，正在升级返回1
  */
-int mrgSysUpdateFirmwareStatusQuery(ViSession vi)
+EXPORT_API int CALL mrgSysUpdateFirmwareStatusQuery(ViSession vi)
 {
-	char args[SEND_BUF];
-	char state[1024] = {0};
-	int retlen = 0;
-	snprintf(args, SEND_BUF, "SYST:UPGR:STAT?\n");
-	if ((retlen = busQuery(vi, args, strlen(args),state,sizeof(state))) <= 0)
-	{
-		return -1;
-	}
-	state[retlen - 1] = 0;
+    char args[SEND_BUF];
+    char state[1024] = {0};
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYST:UPGR:STAT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),state,sizeof(state))) <= 0)
+    {
+        return -1;
+    }
+    state[retlen - 1] = 0;
 
-	if( STRCASECMP(state, "COMPLETED") == 0 )
-		return 0;
-	else if( STRCASECMP(state, "UPDATING") == 0 )
-		return 1;
-	else if( STRCASECMP(state, "FAILD") == 0 )
-		return -2;
-	else
-		return -1;
+    if( STRCASECMP(state, "COMPLETED") == 0 )
+        return 0;
+    else if( STRCASECMP(state, "UPDATING") == 0 )
+        return 1;
+    else if( STRCASECMP(state, "FAILD") == 0 )
+        return -2;
+    else
+        return -1;
 }
 
 
-int mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
+EXPORT_API int CALL mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
 {
     char args[SEND_BUF];
     char ret[1024] = {0};
@@ -676,7 +677,7 @@ int mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
         return -1;
     }
     ret[retlen - 1] = 0;
-    strcpy(fileList, ret);
+    strncpy(fileList, ret, SEND_BUF);
 
     if( STRCASECMP(ret, "NO_UPGRADE_FILE") == 0 )
         return 1;
@@ -687,7 +688,7 @@ int mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
     return 0;
 }
 
-int mrgScriptConfig(ViSession vi, char *filename, int isBoot)
+EXPORT_API int CALL mrgScriptConfig(ViSession vi, char *filename, int isBoot)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SCRipt:CONFIG %s,%s\n", filename, isBoot?"ON":"OFF");
@@ -698,7 +699,7 @@ int mrgScriptConfig(ViSession vi, char *filename, int isBoot)
     return 0;
 }
 
-int mrgScriptConfigQuery(ViSession vi, char *filename)
+EXPORT_API int CALL mrgScriptConfigQuery(ViSession vi, char *filename)
 {
     char args[SEND_BUF];
     int retlen = 0;
@@ -721,7 +722,7 @@ int mrgScriptRun(ViSession vi)
     return 0;
 }
 
-int mrgScriptStop(ViSession vi)
+EXPORT_API int CALL mrgScriptStop(ViSession vi)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SCRipt:STOP\n");
@@ -732,7 +733,7 @@ int mrgScriptStop(ViSession vi)
     return 0;
 }
 
-int mrgScriptGetCurrentStates(ViSession vi)
+EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi)
 {
     char args[SEND_BUF];
     char state[1024] = {0};

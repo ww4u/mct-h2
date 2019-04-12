@@ -1,6 +1,10 @@
 #ifndef _BUS_H_
 #define _BUS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "platform.h"
 
 #define  BUS_LAN   0
@@ -21,6 +25,10 @@ int busCloseDevice(ViSession vi);
 unsigned int busWrite(ViSession vi, char * buf, unsigned int len);
 unsigned int busRead(ViSession vi, char * buf, unsigned int len);
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !_BUS_H_
 

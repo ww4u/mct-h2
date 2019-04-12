@@ -1,5 +1,12 @@
 #include "bus.h"
 
+#if defined(_WIN32) && (!defined(__MINGW64__)) && (!defined(__MINGW32__))
+#pragma comment (lib, "ws2_32")
+#pragma comment (lib, "visa32.lib")
+#pragma comment (lib,"IPHlpApi.lib")
+#pragma comment (lib, "pthreadVC2.lib")
+#endif
+
 #define ADD_GROUP
 #define MCASTADDR "224.0.0.251"
 #define UDP_PORT  5353
@@ -18,26 +25,26 @@ int busFindDevice(int bus, char *output, int len,int method)
     int r = 0;
     if (bus == 0)
     {
-	if (method == 0)
-	{
-	    strcpy(output, "");
-	    goto END;
-	}
-	else if (method == 1)
-	{
-	    char ip_list[256][100];
+        if (method == 0)
+        {
+            strcpy(output, "");
+            goto END;
+        }
+        else if (method == 1)
+        {
+            char ip_list[256][100];
             int status = socketFindResources(ip_list, 500);
             int i;
             for (i = 0; i < status; i++)
-	    {
-		snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
-		r = strlen(output);
-	    }
-	}
+            {
+                snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
+                r = strlen(output);
+            }
+        }
     }
     else if (bus == 1) //USBTMC
     {
-	strcpy(output, "");
+        strcpy(output, "");
     }
 
 END:
@@ -61,16 +68,16 @@ int busOpenDevice(char *ip, int timeout_ms)
     p = STRTOK_S(ip, "::", &pNext);
     while ( p && (index<20) )
     {
-	strcpy(buff[index++], p);
-	p = STRTOK_S(NULL, "::", &pNext);
+        strcpy(buff[index++], p);
+        p = STRTOK_S(NULL, "::", &pNext);
     }
     char *strIP = buff[1];
 
     VXI11_CLINK *clink; //sizeof(VXI11_CLINK)
     if(vxi11_open_device(&clink, strIP, NULL)){
-//        printf("vxi11_open_device error: %s\n", strIP);
-	free(clink);
-	return -1;
+        //        printf("vxi11_open_device error: %s\n", strIP);
+        free(clink);
+        return -1;
     }
 
     strcpy(_g_device_IP, strIP);
@@ -85,13 +92,13 @@ int busOpenDevice(char *ip, int timeout_ms)
 static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
 {
     if(_g_clink == NULL)
-	return -1;
+        return -1;
 
     int ret = vxi11_send(_g_clink, buf, dataLen);
     if(ret > 0)
-	return ret;
+        return ret;
     if(ret < 0){
-	perror("SyncSend error!");
+        perror("SyncSend error!");
     }
     return -1;
 }
@@ -99,23 +106,23 @@ static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
 static int SyncRead(int vi, char *data, int dataLen, int isBlock)
 {
     if(_g_clink == NULL)
-	return -1;
+        return -1;
 
     int ret = -1;
     if(isBlock)
     {
-	ret = vxi11_receive(_g_clink, data, dataLen);
+        ret = vxi11_receive(_g_clink, data, dataLen);
     }
     else
     {
-	// -VXI11_NULL_READ_RESP 超时未判断
-	ret = vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
+        // -VXI11_NULL_READ_RESP 超时未判断
+        ret = vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
     }
     if(ret > 0){
-	return ret;
+        return ret;
     }
     if(ret < 0){
-	perror("SyncRead error!");
+        perror("SyncRead error!");
     }
     return -1;
 }
@@ -124,7 +131,7 @@ int busCloseDevice(ViSession vi)
 {
     if( (_g_clink != NULL) && (0!=strcmp(_g_device_IP,"")) )
     {
-	vxi11_close_device(_g_clink, _g_device_IP);
+        vxi11_close_device(_g_clink, _g_device_IP);
     }
 
     memset(_g_device_IP,'\0',sizeof(_g_device_IP));
@@ -137,10 +144,10 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
     LOCK();
     int retCount = SyncSend(vi, data, len, 1);
     if(retCount < 0){
-	UNLOCK();
-	return 0;
+        UNLOCK();
+        return 0;
     }
-//    printf("\nTO:\n\t%s", data);
+    //    printf("\nTO:\n\t%s", data);
     UNLOCK();
     return (unsigned int)retCount;
 }
@@ -150,16 +157,16 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
     LOCK();
     int retCount = SyncRead(vi, buf, len, 1);
     if(retCount < 0){
-	UNLOCK();
-	return 0;
+        UNLOCK();
+        return 0;
     }
 
-//    printf("\nRECV:%d\n\t%s", retCount, buf);
+    //    printf("\nRECV:%d\n\t%s", retCount, buf);
     if( STRCASECMP(buf, "Command error") == 0 )
     {
-//        printf("\n");
-	UNLOCK();
-	return 0;
+        //        printf("\n");
+        UNLOCK();
+        return 0;
     }
 
     UNLOCK();
@@ -173,24 +180,24 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     LOCK();
     retCount = SyncSend(vi, input, inputlen, 1);
     if(retCount < 0){
-	UNLOCK();
-	return 0;
+        UNLOCK();
+        return 0;
     }
-//    printf("\nQUERY_TO:\n\t%s", input);
+    //    printf("\nQUERY_TO:\n\t%s", input);
 
     retCount = SyncRead(vi, output, wantlen, 1);
     if(retCount < 0){
-//        printf("RECV_QUERY error\n");
-	UNLOCK();
-	return 0;
+        //        printf("RECV_QUERY error\n");
+        UNLOCK();
+        return 0;
     }
 
-//    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
+    //    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
     if( STRCASECMP(output, "Command error") == 0 )
     {
-//        printf("\n");
-	UNLOCK();
-	return 0;
+        //        printf("\n");
+        UNLOCK();
+        return 0;
     }
     UNLOCK();
 
@@ -214,13 +221,13 @@ int getHostIpAddr(char strHostIp[][100])
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock == -1) {
-	return -1;
+        return -1;
     }
 
     ifc.ifc_len = sizeof(buf);
     ifc.ifc_buf = buf;
     if (ioctl(sock, SIOCGIFCONF, &ifc) == -1) {
-	return -2;
+        return -2;
     }
 
     struct ifreq* it = ifc.ifc_req;
@@ -229,20 +236,20 @@ int getHostIpAddr(char strHostIp[][100])
     int count = 0;
     for (; it != end; ++it)
     {
-	strcpy(ifr.ifr_name, it->ifr_name);
-	if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0){
-	    return -3;
-	}else{
-	    if (!(ifr.ifr_flags & IFF_LOOPBACK))
-	    { // don't count loopback
-		if (ioctl(sock, SIOCGIFADDR, &ifr) == 0){
-		    //printf("IP address is: %s\n", inet_ntoa(((struct sockaddr_in *)(&ifr.ifr_addr))->sin_addr));
-		}else
-		    continue;
-		sprintf(strHostIp[count],"%s", inet_ntoa(((struct sockaddr_in *)(&ifr.ifr_addr))->sin_addr));
-		count++;
-	    }
-	}
+        strcpy(ifr.ifr_name, it->ifr_name);
+        if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0){
+            return -3;
+        }else{
+            if (!(ifr.ifr_flags & IFF_LOOPBACK))
+            { // don't count loopback
+                if (ioctl(sock, SIOCGIFADDR, &ifr) == 0){
+                    //printf("IP address is: %s\n", inet_ntoa(((struct sockaddr_in *)(&ifr.ifr_addr))->sin_addr));
+                }else
+                    continue;
+                sprintf(strHostIp[count],"%s", inet_ntoa(((struct sockaddr_in *)(&ifr.ifr_addr))->sin_addr));
+                count++;
+            }
+        }
     }
 
     return count;
@@ -269,8 +276,8 @@ int busFindDevice(int bus, char *output, int len,int method)
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
     {
-	printf("Could not open a session to the VISA Resource Manager!\n");
-	return 0;
+        printf("Could not open a session to the VISA Resource Manager!\n");
+        return 0;
     }
     /*
      * Find all the VISA resources in our system and store the number of resources
@@ -289,58 +296,58 @@ int busFindDevice(int bus, char *output, int len,int method)
     */
     if (bus == BUS_LAN)
     {
-	if (method == METHOD_VISA)
-	{
-	    status = viFindRsrc(defaultRM, "TCPIP[0-9]*::?*INSTR", &findList, &numInstrs, instrDescriptor);
-	    if (status < VI_SUCCESS)
-	    {
-		viClose(defaultRM);
-		return 0;
-	    }
-	    strcpy(&output[r], instrDescriptor);
-	    while (--numInstrs)
-	    {
-		/* stay in this loop until we find all instruments */
-		status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
-		if (status < VI_SUCCESS)
-		{
-		    goto END;
-		}
-		strcat(&output[r], ",");
-		strcat(output, instrDescriptor);
-	    }    /* end while */
-	}
-	else if (method == METHOD_UDP)
-	{
-	    char ip_list[256][100];
+        if (method == METHOD_VISA)
+        {
+            status = viFindRsrc(defaultRM, "TCPIP[0-9]*::?*INSTR", &findList, &numInstrs, instrDescriptor);
+            if (status < VI_SUCCESS)
+            {
+                viClose(defaultRM);
+                return 0;
+            }
+            strcpy(&output[r], instrDescriptor);
+            while (--numInstrs)
+            {
+                /* stay in this loop until we find all instruments */
+                status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
+                if (status < VI_SUCCESS)
+                {
+                    goto END;
+                }
+                strcat(&output[r], ",");
+                strcat(output, instrDescriptor);
+            }    /* end while */
+        }
+        else if (method == METHOD_UDP)
+        {
+            char ip_list[256][100];
             status = socketFindResources(ip_list, 500);
-	    for (int i = 0; i < status; i++)
-	    {
-		snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
-		r = strlen(output);
-	    }
-	}
+            for (int i = 0; i < status; i++)
+            {
+                snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
+                r = strlen(output);
+            }
+        }
     }
     else if (bus == BUS_USB) //USBTMC
     {
-	status = viFindRsrc(defaultRM, "USB0::?*::INSTR", &findList, &numInstrs, instrDescriptor);
-	if (status < VI_SUCCESS)
-	{
-	    viClose(defaultRM);
-	    return 0;
-	}
-	strcpy(&output[r], instrDescriptor);
-	while (--numInstrs)
-	{
-	    /* stay in this loop until we find all instruments */
-	    status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
-	    if (status < VI_SUCCESS)
-	    {
-		goto END;
-	    }
-	    strcat(&output[r], ",");
-	    strcat(output, instrDescriptor);
-	}    /* end while */
+        status = viFindRsrc(defaultRM, "USB0::?*::INSTR", &findList, &numInstrs, instrDescriptor);
+        if (status < VI_SUCCESS)
+        {
+            viClose(defaultRM);
+            return 0;
+        }
+        strcpy(&output[r], instrDescriptor);
+        while (--numInstrs)
+        {
+            /* stay in this loop until we find all instruments */
+            status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
+            if (status < VI_SUCCESS)
+            {
+                goto END;
+            }
+            strcat(&output[r], ",");
+            strcat(output, instrDescriptor);
+        }    /* end while */
     }
     
 END:
@@ -354,26 +361,26 @@ int busOpenDevice(char * ip, int timeout)
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
     {
-	printf("Could not open a session to the VISA Resource Manager!\n");
-	return 0;
+        printf("Could not open a session to the VISA Resource Manager!\n");
+        return 0;
     }
     status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
     if (status < VI_SUCCESS)
     {
-	vi = -1;
-	return status;
+        vi = -1;
+        return status;
     }
     if (_strnicmp(ip, "USB",3)== 0)
     {
-	viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0A);
-	viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_FALSE);
-	viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
-	viSetAttribute(vi, VI_ATTR_IO_PROT, 1);
+        viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0A);
+        viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_FALSE);
+        viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_IO_PROT, 1);
     }
     else if (_strnicmp(ip, "TCPIP", 5) == 0)
     {
-	viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
-	viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
     }
     viSetAttribute(vi, VI_ATTR_TMO_VALUE, timeout);
     return vi;
@@ -382,11 +389,12 @@ int busOpenDevice(char * ip, int timeout)
 ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
 {
     ViStatus viSta;
-    ViSession viDef, viDev;
+    ViSession viDef;
+    ViSession viDev;
     viSta = viOpenDefaultRM(&viDef);
     if (viSta != VI_SUCCESS)
     {
-	return 0;
+        return 0;
     }
 
     //! cat name
@@ -396,7 +404,7 @@ ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
     viSta = viOpen(viDef, rsrc, 0, 2000, &viDev);
     if (viSta != VI_SUCCESS)
     {
-	return 0;
+        return 0;
     }
 
     //set attribute
@@ -421,8 +429,8 @@ unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
     LOCK();
     if(viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
     {
-	UNLOCK();
-	return 0;
+        UNLOCK();
+        return 0;
     }
     UNLOCK();
     return retCount;
@@ -444,8 +452,8 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
     LOCK();
     if (viWrite(vi, (ViBuf)input, inputlen, &retCount) != VI_SUCCESS)
     {
-	UNLOCK();
-	return 0;
+        UNLOCK();
+        return 0;
     }
     viRead(vi, (ViBuf)output, wantlen, &retCount);
     UNLOCK();
@@ -468,41 +476,41 @@ int getHostIpAddr(char strHostIp[][100])
     //记录每张网卡上的IP地址数量
     if (ERROR_BUFFER_OVERFLOW == nRel)
     {
-	//如果函数返回的是ERROR_BUFFER_OVERFLOW
-	//则说明GetAdaptersInfo参数传递的内存空间不够,同时其传出stSize,表示需要的空间大小
-	//这也是说明为什么stSize既是一个输入量也是一个输出量
-	//释放原来的内存空间
-	free(pIpAdapterInfo);
-	//重新申请内存空间用来存储所有网卡信息
-	pIpAdapterInfo = (PIP_ADAPTER_INFO)malloc(stSize);
-	//再次调用GetAdaptersInfo函数,填充pIpAdapterInfo指针变量
-	nRel = GetAdaptersInfo(pIpAdapterInfo, &stSize);
+        //如果函数返回的是ERROR_BUFFER_OVERFLOW
+        //则说明GetAdaptersInfo参数传递的内存空间不够,同时其传出stSize,表示需要的空间大小
+        //这也是说明为什么stSize既是一个输入量也是一个输出量
+        //释放原来的内存空间
+        free(pIpAdapterInfo);
+        //重新申请内存空间用来存储所有网卡信息
+        pIpAdapterInfo = (PIP_ADAPTER_INFO)malloc(stSize);
+        //再次调用GetAdaptersInfo函数,填充pIpAdapterInfo指针变量
+        nRel = GetAdaptersInfo(pIpAdapterInfo, &stSize);
     }
     if (ERROR_SUCCESS == nRel)
     {
-	//输出网卡信息
-	//可能有多网卡,因此通过循环去判断
-	while (pIpAdapterInfo)
-	{
-	    //可能网卡有多IP,因此通过循环去判断
-	    IP_ADDR_STRING *pIpAddrString = &(pIpAdapterInfo->IpAddressList);
-	    do
-	    {
-		if (strcmp("0.0.0.0", pIpAddrString->IpAddress.String) != 0)
-		{
-		    strcpy_s(strHostIp[ipcount],100, pIpAddrString->IpAddress.String);
-		    ipcount++;
-		}
-		pIpAddrString = pIpAddrString->Next;
-	    } while (pIpAddrString);
-	    pIpAdapterInfo = pIpAdapterInfo->Next;
-	    //cout << "--------------------------------------------------------------------" << endl;
-	}
+        //输出网卡信息
+        //可能有多网卡,因此通过循环去判断
+        while (pIpAdapterInfo)
+        {
+            //可能网卡有多IP,因此通过循环去判断
+            IP_ADDR_STRING *pIpAddrString = &(pIpAdapterInfo->IpAddressList);
+            do
+            {
+                if (strcmp("0.0.0.0", pIpAddrString->IpAddress.String) != 0)
+                {
+                    strcpy_s(strHostIp[ipcount],100, pIpAddrString->IpAddress.String);
+                    ipcount++;
+                }
+                pIpAddrString = pIpAddrString->Next;
+            } while (pIpAddrString);
+            pIpAdapterInfo = pIpAdapterInfo->Next;
+            //cout << "--------------------------------------------------------------------" << endl;
+        }
     }
     //释放内存空间
     if (pIpAdapterInfo)
     {
-	free(pIpAdapterInfo);
+        free(pIpAdapterInfo);
     }
     return ipcount;
 }
@@ -519,9 +527,14 @@ int socketFindResources(char ip[][100],int timeout_ms)
 #if _WIN32
     WSADATA ws;
 #endif
-    int ret, count = 0, hostIpCount = 0, i;
+    int ret;
+    int count = 0;
+    int hostIpCount = 0;
+    int i;
     SOCKET sock[256];
-    SOCKADDR_IN localAddr, remoteAddr, servaddr;
+    SOCKADDR_IN localAddr;
+    SOCKADDR_IN remoteAddr;
+    SOCKADDR_IN servaddr;
 
 #ifdef _WIN32
     int len = sizeof(SOCKADDR);
@@ -534,67 +547,67 @@ int socketFindResources(char ip[][100],int timeout_ms)
     hostIpCount = getHostIpAddr(strHostIpAddr);
     if (hostIpCount <= 0)
     {
-	return -1;
+        return -1;
     }
 
 #if _WIN32
     ret = WSAStartup(MAKEWORD(2, 2), &ws);
     if (0 != ret)
     {
-	return -1;
+        return -1;
     }
 #endif	
     for (i = 0; i < hostIpCount; i++)
     {
-	sock[i] = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (INVALID_SOCKET == sock[i])
-	{
+        sock[i] = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+        if (INVALID_SOCKET == sock[i])
+        {
 #ifdef _WIN32		
-	    WSACleanup();
+            WSACleanup();
 #endif
-	    return -1;
-	}
-	localAddr.sin_family = AF_INET;
-	localAddr.sin_port = htons(0);
+            return -1;
+        }
+        localAddr.sin_family = AF_INET;
+        localAddr.sin_port = htons(0);
 #ifdef _WIN32
-	localAddr.sin_addr.S_un.S_addr = inet_addr(strHostIpAddr[i]);//htonl(INADDR_ANY);
+        localAddr.sin_addr.S_un.S_addr = inet_addr(strHostIpAddr[i]);//htonl(INADDR_ANY);
 #else
-	localAddr.sin_addr.s_addr  = inet_addr(strHostIpAddr[i]);//htonl(INADDR_ANY);
+        localAddr.sin_addr.s_addr  = inet_addr(strHostIpAddr[i]);//htonl(INADDR_ANY);
 #endif
-	ret = bind(sock[i], (SOCKADDR*)&localAddr, sizeof(SOCKADDR));
-	if (SOCKET_ERROR == ret)
-	{
-	    return -1;
-	}
+        ret = bind(sock[i], (SOCKADDR*)&localAddr, sizeof(SOCKADDR));
+        if (SOCKET_ERROR == ret)
+        {
+            return -1;
+        }
 
 #ifdef _WIN32
-	ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout_ms, sizeof(int));
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout_ms, sizeof(int));
 #else
-	struct timeval timeout;
-	timeout.tv_sec = timeout_ms/1000;
-	timeout.tv_usec = (timeout_ms % 1000) * 1000;
-	ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(struct timeval));
+        struct timeval timeout;
+        timeout.tv_sec = timeout_ms/1000;
+        timeout.tv_usec = (timeout_ms % 1000) * 1000;
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(struct timeval));
 #endif
-	if (ret != 0)
-	{
-//            printf("SO_RCVTIMEO ERROR!CODE IS:%d\n", WSAGetLastError());
-	    return -1;
-	}
+        if (ret != 0)
+        {
+            //            printf("SO_RCVTIMEO ERROR!CODE IS:%d\n", WSAGetLastError());
+            return -1;
+        }
 #ifdef _WIN32		
-	char bOpt = 1;
+        char bOpt = 1;
 #else
-	int bOpt = 1;
+        int bOpt = 1;
 #endif
-	//设置该套接字为广播类型
+        //设置该套接字为广播类型
 #ifdef _WIN32
-	ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));
 #else
-	ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST | SO_REUSEADDR, (char*)&bOpt, sizeof(bOpt));
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST | SO_REUSEADDR, (char*)&bOpt, sizeof(bOpt));
 #endif
-	if(ret != 0)
-	{
-	    return -1;
-	}
+        if(ret != 0)
+        {
+            return -1;
+        }
     }
     remoteAddr.sin_family = AF_INET;
     remoteAddr.sin_port = htons(6000);
@@ -606,30 +619,30 @@ int socketFindResources(char ip[][100],int timeout_ms)
 
     for (i = 0; i < hostIpCount; i++)
     {
-	sendto(sock[i], "*?", 2, 0, (SOCKADDR*)&remoteAddr, sizeof(SOCKADDR));
-	while (1)
-	{
-	    memset(recvBuf, 0, 50);
-	    ret = recvfrom(sock[i], recvBuf, sizeof(recvBuf), 0, (SOCKADDR*)&servaddr, &len);
-	    if (ret > 0)
-	    {
-		strcpy_s(ip[count], 100, inet_ntoa(servaddr.sin_addr));
-		count++;
-		//printf("%s response to us : %s \n", inet_ntoa(servaddr.sin_addr), recvBuf);
-	    }
-	    else
-	    {
-		break;
-	    }
-	}
+        sendto(sock[i], "*?", 2, 0, (SOCKADDR*)&remoteAddr, sizeof(SOCKADDR));
+        while (1)
+        {
+            memset(recvBuf, 0, 50);
+            ret = recvfrom(sock[i], recvBuf, sizeof(recvBuf), 0, (SOCKADDR*)&servaddr, &len);
+            if (ret > 0)
+            {
+                strcpy_s(ip[count], 100, inet_ntoa(servaddr.sin_addr));
+                count++;
+                //printf("%s response to us : %s \n", inet_ntoa(servaddr.sin_addr), recvBuf);
+            }
+            else
+            {
+                break;
+            }
+        }
     }
     for (i = 0; i < hostIpCount; i++)
     {
 #ifdef _WIN32
-	shutdown(sock[i], 2);//这里的"2"在win32中可以写为SD_BOTH
-	closesocket(sock[i]);
+        shutdown(sock[i], 2);//这里的"2"在win32中可以写为SD_BOTH
+        closesocket(sock[i]);
 #else
-	close(sock[i]);
+        close(sock[i]);
 #endif		
     }
 #ifdef _WIN32

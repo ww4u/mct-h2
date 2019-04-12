@@ -1,10 +1,9 @@
-#ifndef __PLATFORM_H__
-#define __PLATFORM_H__
+#ifndef __MEGA_PLATFORM_H__
+#define __MEGA_PLATFORM_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
 #include <time.h> 
 
 #define strcpy_s(x,y,z)     	strncpy(x,z,y)
@@ -12,20 +11,38 @@
 #ifdef _WIN32
 //////////////////////////////////
 //Windows头文件
+
+#if (defined(__MINGW64__) || defined(__MINGW32__)) || defined(_UWIN)
+
 #ifdef NTDDI_VERSION
 #undef NTDDI_VERSION
 #define NTDDI_VERSION NTDDI_WINXPSP3
 #endif
-#include <windows.h>
-#include <WINSOCK2.H>
-#include <IPHlpApi.h>
 
+#include <pthread.h>
 #include "visatype.h"
 #include "visa.h"
+
+#else // MSVC
+
+#include "msvc/pthread.h"
+#include "msvc/visa.h"
+#include "msvc/visatype.h"
+
+#pragma warning(disable : 4996)  
+
+#endif
+
+#include <WINSOCK2.H>
+#include <windows.h>
+#include <IPHlpApi.h>
 
 #define STRCASECMP(x,y)		_stricmp(x,y)
 #define STRTOK_S(x,y,z)		strtok_s(x,y,z)
 
+#define EXPORT_API __declspec(dllexport)
+#define CALL    __cdecl
+//#define CALL  __stdcall
 #else
 //////////////////////////////////
 //Linux 头文件
@@ -37,6 +54,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <pthread.h>
 
 #define INVALID_SOCKET 	(-1)
 #define SOCKET 		int
@@ -54,6 +72,8 @@ typedef unsigned long ViSession;
 //#define _strnicmp           strncasecmp
 #define Sleep(x)            usleep( ((x) * 1000) )
 
+#define EXPORT_API 
+#define CALL
 
 #endif //_WIN32
 
