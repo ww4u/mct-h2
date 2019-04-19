@@ -150,7 +150,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
 * vi :visa设备句柄
 * 返回值：0表示等待成功，－1：表示等待过程中出错
 */
-int waitMotionFileWirteEnd(int vi)
+int waitMotionFileWriteEnd(int vi)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -176,62 +176,6 @@ int waitMotionFileWirteEnd(int vi)
         }
     }
     return -1;
-}
-
-/*
-* 保存运动文件内容到本地存储器,
-* vi :visa设备句柄
-* srcFileName: 源文件名
-* saveFileName：目的文件名
-* 返回值：  0：写入成功；1：写入失败
-*/
-EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, char * saveFileName)
-{
-    int filesize = 0;
-    int writeLen = 0;
-    int cmdLen = 0;
-    char args[SEND_BUF];
-    char as8Ret[1024];
-    FILE * pFile = NULL;
-    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
-    if ((pFile = fopen(srcFileName, "r")) == NULL)
-    {
-        return -1;
-    }
-    fseek(pFile, 0L, SEEK_END);
-    filesize = ftell(pFile);
-    fseek(pFile, 0L, SEEK_SET);
-    if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
-    {
-        fclose(pFile);
-        return -1;
-    }
-    //写入文件内容
-    while (filesize > 0)
-    {
-        writeLen = filesize > 512 ? 512 : filesize;
-        snprintf(as8Ret, 1024, "STORage:FILe:MOTion:CONText:WRITe:DATa #9%09d", writeLen);
-        cmdLen = strlen(as8Ret);
-        fread(&as8Ret[cmdLen], 1, writeLen, pFile);
-        if (busWrite(vi, as8Ret, writeLen+cmdLen) == 0)
-        {
-            fclose(pFile);
-            return -1;
-        }
-        if (waitMotionFileWirteEnd(vi) != 0)
-        {
-            break;
-        }
-        filesize -= writeLen;
-    }
-    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:END\n");
-    if (busWrite(vi, args, strlen(args)) == 0)//写入文件结束
-    {
-        fclose(pFile);
-        return -1;
-    }
-    fclose(pFile);
-    return 0;
 }
 /*
 * 保存运动文件内容到本地存储器

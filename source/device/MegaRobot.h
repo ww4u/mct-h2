@@ -296,6 +296,17 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int t
 */
 EXPORT_API int CALL mrgRobotMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms);
 /*
+* 机器人末端沿指定的方向持续运动
+* vi :visa设备句柄
+* name: 机器人名称
+* wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+* x,y,z: 方向向量
+* speed : 移动的速度。单位： 度/秒。
+* 返回值：0表示执行成功，否则表示过程中出错
+* 说明：非阻塞函数
+*/
+EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, float x, float y, float z, float speed);
+/*
 * 机器人末端沿指定的坐标轴持续运动
 * vi :visa设备句柄
 * name: 机器人名称
@@ -305,7 +316,7 @@ EXPORT_API int CALL mrgRobotMove(ViSession vi, int name, int wavetable, float x,
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数，此命令只对H2有效
 */
-EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
+EXPORT_API int CALL mrgRobotAxisMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
 /*
 * 机器人末端沿指定的坐标轴持续运动(阶跃运行）
 * vi :visa设备句柄
@@ -318,7 +329,7 @@ EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数,此命令只对H2有效
 */
-EXPORT_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
+EXPORT_API int CALL mrgRobotAxisMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
 /*
 * 机器人从当前位置移动给定的距离（随机移动）
 * vi :visa设备句柄
@@ -745,7 +756,15 @@ EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record
 */
 EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
 /*
-* 控制机器人腕关节的转动角度(相对于90度的算法零位)
+* 获取机器人腕关节的姿态角度(相对于90度的算法零位)
+* vi :visa设备句柄
+* name: 机器人名称
+* angle: 腕关节角度(垂直向下时为零)
+* 返回值：零表示执行正确,-1表示执行错误
+*/
+EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle);
+/*
+* 控制机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
 * angle: 腕关节角度(垂直向下时为零)
@@ -753,15 +772,7 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristAngleZero(ViSession vi, int name, float angle,float time,int timeout_ms);
-/*
-* 获取机器人腕关节的当前角度(相对于90度的算法零位)
-* vi :visa设备句柄
-* name: 机器人名称
-* angle: 腕关节角度(垂直向下时为零)
-* 返回值：零表示执行正确,-1表示执行错误
-*/
-EXPORT_API int CALL mrgGetRobotWristAngleZero(ViSession vi, int name, float *angle);
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

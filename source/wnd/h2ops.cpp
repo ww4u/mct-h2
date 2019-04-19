@@ -932,7 +932,7 @@ void H2Ops::on_toolButton_jogmode_x_dec_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 0, cr_time, 0-cr_speed, speed);
+    int ret = mrgRobotAxisMoveJog(mViHandle, mRobotName, -1, 0, cr_time, 0-cr_speed, speed);
     if(ret != 0)
         sysError("mrhtRobotMoveJog", ret);
 }
@@ -944,7 +944,7 @@ void H2Ops::on_toolButton_jogmode_x_inc_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 0, cr_time, cr_speed, speed);
+    int ret = mrgRobotAxisMoveJog(mViHandle, mRobotName, -1, 0, cr_time, cr_speed, speed);
     if(ret != 0)
         sysError("mrhtRobotMoveJog", ret);
 }
@@ -956,7 +956,7 @@ void H2Ops::on_toolButton_jogmode_y_dec_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 1, cr_time, 0-cr_speed, speed);
+    int ret = mrgRobotAxisMoveJog(mViHandle, mRobotName, -1, 1, cr_time, 0-cr_speed, speed);
     if(ret != 0)
         sysError("mrhtRobotMoveJog", ret);
 }
@@ -968,7 +968,7 @@ void H2Ops::on_toolButton_jogmode_y_inc_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 1, cr_time, cr_speed, speed);
+    int ret = mrgRobotAxisMoveJog(mViHandle, mRobotName, -1, 1, cr_time, cr_speed, speed);
     if(ret != 0)
         sysError("mrhtRobotMoveJog", ret);
 }
