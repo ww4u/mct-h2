@@ -102,7 +102,6 @@
     <addaction name="actionPoweroff"/>
     <addaction name="actionReboot"/>
     <addaction name="actionDPI"/>
-    <addaction name="actionHostIP"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -364,11 +363,6 @@
    </property>
    <property name="toolTip">
     <string>Display</string>
-   </property>
-  </action>
-  <action name="actionHostIP">
-   <property name="text">
-    <string>&amp;NetworkMode</string>
    </property>
   </action>
  </widget>

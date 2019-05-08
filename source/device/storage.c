@@ -143,7 +143,7 @@ int waitMotionFileWriteEnd(int vi)
 */
 EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
 {
-#if 0
+#if 1
     int count = 0;
     int writeLen = 0;
     int cmdLen = 0;

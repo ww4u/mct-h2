@@ -64,11 +64,7 @@ private slots:
 
     void on_actionUpdateFirmware_triggered();
 
-
-
     void on_actionDPI_triggered();
-
-    void on_actionHostIP_triggered();
 
 private:
     Ui::MainWindow *ui;

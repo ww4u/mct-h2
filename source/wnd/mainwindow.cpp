@@ -144,14 +144,8 @@ void MainWindow::setupToolBar()
     t_hBoxLayout->addWidget(m_stopButton);
 
 #ifdef _WIN32
-    //! windows禁用这些功能
-    ui->actionReboot->setVisible(false);
-    ui->actionPoweroff->setVisible(false);
     ui->actionDPI->setVisible(false);
-#else
-    ui->actionHostIP->setVisible(false);
 #endif
-
 }
 
 void MainWindow::setupStatusBar()
@@ -444,23 +438,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_actionPoweroff_triggered()
 {
+#ifndef _WIN32
     m_roboConfig->slotExit();
     QThread::msleep(1000);
-#ifndef _WIN32
     system("poweroff");
 #else
-    system("shutdown -s -t 0");
+    m_roboConfig->slotPoweroff(false);
 #endif
 }
 
 void MainWindow::on_actionReboot_triggered()
 {
+#ifndef _WIN32
     m_roboConfig->slotExit();
     QThread::msleep(1000);
-#ifndef _WIN32
     system("reboot");
 #else
-    system("shutdown -s -r 0");
+    m_roboConfig->slotPoweroff(true);
 #endif
 }
 
@@ -503,39 +497,4 @@ void MainWindow::on_actionDPI_triggered()
     }
 
     return;
-}
-
-void MainWindow::on_actionHostIP_triggered()
-{
-    QString dhcp = tr("Route Mode");
-    QString staticIP = tr("Direct Mode");
-
-    QMessageBox::information(this,tr("tips"),tr("To ensure that this function works properly,") + "\n"
-                             + tr("Please rename the wired network adapter ") + "\n"
-                             + tr("\"Local Connection\" or \"Ethernet\" to \"LAN\" and continue"));
-
-    //显示选择对话框
-    QStringList list;
-    list << dhcp << staticIP;
-    QString item = QInputDialog::getItem(this, tr("NetworkMode"),
-                                         tr("Please select host and MRHT wired network connection mode:"),
-                                         list, -1, false);
-    if(item == "")
-        return;
-
-    qDebug() << item;
-
-    QString cmd = qApp->applicationDirPath() + "/winscript/sudo.vbs ";
-    if(item == dhcp){
-        cmd += "netsh interface ip set address name=\"LAN\" source=dhcp";
-    }
-    else{
-        cmd += "netsh interface ip set address name=\"LAN\" "
-               "source=static "
-               "addr=169.254.1.150 "
-               "mask=255.255.255.0 "
-               "gateway=169.254.1.1 "
-               "gwmetric=1";
-    }
-    system(cmd.toLocal8Bit().data());
 }

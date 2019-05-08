@@ -449,6 +449,25 @@ void RoboConfig::slotWifi()
     return;
 }
 
+void RoboConfig::slotPoweroff(bool isReboot)
+{
+    if(mIndex < 0) return;
+    if( m_RobotList[mIndex].m_Visa <= 0)
+    {
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
+        return;
+    }
+
+    if(isReboot)
+    {
+        mrgSystemRunCmd(m_RobotList[mIndex].m_Visa, "reboot", 0);
+    }
+    else
+    {
+        mrgSystemRunCmd(m_RobotList[mIndex].m_Visa, "poweroff", 0);
+    }
+}
+
 void RoboConfig::slotUpdateFirmware()
 {
     if(mIndex < 0) return;

@@ -760,7 +760,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
                 result = 1;
                 return;
             }
-            ret = mrgRobotWaitHomeEnd(mViHandle, mRobotName, -1);
+            ret = mrgRobotWaitHomeEnd(mViHandle, mRobotName, 0);
             if(ret == -3){//超时
                 qDebug() << "mrgRobotWaitHomeEnd timeout";
                 continue;

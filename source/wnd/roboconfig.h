@@ -37,6 +37,7 @@ public slots:
     void slotSearch();
     void slotExit();
     void slotWifi();
+    void slotPoweroff(bool isReboot);
     void slotUpdateFirmware();
     void slotConnect();
     void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
