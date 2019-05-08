@@ -84,8 +84,8 @@ int busOpenDevice(char *ip, int timeout_ms)
     _g_clink = clink;
     _g_timeout = timeout_ms;
 
-    void *pvoid;
-    int value = (unsigned int)pvoid%10000;
+    srand((int)time(0));
+    int value = (unsigned int)rand()/10000+1;
     return value;//随便返回一个非零数字
 }
 
@@ -154,17 +154,22 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 
 unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 {
+    int errCount = 3;
+    int retCount;
     LOCK();
-    int retCount = SyncRead(vi, buf, len, 1);
-    if(retCount < 0){
-        UNLOCK();
-        return 0;
+    while(errCount--)
+    {
+        retCount = SyncRead(vi, buf, len, 1);
+        if(retCount > 0)
+        {
+            break;
+        }
+        retCount=0;
+        msSleep(1);
     }
 
-    //    printf("\nRECV:%d\n\t%s", retCount, buf);
-    if( STRCASECMP(buf, "Command error") == 0 )
+    if( (retCount==0) || STRCASECMP(buf, "Command error") == 0 )
     {
-        //        printf("\n");
         UNLOCK();
         return 0;
     }
@@ -176,31 +181,32 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen)
 {
     int retCount;
-
+    int errCount = 3;
     LOCK();
     retCount = SyncSend(vi, input, inputlen, 1);
-    if(retCount < 0){
-        UNLOCK();
-        return 0;
-    }
-    //    printf("\nQUERY_TO:\n\t%s", input);
-
-    retCount = SyncRead(vi, output, wantlen, 1);
-    if(retCount < 0){
-        //        printf("RECV_QUERY error\n");
-        UNLOCK();
-        return 0;
-    }
-
-    //    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
-    if( STRCASECMP(output, "Command error") == 0 )
+    if(retCount < 0)
     {
-        //        printf("\n");
         UNLOCK();
         return 0;
     }
-    UNLOCK();
 
+    while(errCount--)
+    {
+        retCount = SyncRead(vi, output, wantlen, 1);
+        if(retCount > 0)
+        {
+            break;
+        }
+        retCount=0;
+        msSleep(1);
+    }
+    if( (retCount==0) || STRCASECMP(output, "Command error") == 0 )
+    {
+        UNLOCK();
+        return 0;
+    }
+
+    UNLOCK();
     return (unsigned int)retCount;
 }
 
@@ -440,8 +446,25 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 {
     //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount = 0;
+    int errCount = 3;
+
     LOCK();
-    viRead(vi, (ViBuf)buf, len, &retCount); //有可能返回错误码，但读到了数据，只是数据 还没有读完！！！！
+    while(errCount--)
+    {
+        viRead(vi, (ViBuf)buf, len, &retCount);
+        if(retCount > 0)
+        {
+            break;
+        }
+        retCount = 0;
+        msSleep(1);
+    }
+    if( (retCount == 0) ||  STRCASECMP(buf, "Command error") == 0 )
+    {
+        UNLOCK();
+        return 0;
+    }
+
     UNLOCK();
     return retCount;
 }
@@ -449,13 +472,30 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* output, unsigned int wantlen)
 {
     ViUInt32 retCount;
+    int errCount = 3;
+
     LOCK();
     if (viWrite(vi, (ViBuf)input, inputlen, &retCount) != VI_SUCCESS)
     {
         UNLOCK();
         return 0;
     }
-    viRead(vi, (ViBuf)output, wantlen, &retCount);
+    while(errCount--)
+    {
+        viRead(vi, (ViBuf)output, wantlen, &retCount);
+        if(retCount > 0)
+        {
+            break;
+        }
+        retCount = 0;
+        msSleep(1);
+    }
+    if( (retCount == 0) ||  STRCASECMP(output, "Command error") == 0 )
+    {
+        UNLOCK();
+        return 0;
+    }
+
     UNLOCK();
     return retCount;
 }

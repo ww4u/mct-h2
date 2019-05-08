@@ -682,7 +682,7 @@ EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, fl
 EXPORT_API int CALL mrgSetRobotWavetable(ViSession vi, int name,int wavetable)
 {
     char args[SEND_BUF];
-    if (wavetable < 0 || wavetable >= 10)
+    if (wavetable < WAVETABLE_MIN || wavetable >= WAVETABLE_MAX)
     {
         return -2;
     }
@@ -743,16 +743,13 @@ EXPORT_API int CALL mrgRobotWavetableQuery(ViSession vi, int name)
 EXPORT_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
 {
     char args[SEND_BUF];
-    if (wavetable == -1)
-    {
-        snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", name);
-    }
-    else if(wavetable >=0 && wavetable <= WAVETABLE_MAX)
+    if(wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
         snprintf(args, SEND_BUF, "ROBOT:RUN %d,%d\n", name,wavetable);
     }
-    else {
-        return -2;
+    else
+    {
+        snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", name);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -773,7 +770,8 @@ EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
     {
         snprintf(args, SEND_BUF, "ROBOT:STOP %d,%d\n", name, wavetable);
     }
-    else {
+    else
+    {
         snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -806,13 +804,13 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
     }
     while (1)
     {
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
             if (++error_count > 3)
             {
                 return -1;
             }
-            Sleep(DELAYTIME);
+            msSleep(DELAYTIME);
             time += DELAYTIME;
             continue;
         }
@@ -824,7 +822,7 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -866,7 +864,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int t
             {
                 return -1;
             }
-            Sleep(DELAYTIME);
+            msSleep(DELAYTIME);
             time += DELAYTIME;
             continue;
         }
@@ -877,7 +875,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int t
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -989,7 +987,7 @@ EXPORT_API int CALL mrgRobotAxisMoveJog(ViSession vi, int name, int wavetable, i
     char args[SEND_BUF];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%f,%f,%d\n", name, ax, cr_time, cr_speed, speed, wavetable);
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f,%d\n", name, ax, cr_time, cr_speed, speed, wavetable);
     }
     else
     {
@@ -1176,7 +1174,7 @@ EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, float* st
 EXPORT_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int name, int wavetable)
 {
     char args[SEND_BUF];
-    if (wavetable < 0 || wavetable > 9)
+    if (wavetable < WAVETABLE_MIN || wavetable >= WAVETABLE_MAX)
     {
         return -2;
     }
@@ -1329,7 +1327,7 @@ EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms != 0) {
             if (time > timeout_ms) {
@@ -1648,7 +1646,7 @@ EXPORT_API int CALL mrgRobotMotionFileImportExternal(ViSession vi, int name, cha
 EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable,int timeout_ms)
 {
     char args[SEND_BUF];
-    if (line == 0 || line < 0)
+    if (line <= 0)
     {
         snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d\n", name,section);
     }
@@ -1708,7 +1706,7 @@ EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, int type, char*
 * dev : 末端执行器对应的通道设备 (1@513), 哪个设备的哪个轴
 * 返回值：0表示执行成功，－1：表示出错
 */
-EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int * type)
+EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int *type)
 {
     int ret = 0, error_count = 0;
     char args[SEND_BUF];
@@ -1736,6 +1734,14 @@ EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int * type)
         else if (STRCASECMP(state, "MR-TIP") == 0)
         {
             *type = 2;
+        }
+        else if (STRCASECMP(state, "MR-FR") == 0)
+        {
+            *type = 3;
+        }
+        else if (STRCASECMP(state, "UNKNOWN") == 0)
+        {
+            *type = -1;
         }
     }
     return ret;
@@ -1770,7 +1776,7 @@ EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -1856,7 +1862,7 @@ EXPORT_API int CALL mrgRobotToolExeMode_Query(ViSession vi, int name, int* mode)
     if (STRCASECMP(state, "NORMAL") == 0 ) {
         *mode = 0;
     }
-    else if (STRCASECMP(state, "open") == 0) {
+    else if (STRCASECMP(state, "OPEN") == 0) {
         *mode = 1;
     }
     else
@@ -1910,7 +1916,7 @@ EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        msSleep(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -2000,27 +2006,35 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name,float * angle
 */
 EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x,float *y ,float* z)
 {
-    int count = 0, retlen = 0;
+    int count = 0, retlen = 0, error_count = 0;
     char args[SEND_BUF];
     char tmp[100];
     float position[3];
     char * p, *pNext = NULL;
     snprintf(args, SEND_BUF, "ROBOT:CURRENT:POSITION? %d\n", name);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    while (1)
     {
-        return -1;
+        if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+        {
+            if (++error_count > 3)
+            {
+                return -1;
+            }
+            continue;
+        }
+        tmp[retlen - 1] = 0;
+        p = STRTOK_S(tmp, ",", &pNext);
+        while (p)
+        {
+            position[count] = strtof(p, NULL);
+            p = STRTOK_S(NULL, ",", &pNext);
+            count++;
+        }
+        *x = position[0];
+        *y = position[1];
+        *z = position[2];
+        break;
     }
-    tmp[retlen] = 0;
-    p = STRTOK_S(tmp, ",", &pNext);
-    while (p)
-    {
-        position[count] = strtof(p, NULL);
-        p = STRTOK_S(NULL, ",", &pNext);
-        count++;
-    }
-    *x = position[0];
-    *y = position[1];
-    *z = position[2];
     return 0;
 }
 /*
@@ -2215,45 +2229,6 @@ EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record
     return 0;
 }
 /*
-* 机器人的折叠功能(包装位)
-* vi :visa设备句柄
-* name: 机器人名称
-* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕 
-* 返回值：0表示执行成功， －1：表示执行失败
-* 此命令只对T4有效！！！！！
-*/
-EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3)
-{
-    int device = 0;
-    //如果不是T4,则返回错误
-    if (mrgGetRobotType(vi,name) != MRX_TYPE_T4)
-    {
-        return -1;
-    }
-    if (mrgGetRobotDevice(vi, name, &device) == 0)
-    {
-        return -2; //获取设备失败
-    }
-    //0. 机器人本体回零位
-    mrgRobotGoHome(vi,name, 0);
-    //1. 先动末端执行器
-    mrgMRQAdjust(vi, device, 4, wavetable, 10.0f,1.0f, 2000);
-    mrgRobotToolGoHome(vi, name, 10000); //末端回零
-
-    //2.腕
-    mrgMRQAdjust(vi, device, 3, wavetable, axi3, 3.0f, 10000);
-    //3. 大臂向后
-    mrgMRQAdjust(vi, device, 1, wavetable, axi1, 2.0f, 10000);
-
-    //4.小臂向下
-    mrgMRQAdjust(vi, device, 2, wavetable, axi2, 3.0f, 10000);
-
-    //5. 基座
-    mrgMRQAdjust(vi, device, 2, wavetable, axi0, 1.0f, 10000);
-    return 0;
-}
-
-/*
 * 获取机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
@@ -2281,24 +2256,60 @@ EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle)
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle, float speed, int timeout_ms)
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, int wavetable, float angle, float speed, int timeout_ms)
 {
-    int ret = 0;
-    float f32Current = 0.0f, f32Target = 0.0f;
-    ret = mrgGetRobotJointAngle(vi, name, 3, &f32Current);
-    if (ret <= 0)
+    int retlen = 0;
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+        snprintf(args, SEND_BUF, "ROBOT:POSE:WRIST %d,%f,%f,%d\n", name, angle,speed, wavetable);
+    }
+    else
+    {
+        return -2;
+    }
+
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;
     }
-    f32Target = 90.0f + angle - f32Current;
-    //走一个最短距离
-    if (f32Target > 180.0f)
+    return mrgRobotWaitEnd(vi, name, wavetable, timeout_ms);
+}
+/*
+* 机器人的折叠功能(包装位)
+* vi :visa设备句柄
+* name: 机器人名称
+* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对T4有效！！！！！
+*/
+EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3)
+{
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:POSE:factory %d,%f,%f,%f,%f\n", name, axi0, axi1, axi2, axi3);
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
-        f32Target = f32Target - 360.0f;
+        return -1;
     }
-    else if (f32Target < -180.0f)
+    return 0;
+}
+/*
+* 获取机器人的折叠状态
+* vi :visa设备句柄
+* name: 机器人名称
+* 返回值：1表示折叠完成， 0：还在折叠中; 小于零表示执行出错
+* 此命令只对T4有效！！！！！
+*/
+EXPORT_API int CALL mrgGetRobotFoldState(ViSession vi, int name)
+{
+    int retlen = 0;
+    char args[SEND_BUF];
+    char as8Ret[10];
+    snprintf(args, SEND_BUF, "ROBOT:POSE:factory:state? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0)
     {
-        f32Target = 360.0f + f32Target;
+        return -1;
     }
-    return mrgRobotJointMove(vi, name, 3, f32Target, fabs(f32Target)/speed, timeout_ms);
+    return atoi(as8Ret);
 }

@@ -43,7 +43,27 @@ EXPORT_API int CALL  mrgStorageMotionFileContextRead(ViSession vi, char* filenam
 * 返回值：  0：写入成功；1：写入失败
 */
 EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context, int len, char * saveFileName);
-
+/*
+* 保存文件内容
+* vi :visa设备句柄
+* isUdisk: 是否写在U盘上
+* path: 文件路径
+* saveFileName：目的文件名
+* data: 文件内容
+* dataLen:文件内容长度
+* 返回值：  0：写入成功；1：写入失败
+*/
+EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName, unsigned char *data, int dataLen);
+/*
+* 读取文件到上位机
+* vi :visa设备句柄
+* isUdisk: 是否写在U盘上
+* path: 文件路径
+* filename: 文件名
+* context：读取到的内容
+* 返回值：返回实际的文件长度
+*/
+EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *path, char* filename, unsigned char* context);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

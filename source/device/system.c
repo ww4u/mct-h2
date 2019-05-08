@@ -354,7 +354,7 @@ EXPORT_API int CALL mrgSysWifiCheckState(ViSession vi, int timeout_ms)
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:STATe?\n");
     while (time < timeout_ms)
     {
-        Sleep(200);
+        msSleep(200);
         if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
         {
             continue;
@@ -632,7 +632,7 @@ EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename)
         }
         if(ret == 1)
         {
-            Sleep(intervalTime);
+            msSleep(intervalTime);
             time += intervalTime;
             continue;
         }
@@ -711,7 +711,7 @@ EXPORT_API int CALL mrgScriptConfigQuery(ViSession vi, char *filename)
     return 0;
 }
 
-int mrgScriptRun(ViSession vi)
+EXPORT_API int CALL mrgScriptRun(ViSession vi)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "SCRipt:START\n");
@@ -751,4 +751,21 @@ EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi)
         return 1;
     else
         return -1;
+}
+
+EXPORT_API int CALL mrgSystemRunCmd(ViSession vi, char *cmd, int isBackground)
+{
+    char args[SEND_BUF];
+    char state[1024] = {0};
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "SYSTEM:CMDLine? %s,%s\n", cmd, isBackground?"NOWAIT":"WAIT");
+    if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) <= 0)
+    {
+        return -1;
+    }
+    state[retlen-1] = 0;
+    if( !isBackground && STRCASECMP(state, "ERROR") == 0 )
+        return -1;
+    else
+        return 0;
 }

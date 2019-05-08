@@ -22,16 +22,17 @@ EXPORT_API int CALL mrgSetProjectMode(ViSession vi, int state)
 /*
 * 查询外部IO的状态
 * vi :visa设备句柄
+* index: 0->所有,1->X1,2->X2...
 * state: 每一位表示一个IO的状态
 * 返回值：0表示执行成功；－1表示执行失败
 */
-EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, unsigned int *state)
+EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, int index, unsigned int *state)
 {
     char args[SEND_BUF];
     char as8Ret[100];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "PROJect:XREAD? 0\n");
-
+    char *ps8XIN[] = { "0","X1","X2","X3","X4","X5","X6","X7","X8","X9","X10"};
+    snprintf(args, SEND_BUF, "PROJect:XREAD? %s\n",ps8XIN[index]);
     if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
     {
         return -1;
@@ -43,7 +44,7 @@ EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, unsigned int *state)
 /*
 * 设置系统的外部输出IO的状态
 * vi :visa设备句柄
-* index: 0->YOUT1; 1->YOUT2
+* index: 0->ALL, 1->YOUT1, 2->YOUT2,3->YOUT3, 4->YOUT4
 * state: 0->low| 1->high
 * 返回值：0表示执行成功；－1表示执行失败
 * 说明: 不支持 同时写出YOUT
@@ -51,7 +52,7 @@ EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, unsigned int *state)
 EXPORT_API int CALL mrgProjectSetYout(ViSession vi, int index, int state)
 {
     char args[SEND_BUF];
-    char *ps8YOUT[] = { "Y1","Y2","Y3","Y4"};
+    char *ps8YOUT[] = {"ALL","Y1","Y2","Y3","Y4","READY","FAULT","ACK","MC","ENABLED"};
     snprintf(args, SEND_BUF, "PROJect:YWRITE %s,%s\n", ps8YOUT[index], state ? "H" : "L");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {

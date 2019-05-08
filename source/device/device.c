@@ -120,7 +120,7 @@ EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms)
     {
         return 0;
     }
-    Sleep(timeout_ms);
+    msSleep(timeout_ms);
     snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
     if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
     {

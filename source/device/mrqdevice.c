@@ -237,7 +237,7 @@ EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wa
              name, ch, wavetableToString(wavetable));
     while (1)
     {
-        Sleep(200);
+        msSleep(200);
         if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
             if (++error_count > 3)
             {
@@ -284,7 +284,7 @@ EXPORT_API int CALL mrgMRQMotionWaitEnd(ViSession vi, int name, int ch, int wave
              name, ch, wavetableToString(wavetable));
     while (1)
     {
-        Sleep(200);
+        msSleep(200);
         if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
             if (++error_count > 3)
             {
@@ -1149,9 +1149,9 @@ EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavet
     
     while (1)
     {
-        Sleep(200);
+        msSleep(200);
         mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
-        Sleep(200);
+        msSleep(200);
         if (readState == state)
         {
             return 0;
@@ -1203,7 +1203,7 @@ EXPORT_API int CALL mrgMRQPVTStateWaitEnd(ViSession vi, int name, int ch, int wa
     }
     while (1)
     {
-        Sleep(100);
+        msSleep(100);
         mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
         if (readState == MTSTATE_CALCEND || readState == MTSTATE_RESET)
         {
